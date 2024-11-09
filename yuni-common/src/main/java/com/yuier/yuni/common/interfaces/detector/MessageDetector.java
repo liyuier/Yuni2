@@ -8,4 +8,5 @@ package com.yuier.yuni.common.interfaces.detector;
  * @description: 消息探测器
  */
 public interface MessageDetector extends EventDetector {
+    Boolean defineValid();
 }
