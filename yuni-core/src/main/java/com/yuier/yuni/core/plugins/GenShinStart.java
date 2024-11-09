@@ -1,8 +1,8 @@
 package com.yuier.yuni.core.plugins;
 
 import com.yuier.yuni.common.anno.Plugin;
-import com.yuier.yuni.common.detect.definer.OrderDetectorDefiner;
-import com.yuier.yuni.common.detect.messagematchedout.OrderMatchedOut;
+import com.yuier.yuni.common.detect.message.matchedout.OrderMatchedOut;
+import com.yuier.yuni.common.detect.message.order.OrderDetector;
 import com.yuier.yuni.common.domain.message.MessageEvent;
 import com.yuier.yuni.common.interfaces.plugin.MessageCalledPlugin;
 import com.yuier.yuni.common.utils.BotAction;
@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Plugin
-public class GenShinStart implements MessageCalledPlugin<OrderDetectorDefiner, OrderMatchedOut> {
+public class GenShinStart implements MessageCalledPlugin<OrderDetector, OrderMatchedOut> {
 
     @Override
     public BotAction run(MessageEvent messageEvent, OrderMatchedOut matchedOut) {
@@ -26,7 +26,7 @@ public class GenShinStart implements MessageCalledPlugin<OrderDetectorDefiner, O
     }
 
     @Override
-    public OrderDetectorDefiner detectorDefine() {
+    public OrderDetector detector() {
         return null;
     }
 }

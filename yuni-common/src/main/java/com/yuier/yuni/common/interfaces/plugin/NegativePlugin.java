@@ -1,6 +1,6 @@
 package com.yuier.yuni.common.interfaces.plugin;
 
-import com.yuier.yuni.common.interfaces.detector.definer.EventDetectorDefiner;
+import com.yuier.yuni.common.interfaces.detector.EventDetector;
 
 /**
  * @Title: NegativePlugin
@@ -9,7 +9,7 @@ import com.yuier.yuni.common.interfaces.detector.definer.EventDetectorDefiner;
  * @Date 2024/11/9 16:21
  * @description: 被动触发的插件
  */
-public interface NegativePlugin<T extends EventDetectorDefiner> {
+public interface NegativePlugin<T extends EventDetector> {
 
-    T detectorDefine();
+    T detector();
 }

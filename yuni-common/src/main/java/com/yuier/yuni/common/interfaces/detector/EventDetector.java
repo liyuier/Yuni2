@@ -9,8 +9,6 @@ package com.yuier.yuni.common.interfaces.detector;
  */
 public interface EventDetector {
 
-    void build();
-
     /**
      * @return  命中消息探测器
      */
