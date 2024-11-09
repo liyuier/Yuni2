@@ -3,14 +3,14 @@ package com.yuier.yuni.common.enums;
 import lombok.Getter;
 
 /**
- * @Title: YuniOrderArgContentTypeEnum
+ * @Title: OrderArgAcceptType
  * @Author yuier
  * @Package com.yuier.yuni.common.enums
  * @Date 2024/5/11 0:14
  * @description: 指令参数接收的内容类型枚举类
  */
 @Getter
-public enum YuniOrderArgContentTypeEnum {
+public enum OrderArgAcceptType {
 
     TEXT("text", "字符串文本"),
     NUMBER("number", "数字"),
@@ -22,7 +22,7 @@ public enum YuniOrderArgContentTypeEnum {
     private final String type;
     private final String description;
 
-    YuniOrderArgContentTypeEnum(String type, String description) {
+    OrderArgAcceptType(String type, String description) {
         this.type = type;
         this.description = description;
     }

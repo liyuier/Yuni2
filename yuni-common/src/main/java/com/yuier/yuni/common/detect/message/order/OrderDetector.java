@@ -1,5 +1,6 @@
 package com.yuier.yuni.common.detect.message.order;
 
+import com.yuier.yuni.common.interfaces.detector.EventDetector;
 import com.yuier.yuni.common.interfaces.detector.MessageDetector;
 import lombok.Data;
 import org.springframework.stereotype.Component;
@@ -11,7 +12,7 @@ import org.springframework.stereotype.Component;
  * @Date 2024/11/9 16:36
  * @description: 指令消息探测器
  * @Detail
- * 一条指令分为指令头 OrderHead、指令参数 OrderArgs、指令选项 OrderOptions。三者均实现指令段 OrderSeg 接口
+ * 一条指令分为指令头 OrderHead、指令参数 OrderArgContainer、指令选项 OrderOptions。三者均实现指令段 OrderElement 接口
  * 指令头
  *   一条指令的入口，最佳实践中，每条指令的指令头是唯一的
  * 指令参数
@@ -46,13 +47,28 @@ public class OrderDetector implements MessageDetector {
      * 指令参数
      * 跟在指令头后面。可选参数必须在必选参数后面
      */
-    private OrderArgs args;
+    private OrderArgContainer args;
 
     /**
      * 指令选项
      * 每个选项都是可选的，其结构分为选项标识与选项参数
      */
-    private OrderOptions options;
+    private OrderOptionContainer options;
+
+    /**
+     * 链式操作的操作对象
+     * 为什么我会写出这种代码？我开始怀疑自己的精神状态。。。
+     */
+    private static OrderDetector detector;
+
+    // fk Java
+    public static EventDetector build() {
+        detector = new OrderDetector();
+        detector.setHead(new OrderHead());
+        detector.setArgs(new OrderArgContainer());
+        detector.setOptions(new OrderOptionContainer());
+        return detector;
+    }
 
     @Override
     public Boolean hit() {
