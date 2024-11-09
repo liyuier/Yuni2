@@ -28,3 +28,7 @@ application.yml
 # IDEA
 .idea
 /.idea/
+**/mvnw
+**/mvnw.cmd
+**/.mvn
+**/target/
