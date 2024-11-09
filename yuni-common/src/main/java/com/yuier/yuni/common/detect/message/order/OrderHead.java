@@ -1,6 +1,6 @@
 package com.yuier.yuni.common.detect.message.order;
 
-import com.yuier.yuni.common.interfaces.detector.order.OrderSeg;
+import com.yuier.yuni.common.interfaces.detector.order.OrderElement;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -15,7 +15,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class OrderHead implements OrderSeg {
+public class OrderHead implements OrderElement {
 
     // 指令头字符串
     private String name;
