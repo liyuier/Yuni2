@@ -12,6 +12,15 @@ import lombok.NoArgsConstructor;
  * @Package com.yuier.yuni.core.domain.dto
  * @Date 2024/4/10 1:21
  * @description: OneBot 消息段类型
+ * @Detail
+ * 消息段为组成一条消息链的单位
+ * 典型的消息段结构如下
+ * {
+ *     "type": "text",
+ *     "data": {
+ *         "text": "纯文本内容"
+ *     }
+ * }
  */
 @Data
 @NoArgsConstructor

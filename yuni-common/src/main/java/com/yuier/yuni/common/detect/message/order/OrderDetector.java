@@ -1,7 +1,8 @@
 package com.yuier.yuni.common.detect.message.order;
 
-import com.yuier.yuni.common.interfaces.detector.EventDetector;
+import com.yuier.yuni.common.enums.OrderArgAcceptType;
 import com.yuier.yuni.common.interfaces.detector.MessageDetector;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.stereotype.Component;
 
@@ -34,6 +35,7 @@ import org.springframework.stereotype.Component;
 
 @Data
 @Component
+@AllArgsConstructor
 public class OrderDetector implements MessageDetector {
 
     private OrderDetector() {}
@@ -47,27 +49,82 @@ public class OrderDetector implements MessageDetector {
      * 指令参数
      * 跟在指令头后面。可选参数必须在必选参数后面
      */
-    private OrderArgContainer args;
+    private OrderArgContainer orderArgs;
 
     /**
      * 指令选项
      * 每个选项都是可选的，其结构分为选项标识与选项参数
      */
-    private OrderOptionContainer options;
+    private OrderOptionContainer orderOptions;
 
-    /**
-     * 链式操作的操作对象
-     * 为什么我会写出这种代码？我开始怀疑自己的精神状态。。。
-     */
-    private static OrderDetector detector;
+    public static class Builder {
+        private OrderHead head;
+        private OrderArgContainer args;
+        private OrderOptionContainer options;
 
-    // fk Java
-    public static EventDetector build() {
-        detector = new OrderDetector();
-        detector.setHead(new OrderHead());
-        detector.setArgs(new OrderArgContainer());
-        detector.setOptions(new OrderOptionContainer());
-        return detector;
+        public Builder setHead(String headName) {
+            this.head = new OrderHead(headName);
+            return this;
+        }
+
+        public Builder addRequiredArg(String name) {
+            args.addRequiredArg(name);
+            return this;
+        }
+
+        public Builder addRequiredArg(String argName, OrderArgAcceptType contentType) {
+            args.addRequiredArg(argName, contentType);
+            return this;
+        }
+
+        public Builder addRequiredArg(String argName, String helpInfo) {
+            args.addRequiredArg(argName, helpInfo);
+            return this;
+        }
+
+        public Builder addRequiredArg(String argName, OrderArgAcceptType contentType, String helpInfo) {
+            args.addRequiredArg(argName, contentType, helpInfo);
+            return this;
+        }
+
+        public Builder addRequiredArg(RequiredArg arg) {
+            args.addRequiredArg(arg);
+            return this;
+        }
+
+        public Builder addOptionalArg(String argName) {
+            args.addOptionalArg(argName);
+            return this;
+        }
+
+        public Builder addOptionalArg(String argName, OrderArgAcceptType contentType) {
+            args.addOptionalArg(argName, contentType);
+            return this;
+        }
+
+        public Builder addOptionalArg(String argName, String helpInfo) {
+            args.addOptionalArg(argName, helpInfo);
+            return this;
+        }
+
+        public Builder addOptionalArg(String argName, OrderArgAcceptType contentType, String helpInfo) {
+            args.addOptionalArg(argName, contentType, helpInfo);
+            return this;
+        }
+
+        public Builder addOptionalArg(OptionalArg arg) {
+            args.addOptionalArg(arg);
+            return this;
+        }
+
+        public Builder addOption(OrderOption option) {
+            options.addOption(option);
+            return this;
+        }
+
+        public OrderDetector build() {
+            return new OrderDetector(this.head, this.args, this.options);
+        }
     }
 
     @Override
