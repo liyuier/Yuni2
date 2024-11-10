@@ -5,10 +5,13 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.yuier.yuni.common.anno.JsonTypeDefine;
 import com.yuier.yuni.common.domain.event.OneBotEvent;
+import com.yuier.yuni.common.domain.event.message.chain.seg.ReMessageSeg;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
 
 /**
  * @Title: MessageEvent
@@ -65,7 +68,7 @@ public class ReMessageEvent extends OneBotEvent {
      * 消息内容
      * TODO 这里的消息链需要再进行处理
      */
-//    private ArrayList<ReMessageSeg> message;
+    private ArrayList<ReMessageSeg> message;
 
     /**
      * 原始消息内容

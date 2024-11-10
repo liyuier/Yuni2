@@ -1,6 +1,6 @@
 package com.yuier.yuni.common.interfaces.plugin;
 
-import com.yuier.yuni.common.domain.event.message.MessageEvent;
+import com.yuier.yuni.common.domain.event.message.ReMessageEvent;
 import com.yuier.yuni.common.interfaces.detector.MessageDetector;
 import com.yuier.yuni.common.interfaces.messagematchedout.MessageMatchedOut;
 import com.yuier.yuni.common.utils.BotAction;
@@ -14,5 +14,5 @@ import com.yuier.yuni.common.utils.BotAction;
  */
 public interface MessageCalledPlugin<T extends MessageDetector, S extends MessageMatchedOut> extends NegativePlugin<T>{
     // 插件入口
-    BotAction run(MessageEvent messageEvent, S matchedOut);
+    BotAction run(ReMessageEvent messageEvent, S matchedOut);
 }

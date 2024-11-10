@@ -1,6 +1,6 @@
 package com.yuier.yuni.common.domain.event.message.chain;
 
-import com.yuier.yuni.common.domain.event.message.MessageSeg;
+import com.yuier.yuni.common.domain.event.message.chain.seg.ReMessageSeg;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.stereotype.Component;
@@ -20,5 +20,5 @@ import java.util.ArrayList;
 @AllArgsConstructor
 public class ReMessageChain {
 
-    private ArrayList<MessageSeg> content;
+    private ArrayList<ReMessageSeg> content;
 }

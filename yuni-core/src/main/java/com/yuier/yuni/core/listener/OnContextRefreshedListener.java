@@ -56,7 +56,7 @@ public class OnContextRefreshedListener implements ApplicationListener<ContextRe
             if(CollectionUtils.isEmpty(subClazzSet)){
                 continue;
             }
-            // 注册子类，demo 代码，请自行修改
+            // 遍历子类
             for (Class<?> subClazz : subClazzSet) {
                 // 跳过接口和抽象类
                 if(subClazz.isInterface() || Modifier.isAbstract(subClazz.getModifiers())){
@@ -67,6 +67,12 @@ public class OnContextRefreshedListener implements ApplicationListener<ContextRe
                 if (extendClassDefine == null) {
                     continue;
                 }
+                /**
+                 * ObjectMapper.registerSubtypes 说明  -- 来源于文心一言
+                 * 在 Jackson 库中，ObjectMapper 的 registerSubtypes 方法是通过 Java 的反射机制来识别并注册子类的。
+                 * 当你调用 registerSubtypes(Dog.class, Cat.class) 时，Jackson 会检查这些类的定义，发现它们都是 Animal 类的子类（因为 Dog 和 Cat 都继承自 Animal）。
+                 * 这样，Jackson 就能够在序列化和反序列化过程中正确地处理这些子类。
+                 */
                 objectMapper.registerSubtypes(new NamedType(subClazz, extendClassDefine.value()));
             }
         }
