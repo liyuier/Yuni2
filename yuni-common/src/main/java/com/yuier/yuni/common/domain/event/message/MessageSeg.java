@@ -1,6 +1,6 @@
 package com.yuier.yuni.common.domain.event.message;
 
-import com.yuier.yuni.common.domain.event.message.data.MessageData;
+import com.yuier.yuni.common.domain.event.message.chain.seg.data.MessageData;
 import com.yuier.yuni.common.enums.MessageDataEnum;
 import lombok.AllArgsConstructor;
 import lombok.Data;

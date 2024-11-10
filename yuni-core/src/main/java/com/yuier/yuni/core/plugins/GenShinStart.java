@@ -3,7 +3,7 @@ package com.yuier.yuni.core.plugins;
 import com.yuier.yuni.common.anno.Plugin;
 import com.yuier.yuni.common.detect.message.matchedout.OrderMatchedOut;
 import com.yuier.yuni.common.detect.message.order.OrderDetector;
-import com.yuier.yuni.common.domain.event.message.MessageEvent;
+import com.yuier.yuni.common.domain.event.message.ReMessageEvent;
 import com.yuier.yuni.common.interfaces.plugin.MessageCalledPlugin;
 import com.yuier.yuni.common.utils.BotAction;
 import org.springframework.stereotype.Component;
@@ -21,7 +21,7 @@ import org.springframework.stereotype.Component;
 public class GenShinStart implements MessageCalledPlugin<OrderDetector, OrderMatchedOut> {
 
     @Override
-    public BotAction run(MessageEvent messageEvent, OrderMatchedOut matchedOut) {
+    public BotAction run(ReMessageEvent messageEvent, OrderMatchedOut matchedOut) {
         return null;
     }
 
