@@ -1,6 +1,6 @@
 package com.yuier.yuni.common.interfaces.plugin;
 
-import com.yuier.yuni.common.domain.message.MessageEvent;
+import com.yuier.yuni.common.domain.event.message.MessageEvent;
 import com.yuier.yuni.common.interfaces.detector.MessageDetector;
 import com.yuier.yuni.common.interfaces.messagematchedout.MessageMatchedOut;
 import com.yuier.yuni.common.utils.BotAction;
