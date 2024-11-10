@@ -18,7 +18,6 @@ public enum OneBotEventEnum {
     META("meta_event", "元事件"),
     MESSAGE_SENT("message_sent", "bot 自身发送消息事件");
 
-
     private final String eventType;
     private final String description;
 

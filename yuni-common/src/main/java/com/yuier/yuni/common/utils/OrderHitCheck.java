@@ -1,9 +1,9 @@
 package com.yuier.yuni.common.utils;
 
-import com.yuier.yuni.common.domain.message.MessageChain;
-import com.yuier.yuni.common.domain.message.MessageChainForOrder;
-import com.yuier.yuni.common.domain.message.MessageSeg;
-import com.yuier.yuni.common.domain.message.data.TextData;
+import com.yuier.yuni.common.domain.event.message.MessageChain;
+import com.yuier.yuni.common.domain.event.message.MessageChainForOrder;
+import com.yuier.yuni.common.domain.event.message.MessageSeg;
+import com.yuier.yuni.common.domain.event.message.data.TextData;
 import com.yuier.yuni.common.enums.MessageDataEnum;
 
 /**
@@ -19,7 +19,7 @@ public class OrderHitCheck {
     /**
      * 为了方便检查消息是否命中了指令探测器，需要对消息进行预处理
      * 具体思路为：
-     *   1. 将消息段 MessageSeg 作为独立单位拆出保存、
+     *   1. 将消息段 ReMessageSeg 作为独立单位拆出保存、
      *   2. 对于文本消息，如果字符串中存在空格，以空格为分割符，将一个 text 类型的消息段拆分出多个 text 类型的消息段
      *   3. 对于包含回复类型消息段的消息链
      *     QQ 发出回复消息时，默认携带一个目标为 对象消息发出者 的 @ 消息段. 此消息段会干扰探测
