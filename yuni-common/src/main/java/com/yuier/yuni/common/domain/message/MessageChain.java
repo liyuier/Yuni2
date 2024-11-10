@@ -18,6 +18,9 @@ import java.util.ArrayList;
  * @Package com.yuier.yuni.core.domain.message
  * @Date 2024/4/14 3:21
  * @description: 消息链实体类
+ * @Detail
+ * 消息链解析消息事件而来，是轻量化的消息事件
+ * 我承认这个设计有些失败，我也许需要推倒重做
  */
 @Data
 @Component
