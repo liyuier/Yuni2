@@ -1,7 +1,11 @@
 package com.yuier.yuni.common.detect.message.order;
 
+import com.yuier.yuni.common.detect.message.matchedout.OrderMatchedOut;
+import com.yuier.yuni.common.domain.event.OneBotEvent;
+import com.yuier.yuni.common.domain.event.message.MessageEvent;
 import com.yuier.yuni.common.enums.OrderArgAcceptType;
 import com.yuier.yuni.common.interfaces.detector.MessageDetector;
+import com.yuier.yuni.common.interfaces.messagematchedout.MessageMatchedOut;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.stereotype.Component;
@@ -56,6 +60,11 @@ public class OrderDetector implements MessageDetector {
      * 每个选项都是可选的，其结构分为选项标识与选项参数
      */
     private OrderOptionContainer orderOptions;
+
+    /**
+     * 由消息探测器解析出来的玩意
+     */
+    private OrderMatchedOut matchedOut;
 
     public static class Builder {
         private OrderHead head;
@@ -123,12 +132,12 @@ public class OrderDetector implements MessageDetector {
         }
 
         public OrderDetector build() {
-            return new OrderDetector(this.head, this.args, this.options);
+            return new OrderDetector(this.head, this.args, this.options, new OrderMatchedOut());
         }
     }
 
     @Override
-    public Boolean hit() {
+    public Boolean hit(MessageEvent event) {
         return null;
     }
 
