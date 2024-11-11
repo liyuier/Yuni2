@@ -20,6 +20,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @JsonTypeDefine("face")
 @EqualsAndHashCode(callSuper = true)
-public class FaceSeg extends ReMessageSeg {
+public class FaceSeg extends MessageSeg {
     FaceData data;
 }

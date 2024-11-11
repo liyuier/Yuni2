@@ -21,7 +21,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @JsonTypeDefine("group")
-public class GroupMessageEvent extends ReMessageEvent{
+public class GroupMessageEvent extends MessageEvent {
     // 群号
     private Long groupId;
 

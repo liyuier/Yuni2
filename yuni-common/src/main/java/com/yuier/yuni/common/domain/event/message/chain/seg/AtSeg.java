@@ -20,6 +20,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @JsonTypeDefine("at")
 @EqualsAndHashCode(callSuper = true)
-public class AtSeg extends ReMessageSeg {
+public class AtSeg extends MessageSeg {
     AtData data;
 }

@@ -20,6 +20,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @JsonTypeDefine("text")
 @EqualsAndHashCode(callSuper = true)
-public class TextSeg extends ReMessageSeg {
+public class TextSeg extends MessageSeg {
     TextData data;
 }

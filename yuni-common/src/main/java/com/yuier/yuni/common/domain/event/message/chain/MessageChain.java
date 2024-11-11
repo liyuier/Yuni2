@@ -1,6 +1,6 @@
 package com.yuier.yuni.common.domain.event.message.chain;
 
-import com.yuier.yuni.common.domain.event.message.chain.seg.ReMessageSeg;
+import com.yuier.yuni.common.domain.event.message.chain.seg.MessageSeg;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.stereotype.Component;
@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 
 /**
- * @Title: ReMessageChain
+ * @Title: MessageChain
  * @Author yuier
  * @Package com.yuier.yuni.common.domain.event.message.chain
  * @Date 2024/11/10 23:24
@@ -18,7 +18,7 @@ import java.util.ArrayList;
 @Data
 @Component
 @AllArgsConstructor
-public class ReMessageChain {
+public class MessageChain {
 
-    private ArrayList<ReMessageSeg> content;
+    private ArrayList<MessageSeg> content;
 }

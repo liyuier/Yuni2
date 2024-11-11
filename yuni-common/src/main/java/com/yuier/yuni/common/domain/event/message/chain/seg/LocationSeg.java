@@ -20,6 +20,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @JsonTypeDefine("location")
 @EqualsAndHashCode(callSuper = true)
-public class LocationSeg extends ReMessageSeg {
+public class LocationSeg extends MessageSeg {
     LocationData data;
 }

@@ -20,6 +20,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @JsonTypeDefine("poke")
 @EqualsAndHashCode(callSuper = true)
-public class PokeSeg extends ReMessageSeg {
+public class PokeSeg extends MessageSeg {
     PokeData data;
 }

@@ -18,6 +18,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class UnknownSeg extends ReMessageSeg {
+public class UnknownSeg extends MessageSeg {
     UnknownData data;
 }

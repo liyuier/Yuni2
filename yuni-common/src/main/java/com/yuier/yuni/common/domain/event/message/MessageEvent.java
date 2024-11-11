@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.yuier.yuni.common.anno.JsonTypeDefine;
 import com.yuier.yuni.common.domain.event.OneBotEvent;
-import com.yuier.yuni.common.domain.event.message.chain.seg.ReMessageSeg;
+import com.yuier.yuni.common.domain.event.message.chain.seg.MessageSeg;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -31,9 +31,9 @@ import java.util.ArrayList;
 @JsonTypeDefine("message")
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME,  // 使用子类名称来自动适配子类
         property = "message_type",  // 指定配置子类型的字段为 messageType
-        defaultImpl = ReMessageEvent.class,  // 未设置 messageType 时默认的解析类型，这里设为 OneBotEvent 本身
+        defaultImpl = MessageEvent.class,  // 未设置 messageType 时默认的解析类型，这里设为 OneBotEvent 本身
         visible = true)  // 反序列化时 property 配置的字段是否解析出值放在结果中
-public class ReMessageEvent extends OneBotEvent {
+public class MessageEvent extends OneBotEvent {
     /**
      * 消息类型。
      * - private 私聊消息
@@ -68,7 +68,7 @@ public class ReMessageEvent extends OneBotEvent {
      * 消息内容
      * TODO 这里的消息链需要再进行处理
      */
-    private ArrayList<ReMessageSeg> message;
+    private ArrayList<MessageSeg> message;
 
     /**
      * 原始消息内容
