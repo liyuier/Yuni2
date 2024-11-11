@@ -20,6 +20,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @JsonTypeDefine("anonymous")
 @EqualsAndHashCode(callSuper = true)
-public class AnonymousSeg extends ReMessageSeg {
+public class AnonymousSeg extends MessageSeg {
     AnonymousData data;
 }

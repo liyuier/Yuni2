@@ -20,6 +20,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @JsonTypeDefine("share")
 @EqualsAndHashCode(callSuper = true)
-public class ShareSeg extends ReMessageSeg {
+public class ShareSeg extends MessageSeg {
     ShareData data;
 }

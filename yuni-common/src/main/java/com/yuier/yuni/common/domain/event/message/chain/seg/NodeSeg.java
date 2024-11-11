@@ -20,6 +20,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @JsonTypeDefine("node")
 @EqualsAndHashCode(callSuper = true)
-public class NodeSeg extends ReMessageSeg {
+public class NodeSeg extends MessageSeg {
     NodeData data;
 }

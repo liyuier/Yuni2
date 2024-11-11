@@ -20,6 +20,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @JsonTypeDefine("rps")
 @EqualsAndHashCode(callSuper = true)
-public class RpsSeg extends ReMessageSeg {
+public class RpsSeg extends MessageSeg {
     RpsData data;
 }

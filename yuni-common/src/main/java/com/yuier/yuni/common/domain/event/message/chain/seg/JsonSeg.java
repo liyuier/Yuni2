@@ -20,6 +20,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @JsonTypeDefine("json")
 @EqualsAndHashCode(callSuper = true)
-public class JsonSeg extends ReMessageSeg {
+public class JsonSeg extends MessageSeg {
     JsonData data;
 }

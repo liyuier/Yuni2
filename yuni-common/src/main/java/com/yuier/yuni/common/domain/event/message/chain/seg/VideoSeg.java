@@ -20,6 +20,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @JsonTypeDefine("video")
 @EqualsAndHashCode(callSuper = true)
-public class VideoSeg extends ReMessageSeg {
+public class VideoSeg extends MessageSeg {
     VideoData data;
 }

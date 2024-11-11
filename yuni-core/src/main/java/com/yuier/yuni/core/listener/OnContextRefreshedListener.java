@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.jsontype.NamedType;
 import com.yuier.yuni.common.anno.JsonTypeDefine;
 import com.yuier.yuni.core.randosoru.Randosoru;
 import org.reflections.Reflections;
-import org.reflections.scanners.SubTypesScanner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;

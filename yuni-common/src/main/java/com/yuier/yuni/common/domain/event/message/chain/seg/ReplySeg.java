@@ -20,6 +20,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @JsonTypeDefine("reply")
 @EqualsAndHashCode(callSuper = true)
-public class ReplySeg extends ReMessageSeg {
+public class ReplySeg extends MessageSeg {
     ReplyData data;
 }
