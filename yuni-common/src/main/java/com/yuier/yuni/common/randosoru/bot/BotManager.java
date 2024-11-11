@@ -1,6 +1,6 @@
-package com.yuier.yuni.core.randosoru.bot;
+package com.yuier.yuni.common.randosoru.bot;
 
-import com.yuier.yuni.core.randosoru.bot.user.UserManager;
+import com.yuier.yuni.common.randosoru.bot.user.UserManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

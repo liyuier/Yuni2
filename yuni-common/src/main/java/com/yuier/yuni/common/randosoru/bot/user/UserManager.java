@@ -1,4 +1,4 @@
-package com.yuier.yuni.core.randosoru.bot.user;
+package com.yuier.yuni.common.randosoru.bot.user;
 
 import org.springframework.stereotype.Component;
 
