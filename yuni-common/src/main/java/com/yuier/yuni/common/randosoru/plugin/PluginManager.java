@@ -81,8 +81,6 @@ public class PluginManager {
                 buildYuniPluginFromPluginBean((PluginBean) bean);
             }
         }
-        System.out.println("OK");
-
     }
 
     /**

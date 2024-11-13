@@ -12,6 +12,9 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Map;
 
+import static com.yuier.yuni.common.constants.OneBotApiRetCode.ASYNC;
+import static com.yuier.yuni.common.constants.OneBotApiRetCode.OK;
+
 /**
  * @Title: CallOneBotUtil
  * @Author yuier
@@ -30,7 +33,7 @@ public class CallOneBotUtil {
      * @return  封装好的 ApiData 实体类
      * @param <T>  限定返回类型
      */
-    public static <T extends OneBotApiData> ApiData<T> getOneBotForEntity(String url, Class<T> responseDataType) {
+    public static <T extends OneBotApiData> T getOneBotForEntity(String url, Class<T> responseDataType) {
         // 获取请求头，设置响应内容类型为 JSON
         HttpHeaders header = createJsonContentHeader();
         ResponseEntity<String> responseEntity = null;
@@ -56,7 +59,7 @@ public class CallOneBotUtil {
      * @return  封装好的 ApiData 实体类
      * @param <T>  限定返回类型
      */
-    public static <T extends OneBotApiData> ApiData<T> getOneBotForEntity(String url, Class<T> responseDataType, Object... uriVariables) {
+    public static <T extends OneBotApiData> T getOneBotForEntity(String url, Class<T> responseDataType, Object... uriVariables) {
         ResponseEntity<String> responseEntity = new RestTemplate().getForEntity(url, String.class, uriVariables);
         if (responseEntity.getStatusCode().is2xxSuccessful()) {
             return parseJsonResult(responseEntity, responseDataType);
@@ -73,7 +76,7 @@ public class CallOneBotUtil {
      * @return  封装好的 ApiData 实体类
      * @param <T>  限定返回类型
      */
-    public static <T extends OneBotApiData> ApiData<T> getOneBotForEntity(String url, Class<T> responseDataType, Map<String, ?> uriVariables) {
+    public static <T extends OneBotApiData> T getOneBotForEntity(String url, Class<T> responseDataType, Map<String, ?> uriVariables) {
         ResponseEntity<String> responseEntity = new RestTemplate().getForEntity(url, String.class, uriVariables);
         if (responseEntity.getStatusCode().is2xxSuccessful()) {
             return parseJsonResult(responseEntity, responseDataType);
@@ -91,7 +94,7 @@ public class CallOneBotUtil {
      * @param <T>  限定返回类型
      * @param <S>  请求数据实体类泛型
      */
-    public static <T extends OneBotApiData, S> ApiData<T> postOneBotForEntity(String url, S requestBody, Class<T> responseDataType) {
+    public static <T extends OneBotApiData, S> T postOneBotForEntity(String url, S requestBody, Class<T> responseDataType) {
         // 组装请求头，设置响应类型为 JSON 类型
         ResponseEntity<String> responseEntity  = null;
         try {
@@ -116,7 +119,7 @@ public class CallOneBotUtil {
      * @param <T>  限定返回类型
      * @param <S>  请求数据实体类泛型
      */
-    public static <T extends OneBotApiData, S> ApiData<T> postOneBotForEntity(String url, S requestBody, Class<T> responseDataType, Object... uriVariables) {
+    public static <T extends OneBotApiData, S> T postOneBotForEntity(String url, S requestBody, Class<T> responseDataType, Object... uriVariables) {
         ResponseEntity<String> responseEntity  = null;
         responseEntity = new RestTemplate().postForEntity(url, createHeadForJsonContentType(requestBody), String.class, uriVariables);
         if (responseEntity.getStatusCode().is2xxSuccessful()) {
@@ -136,7 +139,7 @@ public class CallOneBotUtil {
      * @param <T>  限定返回类型
      * @param <S>  请求数据实体类泛型
      */
-    public static <T extends OneBotApiData, S> ApiData<T> postOneBotForEntity(String url, S requestBody, Class<T> responseDataType, Map<String, ?> uriVariables) {
+    public static <T extends OneBotApiData, S> T postOneBotForEntity(String url, S requestBody, Class<T> responseDataType, Map<String, ?> uriVariables) {
         ResponseEntity<String> responseEntity  = null;
         responseEntity = new RestTemplate().postForEntity(url, createHeadForJsonContentType(requestBody), String.class, uriVariables);
         if (responseEntity.getStatusCode().is2xxSuccessful()) {
@@ -147,16 +150,34 @@ public class CallOneBotUtil {
     }
 
     /**
+     * 处理 OneBot 响应
+     * @param response  OneBot 响应体
+     * @return  ApiData 中的 data 字段
+     * @param <T>  限制入参实现了 OneBotApiData 接口
+     */
+    private static <T extends OneBotApiData> T checkOneBotResponse(ApiData<T> response) {
+        switch (response.getRetcode()) {
+            case OK:
+                break;
+            case ASYNC:
+                throw new RuntimeException("已提交异步处理。");
+            default:
+                throw new RuntimeException("OneBot API 调用失败，响应信息: " + response);
+        }
+        return response.getData();
+    }
+
+    /**
      * 将 JSON 字符串格式的响应结果解析为 ApiData<T> 类型
      * @param responseEntity  响应体
      * @param responseDataType  需要获取的 OneBot API 响应结果的 data 字段类型
      * @return  ApiData<T> 类型的响应结构
      * @param <T>  限定返回值为 OneBotApiData 类型
      */
-    public static <T extends OneBotApiData> ApiData<T> parseJsonResult(ResponseEntity<String> responseEntity, Class<T> responseDataType) {
+    public static <T extends OneBotApiData> T parseJsonResult(ResponseEntity<String> responseEntity, Class<T> responseDataType) {
         String result = responseEntity.getBody();
         ApiData<T> apiData = JSONUtil.toBean(result, ApiData.class);
-        return apiData.build(JSONUtil.toBean((JSONObject) apiData.getData(), responseDataType));
+        return checkOneBotResponse(apiData.build(JSONUtil.toBean((JSONObject) apiData.getData(), responseDataType)));
     }
 
     /**
