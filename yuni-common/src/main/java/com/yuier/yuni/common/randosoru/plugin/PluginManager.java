@@ -2,6 +2,7 @@ package com.yuier.yuni.common.randosoru.plugin;
 
 import com.yuier.yuni.common.anno.Plugin;
 import com.yuier.yuni.common.domain.event.OneBotEvent;
+import com.yuier.yuni.common.domain.event.message.MessageEvent;
 import com.yuier.yuni.common.domain.plugin.YuniMessagePlugin;
 import com.yuier.yuni.common.domain.plugin.YuniNegativePlugin;
 import com.yuier.yuni.common.domain.plugin.YuniPlugin;
@@ -10,6 +11,7 @@ import com.yuier.yuni.common.interfaces.plugin.MessageCalledPluginBean;
 import com.yuier.yuni.common.interfaces.plugin.NegativePluginBean;
 import com.yuier.yuni.common.interfaces.plugin.PluginBean;
 import com.yuier.yuni.common.utils.BeanCopyUtils;
+import com.yuier.yuni.common.utils.MessageMatcher;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -35,15 +37,43 @@ public class PluginManager {
     @Autowired
     ApplicationContext applicationContext;
 
-    // 被动类插件集合
-    private HashMap<String, YuniNegativePlugin> negativePluginMap;
+    // 消息事件触发的插件集合
+    private HashMap<String, YuniMessagePlugin> messagePluginMap;
 
     public PluginManager() {
-        negativePluginMap = new HashMap<>();
+        messagePluginMap = new HashMap<>();
     }
 
     // 初始化
     public void initialize() {
+        buildYuniPlugins();
+    }
+
+    /**
+     * 匹配 OneBot 上报事件，为每个插件
+     * @param event OneBot 事件
+     * @param <T> 限定入参为 OneBotEvent 类型
+     */
+    public <T extends OneBotEvent> void matchEventForPlugin(T event) {
+        if (event instanceof MessageEvent) {
+            matchMessageEvent((MessageEvent) event);
+        }
+    }
+
+    /**
+     * 匹配消息事件
+     * @param event 消息事件
+     */
+    public void matchMessageEvent(MessageEvent event) {
+        for (YuniMessagePlugin plugin: messagePluginMap.values()) {
+            Boolean matchResult = MessageMatcher.matchMessage(event, plugin);
+        }
+    }
+
+    /**
+     * 初始化插件
+     */
+    private void buildYuniPlugins() {
         // 扫描所有加了 @PluginBean 注解的插件
         Map<String, Object> pluginBeans = applicationContext.getBeansWithAnnotation(Plugin.class);
         for (Object bean: pluginBeans.values()) {
@@ -52,6 +82,7 @@ public class PluginManager {
             }
         }
         System.out.println("OK");
+
     }
 
     /**
@@ -136,7 +167,11 @@ public class PluginManager {
         yuniMessagePlugin.setListener(invokeBeanNoArgMethods(targetPluginBean, "listenAt"));
 
         // 构建结束（たぶん），将插件加入 negativePluginMap 中
-        negativePluginMap.put(yuniMessagePlugin.getId(), yuniMessagePlugin);
+        if (messagePluginMap.containsKey(yuniMessagePlugin.getId())) {
+            throw new RuntimeException("插件 " + yuniMessagePlugin.getPluginBean().getClass().getName() +
+                    " 的 ID " + yuniMessagePlugin.getId() + "已经存在!");
+        }
+        messagePluginMap.put(yuniMessagePlugin.getId(), yuniMessagePlugin);
     }
 
     /**

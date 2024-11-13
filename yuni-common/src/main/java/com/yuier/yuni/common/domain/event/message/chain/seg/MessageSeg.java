@@ -2,6 +2,8 @@ package com.yuier.yuni.common.domain.event.message.chain.seg;
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.yuier.yuni.common.domain.event.message.MessageEvent;
+import com.yuier.yuni.common.domain.event.message.chain.seg.data.TextData;
+import com.yuier.yuni.common.enums.MessageDataEnum;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -39,4 +41,8 @@ import lombok.NoArgsConstructor;
         visible = true)  // 反序列化时 property 配置的字段是否解析出值放在结果中
 public class MessageSeg {
     private String type;
+
+    public Boolean typeOf(MessageDataEnum messageDataEnum) {
+        return type.equals(messageDataEnum.toString());
+    }
 }

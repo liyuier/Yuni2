@@ -17,9 +17,13 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 @JsonTypeDefine("text")
 @EqualsAndHashCode(callSuper = true)
 public class TextSeg extends MessageSeg {
     TextData data;
+
+    public TextSeg(TextData textData) {
+        this.setType("text");
+        this.data = textData;
+    }
 }

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.yuier.yuni.common.anno.JsonTypeDefine;
 import com.yuier.yuni.common.domain.event.OneBotEvent;
+import com.yuier.yuni.common.domain.event.message.chain.MessageChain;
 import com.yuier.yuni.common.domain.event.message.chain.seg.MessageSeg;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -69,6 +70,11 @@ public class MessageEvent extends OneBotEvent {
      * TODO 这里的消息链需要再进行处理
      */
     private ArrayList<MessageSeg> message;
+
+    /**
+     * 消息链
+     */
+    private MessageChain messageChain;
 
     /**
      * 原始消息内容

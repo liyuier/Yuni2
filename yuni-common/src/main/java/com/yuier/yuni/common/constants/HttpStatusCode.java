@@ -1,0 +1,89 @@
+package com.yuier.yuni.common.constants;
+
+/**
+ * @Title: HttpStatusCode
+ * @Author yuier
+ * @Package com.yuier.yuni.common.constants
+ * @Date 2024/11/14 1:08
+ * @description: HTTP 状态码
+ * Created By ERNIE Bot
+ */
+public final class HttpStatusCode {
+
+    // 1xx Informational
+    public static final int CONTINUE = 100;
+    public static final int SWITCHING_PROTOCOLS = 101;
+    public static final int PROCESSING = 102; // WebDAV
+
+    // 2xx Success
+    public static final int OK = 200;
+    public static final int CREATED = 201;
+    public static final int ACCEPTED = 202;
+    public static final int NON_AUTHORITATIVE_INFORMATION = 203;
+    public static final int NO_CONTENT = 204;
+    public static final int RESET_CONTENT = 205;
+    public static final int PARTIAL_CONTENT = 206;
+    public static final int MULTI_STATUS = 207; // WebDAV
+    public static final int ALREADY_REPORTED = 208; // WebDAV
+    public static final int IM_USED = 226; // WebDAV
+
+    // 3xx Redirection
+    public static final int MULTIPLE_CHOICES = 300;
+    public static final int MOVED_PERMANENTLY = 301;
+    public static final int FOUND = 302;
+    public static final int SEE_OTHER = 303;
+    public static final int NOT_MODIFIED = 304;
+    public static final int USE_PROXY = 305;
+    public static final int SWITCH_PROXY = 306;
+    public static final int TEMPORARY_REDIRECT = 307;
+    public static final int PERMANENT_REDIRECT = 308; // RFC 7538
+
+    // 4xx Client Error
+    public static final int BAD_REQUEST = 400;
+    public static final int UNAUTHORIZED = 401;
+    public static final int PAYMENT_REQUIRED = 402;
+    public static final int FORBIDDEN = 403;
+    public static final int NOT_FOUND = 404;
+    public static final int METHOD_NOT_ALLOWED = 405;
+    public static final int NOT_ACCEPTABLE = 406;
+    public static final int PROXY_AUTHENTICATION_REQUIRED = 407;
+    public static final int REQUEST_TIMEOUT = 408;
+    public static final int CONFLICT = 409;
+    public static final int GONE = 410;
+    public static final int LENGTH_REQUIRED = 411;
+    public static final int PRECONDITION_FAILED = 412;
+    public static final int REQUEST_ENTITY_TOO_LARGE = 413;
+    public static final int REQUEST_URI_TOO_LONG = 414;
+    public static final int UNSUPPORTED_MEDIA_TYPE = 415;
+    public static final int REQUESTED_RANGE_NOT_SATISFIABLE = 416;
+    public static final int EXPECTATION_FAILED = 417;
+    public static final int I_AM_A_TEAPOT = 418; // RFC 2324
+    public static final int MISDIRECTED_REQUEST = 421; // RFC 7540
+    public static final int UNPROCESSABLE_ENTITY = 422; // WebDAV
+    public static final int LOCKED = 423; // WebDAV
+    public static final int FAILED_DEPENDENCY = 424; // WebDAV
+    public static final int TOO_EARLY = 425; // RFC 8470
+    public static final int UPGRADE_REQUIRED = 426; // RFC 7231
+    public static final int PRECONDITION_REQUIRED = 428; // RFC 6585
+    public static final int TOO_MANY_REQUESTS = 429; // RFC 6585
+    public static final int REQUEST_HEADER_FIELDS_TOO_LARGE = 431; // RFC 6585
+    public static final int UNAVAILABLE_FOR_LEGAL_REASONS = 451; // RFC 7725
+
+    // 5xx Server Error
+    public static final int INTERNAL_SERVER_ERROR = 500;
+    public static final int NOT_IMPLEMENTED = 501;
+    public static final int BAD_GATEWAY = 502;
+    public static final int SERVICE_UNAVAILABLE = 503;
+    public static final int GATEWAY_TIMEOUT = 504;
+    public static final int HTTP_VERSION_NOT_SUPPORTED = 505;
+    public static final int VARIANT_ALSO_NEGOTIATES = 506; // RFC 2295
+    public static final int INSUFFICIENT_STORAGE = 507; // WebDAV
+    public static final int LOOP_DETECTED = 508; // RFC 5842
+    public static final int NOT_EXTENDED = 510; // RFC 2774
+    public static final int NETWORK_AUTHENTICATION_REQUIRED = 511; // RFC 6585
+
+    // Constructor
+    private HttpStatusCode() {
+        // Private constructor to prevent instantiation
+    }
+}
