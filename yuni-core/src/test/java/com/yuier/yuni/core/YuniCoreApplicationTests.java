@@ -1,7 +1,6 @@
 package com.yuier.yuni.core;
 
 import com.yuier.yuni.common.detect.message.order.RequiredArg;
-import com.yuier.yuni.common.domain.onebotapi.ApiData;
 import com.yuier.yuni.common.domain.onebotapi.data.GetLoginInfoResData;
 import com.yuier.yuni.common.utils.BotAction;
 import com.yuier.yuni.common.utils.CallOneBotUtil;
@@ -19,7 +18,7 @@ class YuniCoreApplicationTests {
 
     @Test
     void callOneBot() {
-        ApiData<GetLoginInfoResData> oneBotForEntity = CallOneBotUtil.getOneBotForEntity("http://127.0.0.1:3010/get_login_info", GetLoginInfoResData.class);
+        GetLoginInfoResData oneBotForEntity = CallOneBotUtil.getOneBotForEntity("http://127.0.0.1:3010/get_login_info", GetLoginInfoResData.class);
         GetLoginInfoResData loginInfo = BotAction.getLoginInfo();
         System.out.println("OK");
 
