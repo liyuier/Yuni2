@@ -7,9 +7,11 @@ package com.yuier.yuni.common.constants;
  * @Date 2024/4/10 23:57
  * @description: 系统常量类
  */
-public class SystemConstants {
+public final class SystemConstants {
 
-    public static final Integer FIRST_INDEX = 0;
+    public static final int FIRST_INDEX = 0;
+
+    public static final String BLANK_SPACE = " ";
 
     public static final Integer HTTP_OK = 200;
     public static final String ONEBOT_OK_STATUS = "ok";
