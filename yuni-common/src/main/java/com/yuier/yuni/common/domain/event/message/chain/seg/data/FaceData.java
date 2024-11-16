@@ -5,6 +5,7 @@ import com.yuier.yuni.common.anno.MessageDataEntity;
 import com.yuier.yuni.common.enums.MessageDataEnum;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -15,11 +16,13 @@ import org.springframework.stereotype.Component;
  * @Date 2024/4/14 21:38
  * @description: QQ 表情消息 data 类
  */
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @MessageDataEntity(dataType = MessageDataEnum.FACE)
-public class FaceData {
+public class FaceData extends MessageData {
     private String id;
 
     @Override

@@ -4,6 +4,7 @@ import com.yuier.yuni.common.anno.MessageDataEntity;
 import com.yuier.yuni.common.enums.MessageDataEnum;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 /**
@@ -13,11 +14,13 @@ import lombok.NoArgsConstructor;
  * @Date 2024/4/14 22:14
  * @description: 音乐分享消息段（发） data 类
  */
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @MessageDataEntity(dataType = MessageDataEnum.MUSIC)
-public class MusicData {
+public class MusicData extends MessageData {
     /**
      * 可能的值：qq 163 xm
      * 分别表示使用 QQ 音乐、网易云音乐、虾米音乐

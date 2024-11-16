@@ -17,9 +17,8 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 @JsonTypeDefine("forward")
 @EqualsAndHashCode(callSuper = true)
-public class ForwardSeg extends MessageSeg {
-    ForwardData data;
+public class ForwardSeg extends MessageSeg<ForwardData> {
+
 }

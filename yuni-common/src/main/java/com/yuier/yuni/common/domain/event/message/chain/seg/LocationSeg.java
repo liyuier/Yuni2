@@ -17,9 +17,8 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 @JsonTypeDefine("location")
 @EqualsAndHashCode(callSuper = true)
-public class LocationSeg extends MessageSeg {
-    LocationData data;
+public class LocationSeg extends MessageSeg<LocationData> {
+
 }

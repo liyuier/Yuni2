@@ -17,9 +17,8 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 @JsonTypeDefine("shake")
 @EqualsAndHashCode(callSuper = true)
-public class ShakeSeg extends MessageSeg {
-    ShakeData data;
+public class ShakeSeg extends MessageSeg<ShakeData> {
+
 }

@@ -12,7 +12,7 @@ import com.yuier.yuni.common.domain.event.OneBotEvent;
 public interface EventDetector<T extends OneBotEvent> {
 
     /**
-     * @return  命中消息探测器
+     * @return  检查消息是否命中消息探测器
      */
     Boolean hit(T event);
 }

@@ -120,6 +120,14 @@ public class OrderArgContainer implements OrderElement {
         optionalArgList.add(arg);
     }
 
+    /**
+     * 返回必需参数的数量
+     * @return 必需参数数量
+     */
+    public Integer getRequiredArgNum() {
+        return requiredArgList.size();
+    }
+
     @Override
     public Boolean valid() {
         boolean flag = true;

@@ -4,6 +4,7 @@ import com.yuier.yuni.common.anno.MessageDataEntity;
 import com.yuier.yuni.common.enums.MessageDataEnum;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 /**
@@ -13,11 +14,13 @@ import lombok.NoArgsConstructor;
  * @Date 2024/4/14 21:42
  * @description: 图片消息段 data 类
  */
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @MessageDataEntity(dataType = MessageDataEnum.IMAGE)
-public class ImageData {
+public class ImageData extends MessageData {
     /**
      * 文件名
      * 发送时，除了支持使用收到的图片文件名直接发送外，还支持：

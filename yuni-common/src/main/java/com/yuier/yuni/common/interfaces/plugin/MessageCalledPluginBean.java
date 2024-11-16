@@ -12,7 +12,7 @@ import com.yuier.yuni.common.interfaces.detector.MessageDetector;
  * @description: 消息事件触发的插件接口
  */
 
-public interface MessageCalledPluginBean<T extends MessageDetector> extends NegativePluginBean<MessageEvent, T> {
+public interface MessageCalledPluginBean<T extends MessageDetector> extends NegativePluginBean<MessageEvent<?>, T> {
 
     // 监听的消息类型，默认同时监听私聊与群聊
     default MessageTypeEnum listenAt() {

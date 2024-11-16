@@ -52,6 +52,10 @@ public class OrderArg implements OrderElement {
         this.helpInfo = helpInfo;
     }
 
+    public Boolean wantsMessageType(OrderArgAcceptType typeEnum) {
+        return getAcceptType().equals(typeEnum);
+    }
+
     @Override
     public Boolean valid() {
         return null != name && !name.isEmpty();

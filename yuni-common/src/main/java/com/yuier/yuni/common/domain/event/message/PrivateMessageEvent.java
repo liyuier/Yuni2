@@ -19,10 +19,8 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @JsonTypeDefine("private")
-public class PrivateMessageEvent extends MessageEvent {
-    // 发送人信息
-    private PrivateMessageSender sender;
+public class PrivateMessageEvent extends MessageEvent<PrivateMessageSender> {
+
 }

@@ -1,7 +1,7 @@
 package com.yuier.yuni.core.Controller;
 
 import com.yuier.yuni.common.domain.event.message.GroupMessageEvent;
-import com.yuier.yuni.common.utils.EventHandlerPatcher;
+import com.yuier.yuni.core.util.EventHandlerPatcher;
 import com.yuier.yuni.common.utils.ResponseResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,6 +26,7 @@ public class OneBotEventController {
 
     @PostMapping
     public ResponseResult oneBotEventEntrance(@RequestBody GroupMessageEvent event) {
+        patcher.eventPreHandle(event);
         patcher.patchEvent(event);
         return ResponseResult.okResult();
     }

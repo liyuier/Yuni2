@@ -8,7 +8,6 @@ package com.yuier.yuni.common.domain.event.message.chain.seg.data;
  * @description: 消息段的 data 字段的抽象父类
  */
 
-
 public class MessageData {
 
 }

@@ -21,13 +21,14 @@ import org.springframework.stereotype.Component;
 public class GenShinStart implements MessageCalledPluginBean<OrderDetector> {
 
     @Override
-    public BotAction run(MessageEvent event, OrderDetector detector) {
+    public BotAction run(MessageEvent<?> event, OrderDetector detector) {
+        System.out.println("进入插件");
         return null;
     }
 
     @Override
     public OrderDetector detector() {
-        return null;
+        return new OrderDetector.Builder().setHead("原神").build();
     }
 
     @Override

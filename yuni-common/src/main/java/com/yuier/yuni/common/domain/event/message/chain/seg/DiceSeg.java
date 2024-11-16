@@ -17,9 +17,8 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 @JsonTypeDefine("dice")
 @EqualsAndHashCode(callSuper = true)
-public class DiceSeg extends MessageSeg {
-    DiceData data;
+public class DiceSeg extends MessageSeg<DiceData> {
+
 }

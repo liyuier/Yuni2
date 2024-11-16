@@ -17,9 +17,8 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 @JsonTypeDefine("music")
 @EqualsAndHashCode(callSuper = true)
-public class MusicSeg extends MessageSeg {
-    MusicData data;
+public class MusicSeg extends MessageSeg<MusicData> {
+
 }

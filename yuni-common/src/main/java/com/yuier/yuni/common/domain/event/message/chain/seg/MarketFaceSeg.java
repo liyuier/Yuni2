@@ -17,9 +17,8 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 @JsonTypeDefine("mface")
 @EqualsAndHashCode(callSuper = true)
-public class MarketFaceSeg extends MessageSeg {
-    MarketFaceData data;
+public class MarketFaceSeg extends MessageSeg<MarketFaceData> {
+
 }

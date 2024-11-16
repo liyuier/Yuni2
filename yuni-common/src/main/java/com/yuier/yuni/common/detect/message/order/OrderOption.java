@@ -4,6 +4,8 @@ import com.yuier.yuni.common.interfaces.detector.order.OrderElement;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import java.util.ArrayList;
+
 /**
  * @Title: OrderOption
  * @Author yuier
@@ -30,6 +32,22 @@ public class OrderOption implements OrderElement {
 
     public OrderOption() {
         optionArgs = new OrderArgContainer();
+    }
+
+    /**
+     * @return  要匹配上当前选项，最少需要多少消息段
+     *          参考 OrderDetector.orderLeastSegNum
+     */
+    public Integer leastMessageSegNum() {
+        return 1 + optionArgs.getRequiredArgNum();
+    }
+
+    public ArrayList<RequiredArg> getRequiredArgs() {
+        return optionArgs.getRequiredArgList();
+    }
+
+    public ArrayList<OptionalArg> getOptionalArgs() {
+        return optionArgs.getOptionalArgList();
     }
 
     @Override

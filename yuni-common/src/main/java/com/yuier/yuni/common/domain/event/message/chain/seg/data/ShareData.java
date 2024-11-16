@@ -4,6 +4,7 @@ import com.yuier.yuni.common.anno.MessageDataEntity;
 import com.yuier.yuni.common.enums.MessageDataEnum;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 /**
@@ -13,11 +14,13 @@ import lombok.NoArgsConstructor;
  * @Date 2024/4/14 22:09
  * @description: 链接分享消息段 data 类
  */
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @MessageDataEntity(dataType = MessageDataEnum.SHARE)
-public class ShareData {
+public class ShareData extends MessageData {
     private String url;
     private String title;
     // 发送时可选，内容描述

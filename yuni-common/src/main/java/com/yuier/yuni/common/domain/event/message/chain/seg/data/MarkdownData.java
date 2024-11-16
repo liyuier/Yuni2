@@ -4,6 +4,7 @@ import com.yuier.yuni.common.anno.MessageDataEntity;
 import com.yuier.yuni.common.enums.MessageDataEnum;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 /**
@@ -13,11 +14,13 @@ import lombok.NoArgsConstructor;
  * @Date 2024/4/20 17:50
  * @description: markdown 消息 data 字段
  */
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @MessageDataEntity(dataType = MessageDataEnum.MARKDOWN)
-public class MarkdownData {
+public class MarkdownData extends MessageData {
     private String data;
 
     @Override

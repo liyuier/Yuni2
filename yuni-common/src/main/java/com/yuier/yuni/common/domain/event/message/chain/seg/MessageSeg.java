@@ -2,6 +2,7 @@ package com.yuier.yuni.common.domain.event.message.chain.seg;
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.yuier.yuni.common.domain.event.message.MessageEvent;
+import com.yuier.yuni.common.domain.event.message.chain.seg.data.MessageData;
 import com.yuier.yuni.common.domain.event.message.chain.seg.data.TextData;
 import com.yuier.yuni.common.enums.MessageDataEnum;
 import lombok.AllArgsConstructor;
@@ -39,9 +40,10 @@ import lombok.NoArgsConstructor;
         property = "type",  // 指定配置子类型的字段为 messageType
         defaultImpl = MessageEvent.class,  // 未设置 messageType 时默认的解析类型，这里设为 OneBotEvent 本身
         visible = true)  // 反序列化时 property 配置的字段是否解析出值放在结果中
-public class MessageSeg {
+public abstract class MessageSeg<T extends MessageData> {
     private String type;
-
+    // 你他妈的真是个天才，二等饼干
+    T data;
     public Boolean typeOf(MessageDataEnum messageDataEnum) {
         return type.equals(messageDataEnum.toString());
     }

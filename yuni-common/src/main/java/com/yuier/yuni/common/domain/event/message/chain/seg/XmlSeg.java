@@ -17,9 +17,8 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 @JsonTypeDefine("xml")
 @EqualsAndHashCode(callSuper = true)
-public class XmlSeg extends MessageSeg {
-    XmlData data;
+public class XmlSeg extends MessageSeg<XmlData> {
+
 }

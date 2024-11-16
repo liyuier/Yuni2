@@ -1,7 +1,7 @@
-package com.yuier.yuni.common.randosoru;
+package com.yuier.yuni.core.randosoru;
 
-import com.yuier.yuni.common.randosoru.bot.BotManager;
-import com.yuier.yuni.common.randosoru.plugin.PluginManager;
+import com.yuier.yuni.core.randosoru.bot.BotManager;
+import com.yuier.yuni.core.randosoru.plugin.PluginManager;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -25,7 +25,7 @@ public class Randosoru {
 
     // 初始化管理框架
     public void initialize() {
-        botManager.initialize();
         pluginManager.initialize();
+        botManager.initialize();
     }
 }

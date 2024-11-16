@@ -21,13 +21,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @JsonTypeDefine("group")
-public class GroupMessageEvent extends MessageEvent {
+public class GroupMessageEvent extends MessageEvent<GroupMessageSender> {
     // 群号
     private Long groupId;
 
     // 匿名消息，如果不是匿名消息则为 null
     private AnonymousMessage anonymous;
-
-    // 发送者
-    private GroupMessageSender sender;
 }

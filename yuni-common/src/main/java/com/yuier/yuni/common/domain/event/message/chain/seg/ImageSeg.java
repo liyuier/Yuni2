@@ -17,9 +17,8 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 @JsonTypeDefine("image")
 @EqualsAndHashCode(callSuper = true)
-public class ImageSeg extends MessageSeg {
-    ImageData data;
+public class ImageSeg extends MessageSeg<ImageData> {
+
 }

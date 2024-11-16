@@ -17,9 +17,8 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 @JsonTypeDefine("video")
 @EqualsAndHashCode(callSuper = true)
-public class VideoSeg extends MessageSeg {
-    VideoData data;
+public class VideoSeg extends MessageSeg<VideoData> {
+
 }

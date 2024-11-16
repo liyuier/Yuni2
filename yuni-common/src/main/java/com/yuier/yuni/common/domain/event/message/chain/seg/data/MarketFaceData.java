@@ -4,6 +4,7 @@ import com.yuier.yuni.common.anno.MessageDataEntity;
 import com.yuier.yuni.common.enums.MessageDataEnum;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 /**
@@ -13,11 +14,13 @@ import lombok.NoArgsConstructor;
  * @Date 2024/4/20 17:46
  * @description: 商城表情 data 类
  */
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @MessageDataEntity(dataType = MessageDataEnum.MARKETFACE)
-public class MarketFaceData {
+public class MarketFaceData extends MessageData {
     private String summary;
     private String url;
     private String emojiId;

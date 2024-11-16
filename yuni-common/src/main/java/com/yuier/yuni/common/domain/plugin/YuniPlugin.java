@@ -25,5 +25,8 @@ public class YuniPlugin {
     private String helpInfo;
 
     // 作为新插件，第一次拉起时，希望机器人实例默认订阅还是不订阅
-    SubmitConditions submitCondition;
+    private SubmitConditions submitCondition;
+
+    // 插件是否活跃
+    private Boolean isSubscribed;
 }
