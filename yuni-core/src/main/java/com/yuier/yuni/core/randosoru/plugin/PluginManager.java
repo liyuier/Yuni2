@@ -1,17 +1,21 @@
-package com.yuier.yuni.common.randosoru.plugin;
+package com.yuier.yuni.core.randosoru.plugin;
 
 import com.yuier.yuni.common.anno.Plugin;
 import com.yuier.yuni.common.domain.event.OneBotEvent;
 import com.yuier.yuni.common.domain.event.message.MessageEvent;
+import com.yuier.yuni.common.domain.event.message.sender.MessageSender;
 import com.yuier.yuni.common.domain.plugin.YuniMessagePlugin;
 import com.yuier.yuni.common.domain.plugin.YuniNegativePlugin;
 import com.yuier.yuni.common.domain.plugin.YuniPlugin;
+import com.yuier.yuni.common.enums.SubmitConditions;
 import com.yuier.yuni.common.interfaces.detector.EventDetector;
 import com.yuier.yuni.common.interfaces.plugin.MessageCalledPluginBean;
 import com.yuier.yuni.common.interfaces.plugin.NegativePluginBean;
 import com.yuier.yuni.common.interfaces.plugin.PluginBean;
 import com.yuier.yuni.common.utils.BeanCopyUtils;
 import com.yuier.yuni.common.utils.MessageMatcher;
+import com.yuier.yuni.common.utils.ThreadLocalUtil;
+import com.yuier.yuni.core.randosoru.bot.BotManager;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -36,6 +40,8 @@ public class PluginManager {
 
     @Autowired
     ApplicationContext applicationContext;
+    @Autowired
+    BotManager botManager;
 
     // 消息事件触发的插件集合
     private HashMap<String, YuniMessagePlugin> messagePluginMap;
@@ -55,8 +61,10 @@ public class PluginManager {
      * @param <T> 限定入参为 OneBotEvent 类型
      */
     public <T extends OneBotEvent> void matchEventForPlugin(T event) {
+        // 如果事件为消息事件
         if (event instanceof MessageEvent) {
-            matchMessageEvent((MessageEvent) event);
+            // 检查是否能命中某个插件，并执行
+            matchAndExecMessageEvent((MessageEvent<?>) event);
         }
     }
 
@@ -64,14 +72,67 @@ public class PluginManager {
      * 匹配消息事件
      * @param event 消息事件
      */
-    public void matchMessageEvent(MessageEvent event) {
+    public void matchAndExecMessageEvent(MessageEvent<?> event) {
         for (YuniMessagePlugin plugin: messagePluginMap.values()) {
-            Boolean matchResult = MessageMatcher.matchMessage(event, plugin);
+            // 检查插件是否被当前 BOT 实例订阅
+            if (!pluginIsSubscribedByBot(plugin, ThreadLocalUtil.getBot().getId())) {
+                continue;
+            }
+            // 检查当前插件是否被消息命中
+            if (MessageMatcher.matchMessage(event, plugin)) {
+                // 检查消息发送者是否有权调用该插件
+                if (!checkPermission(event, plugin)) {
+                    // 如果命中了，检查是否有权调用，如果无权调用，发出提示
+                    replyNoPermission();
+                    continue;
+                }
+                // 如果命中，执行插件
+                callPlugin(plugin, event);
+            }
         }
     }
 
     /**
+     * 执行消息插件入口函数
+     * @param plugin  消息插件本体
+     * @param event  消息事件
+     */
+    private void callPlugin(YuniMessagePlugin plugin, MessageEvent<?> event) {
+        // 获取反射执行方法的必要材料
+        PluginBean pluginBean = plugin.getPluginBean();
+        Method runMethod = plugin.getRunMethod();
+        EventDetector<?> detector = plugin.getDetector();
+        try {
+            // 反射执行插件入口函数
+            runMethod.invoke(pluginBean, event, detector);
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void replyNoPermission() {
+        // TODO
+    }
+
+    /**
+     * 检查消息发送者是否有权调用插件
+     * @param event  消息事件
+     * @param plugin  插件
+     * @return  消息发送者是否有权调用插件
+     */
+    private static Boolean checkPermission(MessageEvent<?> event, YuniMessagePlugin plugin) {
+        MessageSender sender = event.getSender();
+        // TODO 再说吧
+        return true;
+    }
+
+    ////////////////////////////////////
+    // 下方为初始化部分代码
+    ////////////////////////////////////
+
+    /**
      * 初始化插件
+     * // TODO 应当注意入参校验，但是我燃尽了，以后再写吧
      */
     private void buildYuniPlugins() {
         // 扫描所有加了 @PluginBean 注解的插件
@@ -114,6 +175,9 @@ public class PluginManager {
 
         // 获取插件默认订阅策略
         yuniPlugin.setSubmitCondition(pluginAnno.submit());
+
+        // 根据插件默认订阅策略设置插件初始状态
+        yuniPlugin.setIsSubscribed(yuniPlugin.getSubmitCondition().equals(SubmitConditions.YES));
 
         // 如果插件为被动插件，继续构建
         if (targetPluginBean instanceof NegativePluginBean<?, ?>) {
@@ -188,5 +252,20 @@ public class PluginManager {
         } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    /**
+     * 检查插件是否被当前 Bot 订阅了
+     * @param plugin  插件
+     * @param botId  Bot ID
+     * @return  插件是否被该 Bot 订阅
+     */
+    private Boolean pluginIsSubscribedByBot(YuniPlugin plugin, Long botId) {
+        // 检查插件是否被 Bot 订阅
+        if (!plugin.getIsSubscribed()) {
+            return false;
+        }
+        // TODO
+        return true;
     }
 }

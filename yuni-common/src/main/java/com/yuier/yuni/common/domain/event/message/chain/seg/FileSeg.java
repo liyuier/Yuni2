@@ -17,9 +17,8 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 @JsonTypeDefine("file")
 @EqualsAndHashCode(callSuper = true)
-public class FileSeg extends MessageSeg {
-    FileData data;
+public class FileSeg extends MessageSeg<FileData> {
+
 }

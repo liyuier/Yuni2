@@ -13,6 +13,8 @@ public final class SystemConstants {
 
     public static final String BLANK_SPACE = " ";
 
+    public static final String LOCAL_BOT = "localBot";
+
     public static final Integer HTTP_OK = 200;
     public static final String ONEBOT_OK_STATUS = "ok";
 

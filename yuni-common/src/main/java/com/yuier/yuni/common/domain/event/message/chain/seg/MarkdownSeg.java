@@ -17,9 +17,8 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 @JsonTypeDefine("markdown")
 @EqualsAndHashCode(callSuper = true)
-public class MarkdownSeg extends MessageSeg {
-    MarkdownData data;
+public class MarkdownSeg extends MessageSeg<MarkdownData> {
+
 }

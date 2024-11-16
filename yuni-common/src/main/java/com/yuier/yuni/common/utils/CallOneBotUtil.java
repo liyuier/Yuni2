@@ -26,6 +26,16 @@ import static com.yuier.yuni.common.constants.OneBotApiRetCode.OK;
 
 public class CallOneBotUtil {
 
+    private static RestTemplate restTemplate;
+
+    private static RestTemplate getRestTemplate() {
+        if (restTemplate == null) {
+            restTemplate = new RestTemplate();
+            return restTemplate;
+        }
+        return restTemplate;
+    }
+
     /**
      * 请求 OneBot API
      * @param url  url
@@ -39,7 +49,7 @@ public class CallOneBotUtil {
         ResponseEntity<String> responseEntity = null;
         try {
             // 发出请求，这里接收响应的 JSON 消息
-            responseEntity = new RestTemplate().getForEntity(new URL(url).toURI(), String.class);
+            responseEntity = getRestTemplate().getForEntity(new URL(url).toURI(), String.class);
             if (responseEntity.getStatusCode().is2xxSuccessful()) {
                 // 获取响应字符串，并解析为返回的实体类
                 return parseJsonResult(responseEntity, responseDataType);
@@ -60,7 +70,7 @@ public class CallOneBotUtil {
      * @param <T>  限定返回类型
      */
     public static <T extends OneBotApiData> T getOneBotForEntity(String url, Class<T> responseDataType, Object... uriVariables) {
-        ResponseEntity<String> responseEntity = new RestTemplate().getForEntity(url, String.class, uriVariables);
+        ResponseEntity<String> responseEntity = getRestTemplate().getForEntity(url, String.class, uriVariables);
         if (responseEntity.getStatusCode().is2xxSuccessful()) {
             return parseJsonResult(responseEntity, responseDataType);
         } else {
@@ -77,7 +87,7 @@ public class CallOneBotUtil {
      * @param <T>  限定返回类型
      */
     public static <T extends OneBotApiData> T getOneBotForEntity(String url, Class<T> responseDataType, Map<String, ?> uriVariables) {
-        ResponseEntity<String> responseEntity = new RestTemplate().getForEntity(url, String.class, uriVariables);
+        ResponseEntity<String> responseEntity = getRestTemplate().getForEntity(url, String.class, uriVariables);
         if (responseEntity.getStatusCode().is2xxSuccessful()) {
             return parseJsonResult(responseEntity, responseDataType);
         } else {
@@ -98,7 +108,7 @@ public class CallOneBotUtil {
         // 组装请求头，设置响应类型为 JSON 类型
         ResponseEntity<String> responseEntity  = null;
         try {
-            responseEntity = new RestTemplate().postForEntity(new URL(url).toURI(), createHeadForJsonContentType(requestBody), String.class);
+            responseEntity = getRestTemplate().postForEntity(new URL(url).toURI(), createHeadForJsonContentType(requestBody), String.class);
         } catch (URISyntaxException | MalformedURLException e) {
             throw new RuntimeException(e);
         }
@@ -121,7 +131,7 @@ public class CallOneBotUtil {
      */
     public static <T extends OneBotApiData, S> T postOneBotForEntity(String url, S requestBody, Class<T> responseDataType, Object... uriVariables) {
         ResponseEntity<String> responseEntity  = null;
-        responseEntity = new RestTemplate().postForEntity(url, createHeadForJsonContentType(requestBody), String.class, uriVariables);
+        responseEntity = getRestTemplate().postForEntity(url, createHeadForJsonContentType(requestBody), String.class, uriVariables);
         if (responseEntity.getStatusCode().is2xxSuccessful()) {
             return parseJsonResult(responseEntity, responseDataType);
         } else {
@@ -141,7 +151,7 @@ public class CallOneBotUtil {
      */
     public static <T extends OneBotApiData, S> T postOneBotForEntity(String url, S requestBody, Class<T> responseDataType, Map<String, ?> uriVariables) {
         ResponseEntity<String> responseEntity  = null;
-        responseEntity = new RestTemplate().postForEntity(url, createHeadForJsonContentType(requestBody), String.class, uriVariables);
+        responseEntity = getRestTemplate().postForEntity(url, createHeadForJsonContentType(requestBody), String.class, uriVariables);
         if (responseEntity.getStatusCode().is2xxSuccessful()) {
             return parseJsonResult(responseEntity, responseDataType);
         } else {

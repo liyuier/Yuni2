@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.jsontype.NamedType;
 import com.yuier.yuni.common.anno.JsonTypeDefine;
-import com.yuier.yuni.common.randosoru.Randosoru;
+import com.yuier.yuni.core.randosoru.Randosoru;
 import org.reflections.Reflections;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;

@@ -28,7 +28,7 @@ public class GetMessageResData implements OneBotApiData {
     private Long messageId;
     private Long realId;
     private MessageSender sender;
-    private ArrayList<MessageSeg> message;
+    private ArrayList<MessageSeg<?>> message;
 
     // llOneBot 自行添加字段
     // 机器人账号

@@ -17,9 +17,8 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 @JsonTypeDefine("contact")
 @EqualsAndHashCode(callSuper = true)
-public class ContactSeg extends MessageSeg {
-    ContactData data;
+public class ContactSeg extends MessageSeg<ContactData> {
+
 }

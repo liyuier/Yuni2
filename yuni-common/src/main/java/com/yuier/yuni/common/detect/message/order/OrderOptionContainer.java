@@ -2,7 +2,6 @@ package com.yuier.yuni.common.detect.message.order;
 
 import com.yuier.yuni.common.enums.OrderArgAcceptType;
 import com.yuier.yuni.common.interfaces.detector.order.OrderElement;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -21,9 +20,18 @@ import java.util.ArrayList;
 @Data
 public class OrderOptionContainer implements OrderElement {
 
-    private static ArrayList<OrderOption> optionList;
+    /*
+     * TODO 这里也许应该优化为 MAP，我不确定
+     */
+    private static ArrayList<OrderOption> staticOptionList;
+
+    /*
+     * 天呐，我怎么能写出如此耻辱的代码。。。
+     */
+    private ArrayList<OrderOption> optionList;
 
     public OrderOptionContainer() {
+        staticOptionList = new ArrayList<>();
         optionList = new ArrayList<>();
     }
 
@@ -38,7 +46,7 @@ public class OrderOptionContainer implements OrderElement {
                 null == optFlag || optFlag.isEmpty()) {
             throw new RuntimeException("选项名称与标识均不能为空！");
         }
-        for (OrderOption option : optionList) {
+        for (OrderOption option : staticOptionList) {
             if (option.getName().equals(optName)) {
                 throw new RuntimeException("选项名称" + optName + "已存在！");
             }
@@ -49,6 +57,7 @@ public class OrderOptionContainer implements OrderElement {
     }
 
     public void addOption(OrderOption option) {
+        staticOptionList.add(option);
         optionList.add(option);
     }
 
@@ -64,6 +73,13 @@ public class OrderOptionContainer implements OrderElement {
 
         // 帮助信息
         private String helpInfo;
+
+        public OptionBuilder() {
+            this.name = "";
+            this.flag = "";
+            this.optionArgs = new OrderArgContainer();
+            this.helpInfo = "";
+        }
 
         public OptionBuilder setNameAndFlag(String name, String flag) {
             checkNameAndFlagValid(name, flag);
@@ -132,9 +148,18 @@ public class OrderOptionContainer implements OrderElement {
         }
     }
 
+    public Boolean hasFlag(String str) {
+        for (OrderOption option : staticOptionList) {
+            if (option.getFlag().equals(str)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     @Override
     public Boolean valid() {
-        for (OrderOption option : optionList) {
+        for (OrderOption option : staticOptionList) {
             if (!option.valid()) {
                 return false;
             }

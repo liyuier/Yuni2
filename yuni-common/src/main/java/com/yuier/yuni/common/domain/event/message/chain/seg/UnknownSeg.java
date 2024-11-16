@@ -16,8 +16,7 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class UnknownSeg extends MessageSeg {
-    UnknownData data;
+public class UnknownSeg extends MessageSeg<UnknownData> {
+
 }

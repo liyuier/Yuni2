@@ -17,9 +17,8 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 @JsonTypeDefine("share")
 @EqualsAndHashCode(callSuper = true)
-public class ShareSeg extends MessageSeg {
-    ShareData data;
+public class ShareSeg extends MessageSeg<ShareData> {
+
 }

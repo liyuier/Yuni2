@@ -3,7 +3,7 @@ package com.yuier.yuni.core.handler;
 import com.yuier.yuni.common.anno.EventHandler;
 import com.yuier.yuni.common.domain.event.message.MessageEvent;
 import com.yuier.yuni.common.domain.event.message.chain.MessageChain;
-import com.yuier.yuni.common.randosoru.plugin.PluginManager;
+import com.yuier.yuni.core.randosoru.plugin.PluginManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -22,9 +22,9 @@ public class MessageEventHandler {
     @Autowired
     PluginManager pluginManager;
 
-    public <T extends MessageEvent> void handle(T messageEvent) {
+    public <T extends MessageEvent<?>> void handle(T messageEvent) {
         messageEvent.setMessageChain(new MessageChain(messageEvent.getMessage()));
-        pluginManager.matchMessageEvent(messageEvent);
-        System.out.println("OK");
+        pluginManager.matchEventForPlugin(messageEvent);
+        System.out.println("解析消息成功");
     }
 }

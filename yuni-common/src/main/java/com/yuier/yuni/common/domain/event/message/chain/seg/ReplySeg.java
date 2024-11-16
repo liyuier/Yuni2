@@ -17,9 +17,8 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 @JsonTypeDefine("reply")
 @EqualsAndHashCode(callSuper = true)
-public class ReplySeg extends MessageSeg {
-    ReplyData data;
+public class ReplySeg extends MessageSeg<ReplyData> {
+
 }

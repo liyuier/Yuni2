@@ -20,5 +20,5 @@ import java.util.ArrayList;
 @AllArgsConstructor
 public class MessageChain {
 
-    private ArrayList<MessageSeg> content;
+    private ArrayList<MessageSeg<?>> content;
 }

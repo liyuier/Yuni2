@@ -17,9 +17,8 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 @JsonTypeDefine("rps")
 @EqualsAndHashCode(callSuper = true)
-public class RpsSeg extends MessageSeg {
-    RpsData data;
+public class RpsSeg extends MessageSeg<RpsData> {
+
 }
