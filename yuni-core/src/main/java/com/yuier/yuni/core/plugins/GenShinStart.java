@@ -3,6 +3,7 @@ package com.yuier.yuni.core.plugins;
 import com.yuier.yuni.common.anno.Plugin;
 import com.yuier.yuni.common.detect.message.order.OrderDetector;
 import com.yuier.yuni.common.domain.event.message.MessageEvent;
+import com.yuier.yuni.common.domain.event.message.chain.MessageChain;
 import com.yuier.yuni.common.enums.MessageTypeEnum;
 import com.yuier.yuni.common.interfaces.plugin.MessageCalledPluginBean;
 import com.yuier.yuni.common.utils.BotAction;
@@ -21,9 +22,9 @@ import org.springframework.stereotype.Component;
 public class GenShinStart implements MessageCalledPluginBean<OrderDetector> {
 
     @Override
-    public BotAction run(MessageEvent<?> event, OrderDetector detector) {
+    public void run(MessageEvent<?> event, OrderDetector detector) {
         System.out.println("进入插件");
-        return null;
+        BotAction.sendMessage(event.getPosition(), new MessageChain("启动！"));
     }
 
     @Override

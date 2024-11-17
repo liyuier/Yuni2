@@ -8,24 +8,17 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * @Title: SendMessageResData
+ * @Title: SendGroupMessageResData
  * @Author yuier
- * @Package com.yuier.yuni.common.domain.message.res.data
- * @Date 2024/4/22 22:32
- * @description: OneBot 发送消息接口响应 data 字段实体类
+ * @Package com.yuier.yuni.common.domain.onebotapi.data
+ * @Date 2024/11/17 18:21
+ * @description: 发送群消息
  */
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class SendMessageResData implements OneBotApiData {
+public class SendGroupMessageResData implements OneBotApiData {
     private Long messageId;
-
-    public SendMessageResData(SendGroupMessageResData data) {
-        this.messageId = data.getMessageId();
-    }
-
-    public SendMessageResData(SendPrivateMessageResData data) {
-        this.messageId = data.getMessageId();
-    }
 }
