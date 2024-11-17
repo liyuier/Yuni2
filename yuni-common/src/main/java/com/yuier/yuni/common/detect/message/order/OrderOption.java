@@ -30,6 +30,9 @@ public class OrderOption implements OrderElement {
     // 帮助信息
     private String helpInfo;
 
+    // 对于当前消息，本选项是否已经与某段消息匹配上
+    private Boolean matched = false;
+
     public OrderOption() {
         optionArgs = new OrderArgContainer();
     }

@@ -21,7 +21,7 @@ import java.util.ArrayList;
 public class OrderOptionContainer implements OrderElement {
 
     /*
-     * TODO 这里也许应该优化为 MAP，我不确定
+     * TODO 这里确实应该优化为 MAP，递归算法性能有点差
      */
     private static ArrayList<OrderOption> staticOptionList;
 
@@ -30,7 +30,7 @@ public class OrderOptionContainer implements OrderElement {
      */
     private ArrayList<OrderOption> optionList;
 
-    public OrderOptionContainer() {
+    protected OrderOptionContainer() {
         staticOptionList = new ArrayList<>();
         optionList = new ArrayList<>();
     }
@@ -57,8 +57,20 @@ public class OrderOptionContainer implements OrderElement {
     }
 
     public void addOption(OrderOption option) {
+        if (!checkOptionNameUnique(option)) {
+            throw new RuntimeException("不允许定义名称相同的多条选项！");
+        }
         staticOptionList.add(option);
         optionList.add(option);
+    }
+
+    public Boolean checkOptionNameUnique(OrderOption option) {
+        for (OrderOption orderOption : staticOptionList) {
+            if (orderOption.getName().equals(option.getName())) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public static class OptionBuilder {
@@ -73,6 +85,9 @@ public class OrderOptionContainer implements OrderElement {
 
         // 帮助信息
         private String helpInfo;
+
+        // 对于当前消息，本选项是否已经与某段消息匹配上
+        private final Boolean matched = false;
 
         public OptionBuilder() {
             this.name = "";
@@ -144,7 +159,7 @@ public class OrderOptionContainer implements OrderElement {
         }
 
         public OrderOption build() {
-            return new OrderOption(this.name, this.flag, this.optionArgs, this.helpInfo);
+            return new OrderOption(this.name, this.flag, this.optionArgs, this.helpInfo, this.matched);
         }
     }
 
