@@ -5,7 +5,7 @@ import com.yuier.yuni.common.detect.message.order.OrderDetector;
 import com.yuier.yuni.common.domain.event.message.MessageEvent;
 import com.yuier.yuni.common.domain.event.message.chain.MessageChain;
 import com.yuier.yuni.common.enums.MessageTypeEnum;
-import com.yuier.yuni.common.interfaces.plugin.MessageCalledPluginBean;
+import com.yuier.yuni.common.interfaces.plugin.MessagePluginBean;
 import com.yuier.yuni.common.utils.BotAction;
 import org.springframework.stereotype.Component;
 
@@ -19,7 +19,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Plugin
-public class GenShinStart implements MessageCalledPluginBean<OrderDetector> {
+public class GenShinStart implements MessagePluginBean<OrderDetector> {
 
     @Override
     public void run(MessageEvent<?> event, OrderDetector detector) {
@@ -39,6 +39,6 @@ public class GenShinStart implements MessageCalledPluginBean<OrderDetector> {
 
     @Override
     public MessageTypeEnum listenAt() {
-        return MessageCalledPluginBean.super.listenAt();
+        return MessagePluginBean.super.listenAt();
     }
 }
