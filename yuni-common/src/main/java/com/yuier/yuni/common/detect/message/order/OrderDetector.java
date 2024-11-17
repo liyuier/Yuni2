@@ -161,9 +161,11 @@ public class OrderDetector implements MessageDetector {
 
     @Override
     public Boolean hit(MessageEvent<?> event) {
+        // 清理 options 状态
+        cleanDetectorStat();
         // 将消息链转为方便指令探测器使用的 MessageChainForOrder
         MessageChainForOrder chainForOrder = splitMessageForOrder(event.getMessageChain());
-        OrderMatchedOut orderMatchedOut = new OrderMatchedOut();
+        orderMatchedOut = new OrderMatchedOut();
         String orderMark = getOrderMark();
         // 开始匹配，检查一些基本的信息
         // 如果消息链不是以有效文本开头，直接判不匹配
@@ -248,20 +250,25 @@ public class OrderDetector implements MessageDetector {
                                 MessageChainForOrder chainForOrder,
                                 ArrayList<OrderOptionMatchedOut> optionMatchedList) {
         for (OrderOption option : optionList) {
-            // 如果 cfo 消息段检查完毕，返回 true
+            // 如果 cfo 消息段检查完毕，直接返回 true
             if (chainForOrder.messageSegsMatchedEnd()) {
                 return true;
+            }
+
+            // 如果本选项已经与消息段的某部分匹配上，匹配下一条选项。
+            if (option.getMatched()) {
+                continue;
             }
 
             // 如果当前消息段不是文本消息段，说明无法与任意一条选项匹配，返回 false
             if (!chainForOrder.getCurMessageSeg().typeOf(MessageDataEnum.TEXT)) {
                 return false;
             }
-            // 消息链过短，无法匹配当前选项
+            // 消息链过短，无法匹配当前选项，匹配下一条选项。
             if (chainForOrder.restMessageSegNum() < option.leastMessageSegNum()) {
                 continue;
             }
-            // 当前消息段与选项标识不匹配，返回
+            // 当前消息段与选项标识不匹配，匹配下一条选项。
             String text = ((TextSeg) chainForOrder.getCurMessageSeg()).getData().getText();
             if (!text.equals(option.getFlag())) {
                 continue;
@@ -288,6 +295,8 @@ public class OrderDetector implements MessageDetector {
                 orderOptionMatchedOut.addOrderArgsMatchedList(argMatchedList);
                 // 将 optionMatchedOut 加入 optionMatchedList 中
                 optionMatchedList.add(orderOptionMatchedOut);
+                // 标记本选项已经与某段消息匹配
+                option.setMatched(true);
                 return true;
             }
 
@@ -297,10 +306,15 @@ public class OrderDetector implements MessageDetector {
             orderOptionMatchedOut.addOrderArgsMatchedList(argMatchedList);
             // 将 optionMatchedOut 加入 optionMatchedList 中
             optionMatchedList.add(orderOptionMatchedOut);
+            // 标记本选项已经与某段消息匹配
+            option.setMatched(true);
 
             // 如果匹配完了，返回 true
             if (chainForOrder.messageSegsMatchedEnd()) {
                 return true;
+            } else {
+                // 如果没有匹配完，递归匹配剩余部分消息段与剩余选项
+                return matchOptions(optionList, chainForOrder, optionMatchedList);
             }
         }
         // 所有选项匹配结束，如果消息段正好匹配完，返回 true，否则返回 false
@@ -316,16 +330,37 @@ public class OrderDetector implements MessageDetector {
     private void matchOptionalArgs(ArrayList<OptionalArg> optionalArgs,
                                       MessageChainForOrder chainForOrder,
                                       ArrayList<OrderArgMatchedOut> argMatchedList) {
+
         /*
-         * 与必选参数不同，一段消息可能无法匹配所有可选参数，因此这里需要检查消息段指针是否越界
-         * 如果 cfo 消息段检查完毕，返回 true
+         * 采用 “先到先得，过时不候” 的方式匹配可选参数
+         * 具体来说，使用指针单向遍历消息段，并使用 for 循环遍历可选参数。
+         * 对于每个消息段，遍历每个可选参数，将消息段匹配给第一个可匹配的参数，随后消息段指针右移，for 循环也进入下一轮，可选参数不回头遍历。
+         * 举例来说：
+         * 有如下 4 个可选参数：甲-at、乙-number、丙-at、丁-number
+         * 有如下消息段：<123>、<@1>、<@2>
+         * 也许会有读者认为应该如此匹配：<123>-乙，<@1>-甲，<@2>-丙，但实际并非如此。
+         * 1. 对于消息段 <123>，从甲开始遍历可选参数，第一轮搜索匹配上了乙，消息段指针右移；参数从丙开始遍历
+         * 2. 对于消息段 <@1>，从丙开始查找接收 @ 消息的可选参数，匹配上了丙
+         * 3. 对于消息段 <@2>，从丁开始查找接收 @ 消息的可选参数，找不到
+         * 最终结果为：<123>-乙，<@1>-丙，<@2>-未匹配。
+         * 这样的匹配原则规则明确，方便理解。
+         *
+         * 鉴于以上 feature，我推荐这样的指令定义策略：
+         * 1. 不将不同类型的可选参数混杂定义，如上方示例，at 类参数与 number 类参数混杂定义，极易出现不符合预期的匹配结果。
+         * 2. 不定义连续多个可选参数，例如 3 个以上。超过 3 个可选参数，很难说清自己接收到的数据到底是不是用户想要传达的意图。
+         * 3. 多用 选项+必选参数 的模式代替可选参数。实际上这样的模式可以理解为一种 “有名字的可选参数”，其匹配逻辑更精准，代码更健壮。
          */
-        if (chainForOrder.messageSegsMatchedEnd()) {
-            return;
-        }
 
         // 遍历所有可选参数，检查是否可以与剩余的某个消息段匹配上
         for (OptionalArg optionalArg : optionalArgs) {
+            /*
+             * 与必选参数不同，一段消息可能无法匹配所有可选参数，因此这里需要检查消息段指针是否越界
+             * 如果 cfo 消息段检查完毕，返回 true
+             */
+            if (chainForOrder.messageSegsMatchedEnd()) {
+                return;
+            }
+
             // 取出当前消息段
             MessageSeg<?> curMessageSeg = chainForOrder.getCurMessageSeg();
 
@@ -377,7 +412,7 @@ public class OrderDetector implements MessageDetector {
             // 将提取出来的参数保存下来
             argMatchedList.add(new OrderArgMatchedOut(
                     optionalArg.getName(),
-                    OrderArgAcceptType.REPLY,
+                    optionalArg.getAcceptType(),
                     curMessageSeg.getData(),
                     optionalArg.getHelpInfo()
             ));
@@ -567,5 +602,15 @@ public class OrderDetector implements MessageDetector {
             }
         }
         return chainForOrder;
+    }
+
+    /**
+     * 对于每条新的请求，做一些状态上的清理
+     */
+    private void cleanDetectorStat() {
+        // 每条选项都暂未与当前新消息的任意部分匹配
+        for (OrderOption option : orderOptions.getOptionList()) {
+            option.setMatched(false);
+        }
     }
 }
