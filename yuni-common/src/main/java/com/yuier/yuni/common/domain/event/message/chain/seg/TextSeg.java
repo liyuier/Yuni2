@@ -25,4 +25,8 @@ public class TextSeg extends MessageSeg<TextData> {
         this.setType("text");
         this.data = textData;
     }
+
+    public TextSeg(String text) {
+        this(new TextData(text));
+    }
 }

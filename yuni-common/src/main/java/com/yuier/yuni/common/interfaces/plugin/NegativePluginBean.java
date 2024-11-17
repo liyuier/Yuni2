@@ -18,9 +18,8 @@ public interface NegativePluginBean<T extends OneBotEvent, S extends EventDetect
      * 插件入口
      * @param event 触发该插件的 OneBot 上报事件
      * @param detector 该被动插件的事件探测器
-     * @return 返回给 Bot 实例的动作
      */
-    BotAction run(T event, S detector);
+    void run(T event, S detector);
 
     /**
      * 消息探测器定义方法，内部应直接产生一个事件探测器

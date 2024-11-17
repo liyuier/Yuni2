@@ -87,6 +87,12 @@ public class MessageEvent<T extends MessageSender> extends OneBotEvent {
      */
     private Long font;
 
+    // 消息发送者
+    private T sender;
+
+    // 个人添加
+    private MessageEventPosition position;
+
     // 以下为 LLOneBot 在 OneBot 消息事件标准之外添加的字段
     // 消息类型，是数组还是 CQ 码
     private String messageFormat;
@@ -94,7 +100,4 @@ public class MessageEvent<T extends MessageSender> extends OneBotEvent {
     // 真实 ID 就是最真实的 ID （划掉）
     // 其实这个字段在协议的 get_msg() 接口上会响应出来
     private Long realId;
-
-    // 消息发送者
-    private T sender;
 }
