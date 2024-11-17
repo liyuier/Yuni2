@@ -9,7 +9,8 @@ import com.yuier.yuni.common.domain.plugin.YuniNegativePlugin;
 import com.yuier.yuni.common.domain.plugin.YuniPlugin;
 import com.yuier.yuni.common.enums.SubmitConditions;
 import com.yuier.yuni.common.interfaces.detector.EventDetector;
-import com.yuier.yuni.common.interfaces.plugin.MessageCalledPluginBean;
+import com.yuier.yuni.common.interfaces.detector.MessageDetector;
+import com.yuier.yuni.common.interfaces.plugin.MessagePluginBean;
 import com.yuier.yuni.common.interfaces.plugin.NegativePluginBean;
 import com.yuier.yuni.common.interfaces.plugin.PluginBean;
 import com.yuier.yuni.common.utils.BeanCopyUtils;
@@ -101,7 +102,7 @@ public class PluginManager {
         // 获取反射执行方法的必要材料
         PluginBean pluginBean = plugin.getPluginBean();
         Method runMethod = plugin.getRunMethod();
-        EventDetector<?> detector = plugin.getDetector();
+        MessageDetector detector = (MessageDetector) plugin.getDetector();
         try {
             // 反射执行插件入口函数
             runMethod.invoke(pluginBean, event, detector);
@@ -204,18 +205,18 @@ public class PluginManager {
         yuniNegativePlugin.setDetector(invokeBeanNoArgMethods(targetPluginBean, "detector"));
 
         // 如果被动插件由消息事件触发，继续构建
-        if (targetPluginBean instanceof MessageCalledPluginBean) {
-            buildFurtherForMessagePlugin(yuniNegativePlugin, (MessageCalledPluginBean<?>) targetPluginBean);
+        if (targetPluginBean instanceof MessagePluginBean) {
+            buildFurtherForMessagePlugin(yuniNegativePlugin, (MessagePluginBean<?>) targetPluginBean);
         }
     }
 
     /**
-     * 从 YuniNegativePlugin 实例构建出 MessageCalledPluginBean 消息插件
+     * 从 YuniNegativePlugin 实例构建出 MessagePluginBean 消息插件
      * @param yuniNegativePlugin YuniNegativePlugin 实例
      * @param targetPluginBean 插件 Bean 本体
      * @param <T> 泛型，限定入参实现 NegativePluginBean 接口
      */
-    private <T extends MessageCalledPluginBean<?>> void buildFurtherForMessagePlugin(YuniNegativePlugin yuniNegativePlugin, T targetPluginBean) {
+    private <T extends MessagePluginBean<?>> void buildFurtherForMessagePlugin(YuniNegativePlugin yuniNegativePlugin, T targetPluginBean) {
         YuniMessagePlugin yuniMessagePlugin = BeanCopyUtils.copyBean(yuniNegativePlugin, YuniMessagePlugin.class);
 
         // 获取插件的 @Plugin 注解
