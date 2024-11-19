@@ -33,7 +33,7 @@ public class MessageEventHandler {
 
     private <T extends MessageEvent<?>> void preHandle(T messageEvent) {
         // 设置消息链
-        messageEvent.setMessageChain(new MessageChain(messageEvent.getMessage()));
+        messageEvent.setMessageChain(new MessageChain(messageEvent.getMessage(), true));
         // 设置消息位置（群聊还是私聊）
         if (messageEvent instanceof GroupMessageEvent) {
             messageEvent.setPosition(new MessageEventPosition(MessageTypeEnum.GROUP, ((GroupMessageEvent) messageEvent).getGroupId()));

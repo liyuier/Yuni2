@@ -16,8 +16,8 @@ import org.springframework.stereotype.Component;
  * @description: 指令测试
  */
 
-@Component
 @Plugin
+@Component
 public class OrderTest implements MessagePluginBean<OrderDetector> {
 
     @Override

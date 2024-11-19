@@ -1,4 +1,4 @@
-package com.yuier.yuni.core.Controller;
+package com.yuier.yuni.core.controller;
 
 import com.yuier.yuni.common.domain.event.message.GroupMessageEvent;
 import com.yuier.yuni.core.util.EventHandlerPatcher;
@@ -25,7 +25,7 @@ public class OneBotEventController {
     EventHandlerPatcher patcher;
 
     @PostMapping
-    public ResponseResult oneBotEventEntrance(@RequestBody GroupMessageEvent event) {
+    public ResponseResult<?> oneBotEventEntrance(@RequestBody GroupMessageEvent event) {
         patcher.eventPreHandle(event);
         patcher.patchEvent(event);
         return ResponseResult.okResult();
