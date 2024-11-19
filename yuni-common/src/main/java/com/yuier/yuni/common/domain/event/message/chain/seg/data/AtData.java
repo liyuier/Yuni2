@@ -21,6 +21,7 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(callSuper = true)
 @MessageDataEntity(dataType = MessageDataEnum.AT)
 public class AtData extends MessageData {
+
     // 被 @ 的 QQ 号。all 表示全体成员。
     private String qq;
 

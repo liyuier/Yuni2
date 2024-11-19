@@ -8,6 +8,7 @@ import com.yuier.yuni.common.domain.event.message.chain.seg.data.TextData;
 import com.yuier.yuni.common.enums.MessageDataEnum;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.util.ArrayList;
 
@@ -23,7 +24,8 @@ import static com.yuier.yuni.common.constants.SystemConstants.FIRST_INDEX;
 
 @Data
 @AllArgsConstructor
-public class MessageChainForOrder {
+@EqualsAndHashCode(callSuper = true)
+public class MessageChainForOrder extends MessageChain{
 
     /**
      * 辅助字段，用于在匹配指令时，标识当前匹配的消息段在整个 cfo 中的位置
@@ -43,29 +45,6 @@ public class MessageChainForOrder {
     public MessageChainForOrder() {
         curSegIndex = 0;
         content = new ArrayList<>();
-    }
-
-    public void addTextSeg(String text) {
-        content.add(new TextSeg(
-                new TextData(text)
-        ));
-    }
-
-    public Boolean startWithTextData() {
-        return content.get(FIRST_INDEX).typeOf(MessageDataEnum.TEXT) &&
-                !((TextSeg) content.get(FIRST_INDEX)).getData().getText().trim().isEmpty();
-    }
-
-    public Boolean startWithReplyData() {
-        return content.get(FIRST_INDEX).typeOf(MessageDataEnum.REPLY);
-    }
-
-    /**
-     * 获取开头的文本消息段
-     * @return  开头的文本消息段
-     */
-    public TextData getStartTextData() {
-        return ((TextSeg) content.get(FIRST_INDEX)).getData();
     }
 
     /**

@@ -51,11 +51,6 @@ public class PluginManager {
         messagePluginMap = new HashMap<>();
     }
 
-    // 初始化
-    public void initialize() {
-        buildYuniPlugins();
-    }
-
     /**
      * 匹配 OneBot 上报事件，为每个插件
      * @param event OneBot 事件
@@ -111,6 +106,9 @@ public class PluginManager {
         }
     }
 
+    /**
+     * 如果插件触发者无权调用插件，执行这一步
+     */
     private void replyNoPermission() {
         // TODO
     }
@@ -130,6 +128,11 @@ public class PluginManager {
     ////////////////////////////////////
     // 下方为初始化部分代码
     ////////////////////////////////////
+
+    // 初始化
+    public void initialize() {
+        buildYuniPlugins();
+    }
 
     /**
      * 初始化插件
@@ -195,7 +198,7 @@ public class PluginManager {
     private <T extends NegativePluginBean<?, ?>> void buildFurtherForNegativePlugin(YuniPlugin yuniPlugin, T targetPluginBean) {
         YuniNegativePlugin yuniNegativePlugin = BeanCopyUtils.copyBean(yuniPlugin, YuniNegativePlugin.class);
         try {
-            // 获取消息插件的入口方法
+            // 获取被动插件的入口方法
             yuniNegativePlugin.setRunMethod(targetPluginBean.getClass().getMethod("run", OneBotEvent.class, EventDetector.class));
         } catch (NoSuchMethodException e) {
             throw new RuntimeException(e);

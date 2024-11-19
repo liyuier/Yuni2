@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 
 @Plugin
 @Component
-public class PluginManager implements MessagePluginBean<OrderDetector> {
+public class ManagePlugins implements MessagePluginBean<OrderDetector> {
 
     @Override
     public void run(MessageEvent<?> event, OrderDetector detector) {
