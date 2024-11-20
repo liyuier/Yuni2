@@ -33,9 +33,6 @@ public class MessageChainForOrder extends MessageChain{
      */
     private int curSegIndex;
 
-    // 消息段集合
-    private ArrayList<MessageSeg<?>> content;
-
     /**
      * 回复消息
      * 如果消息链中包含回复消息，此处用于暂存，辅助后续解析逻辑
@@ -43,8 +40,8 @@ public class MessageChainForOrder extends MessageChain{
     private ReplyData replyData;
 
     public MessageChainForOrder() {
+        super();
         curSegIndex = 0;
-        content = new ArrayList<>();
     }
 
     /**
@@ -52,7 +49,7 @@ public class MessageChainForOrder extends MessageChain{
      * @return  当前消息段指针指向的消息段
      */
     public MessageSeg<?> getCurMessageSeg() {
-        return content.get(curSegIndex);
+        return getContent().get(curSegIndex);
     }
 
     /**
@@ -76,14 +73,14 @@ public class MessageChainForOrder extends MessageChain{
      * @return  消息段是否已经遍历完毕
      */
     public Boolean messageSegsMatchedEnd() {
-        return curSegIndex >= content.size();
+        return curSegIndex >= getContent().size();
     }
 
     /**
      * @return  从当前消息段开始（含），还剩多少消息段未匹配
      */
     public Integer restMessageSegNum() {
-        return content.size() - curSegIndex;
+        return getContent().size() - curSegIndex;
     }
 
     public Boolean storesReplyData() {

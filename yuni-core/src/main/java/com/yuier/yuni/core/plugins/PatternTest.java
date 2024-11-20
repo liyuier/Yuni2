@@ -19,7 +19,7 @@ import org.springframework.stereotype.Component;
 public class PatternTest implements MessagePluginBean<PatternDetector> {
     @Override
     public void run(MessageEvent<?> event, PatternDetector detector) {
-        return;
+        System.out.println("PatternTest entered..");
     }
 
     @Override

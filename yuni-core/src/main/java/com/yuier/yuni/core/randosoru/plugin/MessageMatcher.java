@@ -1,13 +1,13 @@
-package com.yuier.yuni.common.utils;
+package com.yuier.yuni.core.randosoru.plugin;
 
 import com.yuier.yuni.common.detect.message.order.OrderDetector;
 import com.yuier.yuni.common.detect.message.pattern.PatternDetector;
 import com.yuier.yuni.common.domain.event.message.GroupMessageEvent;
 import com.yuier.yuni.common.domain.event.message.MessageEvent;
 import com.yuier.yuni.common.domain.event.message.PrivateMessageEvent;
-import com.yuier.yuni.common.domain.event.message.sender.MessageSender;
 import com.yuier.yuni.common.domain.plugin.YuniMessagePlugin;
 import com.yuier.yuni.common.enums.MessageTypeEnum;
+import com.yuier.yuni.common.utils.BeanCopyUtils;
 
 /**
  * @Title: MessageMatcher
@@ -20,38 +20,16 @@ import com.yuier.yuni.common.enums.MessageTypeEnum;
 public class MessageMatcher {
 
     /**
-     * 检查消息是否命中消息插件
-     * @param event  消息事件
-     * @param plugin  消息插件
-     * @return  消息是否命中插件
-     */
-    public static Boolean matchMessage(MessageEvent<?> event, YuniMessagePlugin plugin) {
-        // 检查 listener
-        if (!checkListener(event, plugin)) {
-            return false;
-        }
-
-        /*
-         * TODO 此处可优化，以 for 循环判断是否为某种适配器，并调用该适配器绑定的 match 方法
-         *  可以增加扩展性
-         */
-        // 如果插件注册的是指令探测器
-        if (plugin.getDetector() instanceof OrderDetector) {
-            return matchOrderMessage(event, plugin);
-        } else if (plugin.getDetector() instanceof PatternDetector) {
-            return matchPatternDetector(event, plugin);
-        }
-        // TODO
-        return false;
-    }
-
-    /**
      * 检查消息能否匹配模式探测器
      * @param event  消息
      * @param plugin  注册了模式探测器的插件
      * @return  消息是否命中插件
      */
-    private static Boolean matchPatternDetector(MessageEvent<?> event, YuniMessagePlugin plugin) {
+    public static Boolean matchPatternDetector(MessageEvent<?> event, YuniMessagePlugin plugin) {
+        // 检查 listener
+        if (!checkListener(event, plugin)) {
+            return false;
+        }
         PatternDetector detector = (PatternDetector) plugin.getDetector();
         return detector.hit(event);
     }
@@ -62,7 +40,11 @@ public class MessageMatcher {
      * @param plugin  注册了指令探测器的插件
      * @return  消息是否命中插件
      */
-    private static Boolean matchOrderMessage(MessageEvent<?> event, YuniMessagePlugin plugin) {
+    public static Boolean matchOrderMessage(MessageEvent<?> event, YuniMessagePlugin plugin) {
+        // 检查 listener
+        if (!checkListener(event, plugin)) {
+            return false;
+        }
         OrderDetector detector = (OrderDetector) plugin.getDetector();
         return detector.hit(event);
     }

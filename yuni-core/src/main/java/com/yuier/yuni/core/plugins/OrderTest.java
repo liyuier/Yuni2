@@ -60,7 +60,7 @@ public class OrderTest implements MessagePluginBean<OrderDetector> {
          * （二）不命中
          * 懒得写了
          */
-        return;
+        System.out.println("OrderTest entered..");
     }
 
     @Override

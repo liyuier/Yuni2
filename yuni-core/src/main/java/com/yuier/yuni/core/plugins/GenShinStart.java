@@ -23,7 +23,7 @@ public class GenShinStart implements MessagePluginBean<OrderDetector> {
 
     @Override
     public void run(MessageEvent<?> event, OrderDetector detector) {
-        System.out.println("进入插件");
+        System.out.println("进入插件 GenShinStart");
         BotAction.sendMessage(event.getPosition(), new MessageChain("启动！"));
     }
 
