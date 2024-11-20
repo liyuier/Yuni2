@@ -1,6 +1,5 @@
 package com.yuier.yuni.common.domain.event.message.chain;
 
-import com.yuier.yuni.common.domain.bot.YuniBot;
 import com.yuier.yuni.common.domain.event.message.chain.seg.MessageSeg;
 import com.yuier.yuni.common.domain.event.message.chain.seg.TextSeg;
 import com.yuier.yuni.common.domain.event.message.chain.seg.data.AtData;

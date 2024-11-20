@@ -1,6 +1,8 @@
 package com.yuier.yuni.core.randosoru.plugin;
 
 import com.yuier.yuni.common.anno.Plugin;
+import com.yuier.yuni.common.detect.message.order.OrderDetector;
+import com.yuier.yuni.common.detect.message.pattern.PatternDetector;
 import com.yuier.yuni.common.domain.event.OneBotEvent;
 import com.yuier.yuni.common.domain.event.message.MessageEvent;
 import com.yuier.yuni.common.domain.event.message.sender.MessageSender;
@@ -14,7 +16,6 @@ import com.yuier.yuni.common.interfaces.plugin.MessagePluginBean;
 import com.yuier.yuni.common.interfaces.plugin.NegativePluginBean;
 import com.yuier.yuni.common.interfaces.plugin.PluginBean;
 import com.yuier.yuni.common.utils.BeanCopyUtils;
-import com.yuier.yuni.common.utils.MessageMatcher;
 import com.yuier.yuni.common.utils.ThreadLocalUtil;
 import com.yuier.yuni.core.randosoru.bot.BotManager;
 import lombok.Data;
@@ -45,10 +46,12 @@ public class PluginManager {
     BotManager botManager;
 
     // 消息事件触发的插件集合
-    private HashMap<String, YuniMessagePlugin> messagePluginMap;
+    private HashMap<String, YuniMessagePlugin> orderMessagePluginMap;
+    private HashMap<String, YuniMessagePlugin> patternMessagePluginMap;
 
     public PluginManager() {
-        messagePluginMap = new HashMap<>();
+        orderMessagePluginMap = new HashMap<>();
+        patternMessagePluginMap = new HashMap<>();
     }
 
     /**
@@ -69,20 +72,47 @@ public class PluginManager {
      * @param event 消息事件
      */
     public void matchAndExecMessageEvent(MessageEvent<?> event) {
-        for (YuniMessagePlugin plugin: messagePluginMap.values()) {
+        /*
+         * 原则是先匹配指令插件。如果存在指令插件可以被触发，后续不再遍历模式插件。
+         * 如果没有匹配上指令插件，再继续匹配模式插件。模式插件匹配上了也继续匹配，不中途退出。
+         */
+        boolean orderPluginCalled = false;
+        for (YuniMessagePlugin plugin: orderMessagePluginMap.values()) {
             // 检查插件是否被当前 BOT 实例订阅
             if (!pluginIsSubscribedByBot(plugin, ThreadLocalUtil.getBot().getId())) {
                 continue;
             }
             // 检查当前插件是否被消息命中
-            if (MessageMatcher.matchMessage(event, plugin)) {
-                // 检查消息发送者是否有权调用该插件
+            if (MessageMatcher.matchOrderMessage(event, plugin)) {
+                // 如果命中了，检查消息发送者是否有权调用该插件
                 if (!checkPermission(event, plugin)) {
-                    // 如果命中了，检查是否有权调用，如果无权调用，发出提示
+                    // 如果无权调用，发出提示
                     replyNoPermission();
                     continue;
                 }
-                // 如果命中，执行插件
+                // 如果有权调用，执行插件
+                callPlugin(plugin, event);
+                orderPluginCalled = true;
+            }
+        }
+        // 如果存在指令插件被触发，后续不再遍历匹配插件
+        if (orderPluginCalled) {
+            return;
+        }
+        for (YuniMessagePlugin plugin : patternMessagePluginMap.values()) {
+            // 检查插件是否被当前 BOT 实例订阅
+            if (!pluginIsSubscribedByBot(plugin, ThreadLocalUtil.getBot().getId())) {
+                continue;
+            }
+            // 检查当前插件是否被消息命中
+            if (MessageMatcher.matchPatternDetector(event, plugin)) {
+                // 如果命中了，检查消息发送者是否有权调用该插件
+                if (!checkPermission(event, plugin)) {
+                    // 如果无权调用，发出提示
+                    replyNoPermission();
+                    continue;
+                }
+                // 如果有权调用，执行插件
                 callPlugin(plugin, event);
             }
         }
@@ -232,12 +262,31 @@ public class PluginManager {
         // 设置该消息插件监听的消息类型
         yuniMessagePlugin.setListener(invokeBeanNoArgMethods(targetPluginBean, "listenAt"));
 
-        // 构建结束（たぶん），将插件加入 negativePluginMap 中
-        if (messagePluginMap.containsKey(yuniMessagePlugin.getId())) {
-            throw new RuntimeException("插件 " + yuniMessagePlugin.getPluginBean().getClass().getName() +
-                    " 的 ID " + yuniMessagePlugin.getId() + "已经存在!");
+        // 构建结束（たぶん），将插件加入 messagePluginMap 中
+        putMessagePluginsIntoMap(yuniMessagePlugin);
+    }
+
+    /**
+     * 将消息插件按探测器类型放入不同插件 map 中
+     * @param yuniMessagePlugin  消息插件
+     */
+    private void putMessagePluginsIntoMap(YuniMessagePlugin yuniMessagePlugin) {
+        EventDetector<?> detector = yuniMessagePlugin.getDetector();
+        if (detector instanceof OrderDetector) {
+            // 放入 orderMessagePluginMap 中
+            if (orderMessagePluginMap.containsKey(yuniMessagePlugin.getId())) {
+                throw new RuntimeException("插件 " + yuniMessagePlugin.getPluginBean().getClass().getName() +
+                        " 的 ID " + yuniMessagePlugin.getId() + "已经存在!");
+            }
+            orderMessagePluginMap.put(yuniMessagePlugin.getId(), yuniMessagePlugin);
+        } else if (detector instanceof PatternDetector) {
+            // 放入 patternMessagePluginMap 中
+            if (patternMessagePluginMap.containsKey(yuniMessagePlugin.getId())) {
+                throw new RuntimeException("插件 " + yuniMessagePlugin.getPluginBean().getClass().getName() +
+                        " 的 ID " + yuniMessagePlugin.getId() + "已经存在!");
+            }
+            patternMessagePluginMap.put(yuniMessagePlugin.getId(), yuniMessagePlugin);
         }
-        messagePluginMap.put(yuniMessagePlugin.getId(), yuniMessagePlugin);
     }
 
     /**

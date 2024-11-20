@@ -59,8 +59,6 @@ import static com.yuier.yuni.common.constants.SystemConstants.FIRST_INDEX;
 @AllArgsConstructor
 public class OrderDetector implements MessageDetector {
 
-    private OrderDetector() {}
-
     /**
      * 指令头
      */
@@ -82,6 +80,10 @@ public class OrderDetector implements MessageDetector {
      * 由消息探测器解析出来的玩意
      */
     private OrderMatchedOut orderMatchedOut;
+
+    public OrderDetector() {
+
+    }
 
     public static class Builder {
         private OrderHead head;
