@@ -6,7 +6,9 @@ import com.yuier.yuni.common.domain.event.message.MessageEvent;
 import com.yuier.yuni.common.domain.event.message.MessageEventPosition;
 import com.yuier.yuni.common.domain.event.message.chain.MessageChain;
 import com.yuier.yuni.common.enums.MessageTypeEnum;
+import com.yuier.yuni.common.utils.YuniLogUtils;
 import com.yuier.yuni.core.randosoru.plugin.PluginManager;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -18,6 +20,7 @@ import org.springframework.stereotype.Component;
  * @description: 消息事件 handler
  */
 
+@Slf4j
 @Component
 @EventHandler(eventType = MessageEvent.class)
 public class MessageEventHandler {
@@ -28,7 +31,6 @@ public class MessageEventHandler {
     public <T extends MessageEvent<?>> void handle(T messageEvent) {
         preHandle(messageEvent);
         pluginManager.matchEventForPlugin(messageEvent);
-        System.out.println("解析消息成功");
     }
 
     private <T extends MessageEvent<?>> void preHandle(T messageEvent) {
@@ -40,5 +42,7 @@ public class MessageEventHandler {
         } else {
             messageEvent.setPosition(new MessageEventPosition(MessageTypeEnum.PRIVATE, messageEvent.getSender().getUserId()));
         }
+        // 打印消息日志
+        log.info(YuniLogUtils.receiveMessageLogStr(messageEvent));
     }
 }

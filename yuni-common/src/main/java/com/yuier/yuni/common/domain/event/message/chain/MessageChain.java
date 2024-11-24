@@ -119,4 +119,13 @@ public class MessageChain {
         }
         return false;
     }
+
+    @Override
+    public String toString() {
+        StringBuilder str = new StringBuilder();
+        for (MessageSeg<?> seg : content) {
+            str.append(seg.getData().toString());
+        }
+        return str.toString();
+    }
 }
