@@ -567,6 +567,10 @@ public class OrderDetector implements MessageDetector {
      * @return MessageChainForOrder
      */
     private static MessageChainForOrder splitMessageForOrder(MessageChain chain) {
+        /*
+         * TODO 此处可优化，每个请求维护一个 cfo 即可
+         *  ThreadLocal, 启动！
+         */
         MessageChainForOrder chainForOrder = new MessageChainForOrder();
         // 遍历消息段
         for (MessageSeg<?> messageSeg : chain.getContent()) {

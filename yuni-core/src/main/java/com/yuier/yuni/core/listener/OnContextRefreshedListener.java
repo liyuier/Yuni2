@@ -34,14 +34,14 @@ public class OnContextRefreshedListener implements ApplicationListener<ContextRe
 
     @Override
     public void onApplicationEvent(@NonNull ContextRefreshedEvent event) {
-        // 初始化 Bot 框架
-        randosoru.initialize();
-
         // 使 Jackson 反序列化自动适配子类
         improveJacksonDeserialize();
+        // 初始化 Bot 框架
+        randosoru.initialize();
     }
 
     private void improveJacksonDeserialize() {
+        // TODO 待优化
         String packageName = "com.yuier.yuni.common";
 
         Reflections reflections = new Reflections(packageName);
