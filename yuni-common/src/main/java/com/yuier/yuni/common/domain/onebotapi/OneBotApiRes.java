@@ -2,13 +2,12 @@ package com.yuier.yuni.common.domain.onebotapi;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import com.yuier.yuni.common.interfaces.onebotapi.OneBotApiData;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * @Title: ApiData
+ * @Title: OneBotApiRes
  * @Author yuier
  * @Package com.yuier.yuni.common.domain.onebotapi
  * @Date 2024/11/13 0:54
@@ -19,7 +18,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class ApiData <T>{
+public class OneBotApiRes<T>{
 
     private Integer retcode;
 
@@ -33,14 +32,14 @@ public class ApiData <T>{
 
     private T data;
 
-    public ApiData<T> build(T data) {
+    public OneBotApiRes<T> build(T data) {
         this.data = data;
         return this;
     }
 
     @Override
     public String toString() {
-        return "ApiData{" +
+        return "OneBotApiRes{" +
                 "retcode=" + retcode +
                 ", message='" + message + '\'' +
                 ", wording='" + wording + '\'' +

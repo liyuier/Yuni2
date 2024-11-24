@@ -5,6 +5,7 @@ import com.yuier.yuni.common.domain.event.message.MessageEventPosition;
 import com.yuier.yuni.common.domain.event.message.chain.MessageChain;
 import com.yuier.yuni.common.domain.event.message.chain.seg.MessageSeg;
 import com.yuier.yuni.common.domain.onebotapi.data.*;
+import com.yuier.yuni.common.domain.onebotapi.pojo.GetMessagePojo;
 import com.yuier.yuni.common.domain.onebotapi.pojo.SendGroupMessagePojo;
 import com.yuier.yuni.common.domain.onebotapi.pojo.SendPrivateMessagePojo;
 import com.yuier.yuni.common.enums.MessageTypeEnum;
@@ -23,6 +24,10 @@ import java.util.HashMap;
 @Component
 public class BotAction {
 
+    /**
+     * 获取当前 bot 实例的 OneBot API 基础 url
+     * @return
+     */
     private static String getOneBotBaseUrl() {
         YuniBot bot = ThreadLocalUtil.getBot();
         return bot.getOnebotUrl();
@@ -34,12 +39,11 @@ public class BotAction {
      * @return  GetMessageResData 实例
      */
     public static GetMessageResData getMessage(Long messageId) {
-        HashMap<String, Long> getMessageParam = new HashMap<>();
-        getMessageParam.put("message_id", messageId);
-        return CallOneBotUtil.getOneBotForEntity(
-                getOneBotBaseUrl() + "/get_msg",
-                GetMessageResData.class,
-                getMessageParam
+        String getMessageUrl = getOneBotBaseUrl() + "/get_msg";
+        return CallOneBotUtil.postOneBotForEntity(
+                getMessageUrl,
+                new GetMessagePojo(messageId),
+                GetMessageResData.class
         );
     }
 
