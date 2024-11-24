@@ -66,7 +66,7 @@ public class OnContextRefreshedListener implements ApplicationListener<ContextRe
                 if (extendClassDefine == null) {
                     continue;
                 }
-                /**
+                /*
                  * ObjectMapper.registerSubtypes 说明  -- 来源于文心一言
                  * 在 Jackson 库中，ObjectMapper 的 registerSubtypes 方法是通过 Java 的反射机制来识别并注册子类的。
                  * 当你调用 registerSubtypes(Dog.class, Cat.class) 时，Jackson 会检查这些类的定义，发现它们都是 Animal 类的子类（因为 Dog 和 Cat 都继承自 Animal）。
