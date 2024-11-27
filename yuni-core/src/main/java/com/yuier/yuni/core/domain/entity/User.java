@@ -1,4 +1,4 @@
-package com.yuier.yuni.core.entity;
+package com.yuier.yuni.core.domain.entity;
 
 import com.yuier.yuni.common.enums.PermissionLevel;
 import lombok.AllArgsConstructor;

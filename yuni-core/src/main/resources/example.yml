@@ -1,0 +1,21 @@
+server:
+  port: 11454
+spring:
+  application:
+    name: yuni-core
+  datasource:
+    url: jdbc:mysql://localhost:3306/yuni2_cms?characterEncoding=utf-8&serverTimezone=Asia/Shanghai
+    username: username
+    password: password
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+mybatis-plus:
+  configuration:
+    # 日志
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    db-config:
+      id-type: auto
+
+bots:
+  config: bots.yml
