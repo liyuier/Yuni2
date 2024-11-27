@@ -6,7 +6,7 @@ import com.yuier.yuni.common.domain.onebotapi.data.GetLoginInfoResData;
 import com.yuier.yuni.common.enums.PermissionLevel;
 import com.yuier.yuni.common.utils.BotAction;
 import com.yuier.yuni.core.util.YamlParser;
-import com.yuier.yuni.core.entity.User;
+import com.yuier.yuni.core.domain.entity.User;
 import com.yuier.yuni.core.randosoru.bot.user.UserManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

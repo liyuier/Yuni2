@@ -1,6 +1,7 @@
 package com.yuier.yuni.core.randosoru;
 
 import com.yuier.yuni.core.randosoru.bot.BotManager;
+import com.yuier.yuni.core.randosoru.perm.PermissionManager;
 import com.yuier.yuni.core.randosoru.plugin.PluginManager;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,10 +23,13 @@ public class Randosoru {
     BotManager botManager;
     @Autowired
     PluginManager pluginManager;
+    @Autowired
+    PermissionManager permissionManager;
 
     // 初始化管理框架
     public void initialize() {
         pluginManager.initialize();
         botManager.initialize();
+        permissionManager.initialize();
     }
 }
