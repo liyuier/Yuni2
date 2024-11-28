@@ -23,5 +23,5 @@ public class MessageEventPosition {
      * 如果消息链来自群聊，则为群号；
      * 如果消息链来自私聊，则为 QQ 号
      */
-    private Long position;
+    private Long positionId;
 }

@@ -50,4 +50,12 @@ public class UserPermExceptEntity {
     * 权限等级，0 ~ 4
     */
     private Integer permLevel;
+
+    public UserPermExceptEntity(Long userId, String position, Long posId, Long botId, Integer permLevel) {
+        this.userId = userId;
+        this.position = position;
+        this.posId = posId;
+        this.botId = botId;
+        this.permLevel = permLevel;
+    }
 }

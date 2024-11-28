@@ -14,5 +14,11 @@ import java.util.List;
 public interface UserPermExceptService extends IService<UserPermExceptEntity> {
 
     List<UserPermExceptEntity> getPermExceptList();
+
+    List<UserPermExceptEntity> listUserPerms(Long userId, String position, Long posId, Long botId);
+
+    void addUserPerm(Long userId, String position, Long posId, Long botId, Integer permLevel);
+
+    void updateUserPerm(Long userId, String position, Long posId, Long botId, Integer permLevel);
 }
 
