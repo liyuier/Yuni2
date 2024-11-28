@@ -11,6 +11,7 @@ import com.yuier.yuni.common.utils.ThreadLocalUtil;
 import com.yuier.yuni.core.domain.entity.UserPermExceptEntity;
 import com.yuier.yuni.core.service.UserPermExceptService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
@@ -28,6 +29,9 @@ import java.util.stream.Collectors;
 
 @Component
 public class PermissionManager {
+
+    @Value("${master}")
+    private Long masterQq;
 
     @Autowired
     UserPermExceptService userPermExceptService;
@@ -128,6 +132,9 @@ public class PermissionManager {
         if (exceptPermLevelNum.equals(UNKNOWN_PERM_LEVEL)) {
             // 没有查出特殊权限，构造默认权限
             MessageSender sender = event.getSender();
+            if (sender.getUserId().equals(masterQq)) {
+                return PermissionLevel.MASTER;
+            }
             if (sender instanceof PrivateMessageSender) {
                 // 私聊用户默认返回 USER 权限
                 return PermissionLevel.USER;

@@ -19,7 +19,7 @@ import org.springframework.stereotype.Component;
  */
 
 @Component
-@Plugin(permission = PermissionLevel.SUPER_ADMIN)
+@Plugin(permission = PermissionLevel.MASTER)
 public class GenShinStart implements MessagePluginBean<OrderDetector> {
 
     @Override
