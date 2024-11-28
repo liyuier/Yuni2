@@ -68,7 +68,6 @@ public class MessageEvent<T extends MessageSender> extends OneBotEvent {
 
     /**
      * 消息内容
-     * TODO 这里的消息链需要再进行处理
      */
     private ArrayList<MessageSeg<?>> message;
 

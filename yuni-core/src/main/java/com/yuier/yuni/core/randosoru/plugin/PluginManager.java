@@ -5,10 +5,10 @@ import com.yuier.yuni.common.detect.message.order.OrderDetector;
 import com.yuier.yuni.common.detect.message.pattern.PatternDetector;
 import com.yuier.yuni.common.domain.event.OneBotEvent;
 import com.yuier.yuni.common.domain.event.message.MessageEvent;
-import com.yuier.yuni.common.domain.event.message.sender.MessageSender;
 import com.yuier.yuni.common.domain.plugin.YuniMessagePlugin;
 import com.yuier.yuni.common.domain.plugin.YuniNegativePlugin;
 import com.yuier.yuni.common.domain.plugin.YuniPlugin;
+import com.yuier.yuni.common.enums.PermissionLevel;
 import com.yuier.yuni.common.enums.SubmitConditions;
 import com.yuier.yuni.common.interfaces.detector.EventDetector;
 import com.yuier.yuni.common.interfaces.detector.MessageDetector;
@@ -18,6 +18,7 @@ import com.yuier.yuni.common.interfaces.plugin.PluginBean;
 import com.yuier.yuni.common.utils.BeanCopyUtils;
 import com.yuier.yuni.common.utils.ThreadLocalUtil;
 import com.yuier.yuni.core.randosoru.bot.BotManager;
+import com.yuier.yuni.core.randosoru.perm.PermissionManager;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -44,6 +45,8 @@ public class PluginManager {
     ApplicationContext applicationContext;
     @Autowired
     BotManager botManager;
+    @Autowired
+    PermissionManager permissionManager;
 
     // 消息事件触发的插件集合
     private HashMap<String, YuniMessagePlugin> orderMessagePluginMap;
@@ -149,10 +152,11 @@ public class PluginManager {
      * @param plugin  插件
      * @return  消息发送者是否有权调用插件
      */
-    private static Boolean checkPermission(MessageEvent<?> event, YuniMessagePlugin plugin) {
-        MessageSender sender = event.getSender();
-        // TODO 再说吧
-        return true;
+    private Boolean checkPermission(MessageEvent<?> event, YuniMessagePlugin plugin) {
+        PermissionLevel userPermLevel = permissionManager.queryUserPermission(event);
+        PermissionLevel pluginPermLevel = plugin.getPluginBean().getClass()
+                                                .getAnnotation(Plugin.class).permission();
+        return userPermLevel.compareTo(pluginPermLevel) >= 0;
     }
 
     ////////////////////////////////////

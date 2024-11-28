@@ -44,10 +44,10 @@ public class SendMessagePojo {
     public SendMessagePojo(MessageEventPosition messageEventPosition, MessageChain chain) {
         if (messageEventPosition.getMessageType().equals(MessageTypeEnum.PRIVATE)) {
             this.messageType = "private";
-            this.userId = messageEventPosition.getPosition();
+            this.userId = messageEventPosition.getPositionId();
         } else if (messageEventPosition.getMessageType().equals(MessageTypeEnum.GROUP)) {
             this.messageType = "group";
-            this.groupId = messageEventPosition.getPosition();
+            this.groupId = messageEventPosition.getPositionId();
         }
         this.message = chain.getContent();
     }

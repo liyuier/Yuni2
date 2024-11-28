@@ -11,8 +11,6 @@ import com.yuier.yuni.common.domain.onebotapi.pojo.SendPrivateMessagePojo;
 import com.yuier.yuni.common.enums.MessageTypeEnum;
 import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
-
 /**
  * @Title: BotAction
  * @Author yuier
@@ -154,9 +152,9 @@ public class BotAction {
     public static SendMessageResData sendMessage(MessageEventPosition position, MessageSeg<?>[] messageSegs) {
         MessageTypeEnum messageType = position.getMessageType();
         if (messageType.equals(MessageTypeEnum.GROUP)) {
-            return new SendMessageResData(sendGroupMessage(position.getPosition(), messageSegs));
+            return new SendMessageResData(sendGroupMessage(position.getPositionId(), messageSegs));
         } else {
-            return new SendMessageResData((sendPrivateMessageResData(position.getPosition(), messageSegs)));
+            return new SendMessageResData((sendPrivateMessageResData(position.getPositionId(), messageSegs)));
         }
     }
 
@@ -169,9 +167,9 @@ public class BotAction {
     public static SendMessageResData sendMessage(MessageEventPosition position, MessageChain chain) {
         MessageTypeEnum messageType = position.getMessageType();
         if (messageType.equals(MessageTypeEnum.GROUP)) {
-            return new SendMessageResData(sendGroupMessage(position.getPosition(), chain));
+            return new SendMessageResData(sendGroupMessage(position.getPositionId(), chain));
         } else {
-            return new SendMessageResData((sendPrivateMessageResData(position.getPosition(), chain)));
+            return new SendMessageResData((sendPrivateMessageResData(position.getPositionId(), chain)));
         }
     }
 }
