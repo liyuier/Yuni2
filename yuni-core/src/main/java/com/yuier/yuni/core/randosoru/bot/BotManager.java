@@ -58,17 +58,6 @@ public class BotManager {
     }
 
     /**
-     * 获取当前 bot 下，用户权限
-     * @param botId botID
-     * @param userId userId
-     * @return 用户权限等级
-     */
-    public PermissionLevel getUserPermission(Long botId, Long userId) {
-        // TODO 先返回个 user 再说，后面的慢慢写
-        return PermissionLevel.USER;
-    }
-
-    /**
      * 加载配置文件中的 bot 到内存中
      */
     private void loadBots() {

@@ -23,8 +23,4 @@ public class BotsConfig {
 
     @JsonProperty("bots")
     private List<YuniBot> bots;
-
-//    public BotsConfig() {
-//        bots = new ArrayList<>();
-//    }
 }
