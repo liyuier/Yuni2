@@ -19,3 +19,5 @@ mybatis-plus:
 
 bots:
   config: bots.yml
+
+master: 2937818202

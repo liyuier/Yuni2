@@ -45,4 +45,11 @@ public class PluginSubscExceptEntity {
     * 订阅策略，0 表示不订阅；1 表示订阅
     */
     private Integer subscFlag;
+
+    public PluginSubscExceptEntity(String position, Long posId, String pluginId, Integer subscFlag) {
+        this.position = position;
+        this.posId = posId;
+        this.pluginId = pluginId;
+        this.subscFlag = subscFlag;
+    }
 }

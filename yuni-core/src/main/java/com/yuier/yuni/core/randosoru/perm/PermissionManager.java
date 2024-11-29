@@ -132,6 +132,7 @@ public class PermissionManager {
         if (exceptPermLevelNum.equals(UNKNOWN_PERM_LEVEL)) {
             // 没有查出特殊权限，构造默认权限
             MessageSender sender = event.getSender();
+            // 检查发送者是否为 bot 主人
             if (sender.getUserId().equals(masterQq)) {
                 return PermissionLevel.MASTER;
             }
@@ -194,7 +195,7 @@ public class PermissionManager {
         if (permLevel < PERM_BANNED || permLevel > PERM_MASTER) {
             throw new RuntimeException("没有对应的权限等级：" + permLevel);
         }
-        // 首先查找当前定位下是否已经设置了特殊参数
+        // 首先查找当前定位下是否已经设置了特殊权限
         List<UserPermExceptEntity> userPermList = userPermExceptService.listUserPerms(userId, position, posId, botId);
         if (userPermList == null || userPermList.isEmpty()) {
             userPermExceptService.addUserPerm(userId, position, posId, botId, permLevel);
@@ -217,7 +218,7 @@ public class PermissionManager {
             throw new RuntimeException("没有对应的权限等级：" + permLevel);
         }
         String redisPermKey = buildRedisPermKey(userId, position, posId, botId);
-        Map<String, Integer> permExceptMap = null;
+        Map<String, Integer> permExceptMap;
         permExceptMap = redisCache.getCacheMap(USER_PERM_EXCEP_MAP);
         if (permExceptMap == null) {
             permExceptMap = new HashMap<>();
@@ -243,7 +244,7 @@ public class PermissionManager {
     }
 
     /**
-     * 根据数据库中的记录，构建 redis 中储存权限特殊情况表的 Map 结构的键
+     * 构建 redis 中储存权限特殊情况表的 Map 结构的键
      * @param userId 用户 ID
      * @param position 位置，group 或 private
      * @param posId 位置 ID，群号或用户号
