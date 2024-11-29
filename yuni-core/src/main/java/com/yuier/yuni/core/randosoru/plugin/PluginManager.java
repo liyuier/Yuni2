@@ -9,7 +9,7 @@ import com.yuier.yuni.common.domain.plugin.YuniMessagePlugin;
 import com.yuier.yuni.common.domain.plugin.YuniNegativePlugin;
 import com.yuier.yuni.common.domain.plugin.YuniPlugin;
 import com.yuier.yuni.common.enums.PermissionLevel;
-import com.yuier.yuni.common.enums.SubmitConditions;
+import com.yuier.yuni.common.enums.SubscribeCondition;
 import com.yuier.yuni.common.interfaces.detector.EventDetector;
 import com.yuier.yuni.common.interfaces.detector.MessageDetector;
 import com.yuier.yuni.common.interfaces.plugin.MessagePluginBean;
@@ -199,7 +199,7 @@ public class PluginManager {
         // 设置插件 ID
         if (pluginAnno.id().isEmpty()) {
             // 以 Bean 的全名作为插件 ID
-            yuniPlugin.setId(targetPluginBean.getClass().getName());
+            yuniPlugin.setId(targetPluginBean.getClass().getSimpleName());
         } else {
             yuniPlugin.setId(pluginAnno.id());
         }
@@ -212,10 +212,10 @@ public class PluginManager {
         yuniPlugin.setHelpInfo(helpInfo);
 
         // 获取插件默认订阅策略
-        yuniPlugin.setSubmitCondition(pluginAnno.submit());
+        yuniPlugin.setSubmitCondition(pluginAnno.subscribe());
 
         // 根据插件默认订阅策略设置插件初始状态
-        yuniPlugin.setIsSubscribed(yuniPlugin.getSubmitCondition().equals(SubmitConditions.YES));
+        yuniPlugin.setIsSubscribed(yuniPlugin.getSubmitCondition().equals(SubscribeCondition.YES));
 
         // 如果插件为被动插件，继续构建
         if (targetPluginBean instanceof NegativePluginBean<?, ?>) {

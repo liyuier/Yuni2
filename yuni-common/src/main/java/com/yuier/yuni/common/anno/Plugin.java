@@ -1,7 +1,7 @@
 package com.yuier.yuni.common.anno;
 
 import com.yuier.yuni.common.enums.PermissionLevel;
-import com.yuier.yuni.common.enums.SubmitConditions;
+import com.yuier.yuni.common.enums.SubscribeCondition;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -35,5 +35,5 @@ public @interface Plugin {
      * @return 作为新插件，第一次拉起时，希望机器人实例默认订阅还是不订阅
      *         默认订阅
      */
-    SubmitConditions submit() default SubmitConditions.YES;
+    SubscribeCondition subscribe() default SubscribeCondition.YES;
 }

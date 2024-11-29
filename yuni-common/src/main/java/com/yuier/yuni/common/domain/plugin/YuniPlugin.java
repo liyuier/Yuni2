@@ -1,6 +1,6 @@
 package com.yuier.yuni.common.domain.plugin;
 
-import com.yuier.yuni.common.enums.SubmitConditions;
+import com.yuier.yuni.common.enums.SubscribeCondition;
 import com.yuier.yuni.common.interfaces.plugin.PluginBean;
 import lombok.Data;
 
@@ -25,7 +25,7 @@ public class YuniPlugin {
     private String helpInfo;
 
     // 作为新插件，第一次拉起时，希望机器人实例默认订阅还是不订阅
-    private SubmitConditions submitCondition;
+    private SubscribeCondition submitCondition;
 
     // 插件是否活跃
     private Boolean isSubscribed;
