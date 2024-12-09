@@ -9,6 +9,8 @@ import com.yuier.yuni.common.domain.onebotapi.OneBotApiRes;
 import com.yuier.yuni.common.interfaces.onebotapi.OneBotApiData;
 import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
@@ -31,6 +33,8 @@ public class CallOneBotUtil {
 
     private static RestTemplate restTemplate;
 
+    private static WebClient webClient;
+
     private static ObjectMapper getObjectMapper() {
         return ApplicationContextProvider.getBean(ObjectMapper.class);
     }
@@ -42,6 +46,12 @@ public class CallOneBotUtil {
         }
         return restTemplate;
     }
+    private static WebClient getWebClient() {
+        if (webClient == null) {
+            webClient = WebClient.builder().build();
+        }
+        return webClient;
+    }
 
     /**
      * 请求 OneBot API
@@ -52,20 +62,26 @@ public class CallOneBotUtil {
      */
     public static <T extends OneBotApiData> T getOneBotForEntity(String url, Class<T> responseDataType) {
         // 获取请求头，设置响应内容类型为 JSON
-        HttpHeaders header = createJsonContentHeader();
-        ResponseEntity<String> responseEntity = null;
-        try {
-            // 发出请求，这里接收响应的 JSON 消息
-            responseEntity = getRestTemplate().getForEntity(new URL(url).toURI(), String.class);
-            if (responseEntity.getStatusCode().is2xxSuccessful()) {
-                // 获取响应字符串，并解析为返回的实体类
-                return parseJsonResult(responseEntity, responseDataType);
-            } else {
-                throw new RuntimeException("Failed to fetch data from " + url + ". Status code: " + responseEntity.getStatusCode());
-            }
-        } catch (URISyntaxException | MalformedURLException e) {
-            throw new RuntimeException(e);
-        }
+//        HttpHeaders header = createJsonContentHeader();
+//        ResponseEntity<String> responseEntity = null;
+//        try {
+//            // 发出请求，这里接收响应的 JSON 消息
+//            responseEntity = getRestTemplate().getForEntity(new URL(url).toURI(), String.class);
+//            if (responseEntity.getHttpStatus().is2xxSuccessful()) {
+//                // 获取响应字符串，并解析为返回的实体类
+//                return parseJsonResult(responseEntity, responseDataType);
+//            } else {
+//                throw new RuntimeException("Failed to fetch data from " + url + ". Status code: " + responseEntity.getStatusCode());
+//            }
+//        } catch (URISyntaxException | MalformedURLException e) {
+//            throw new RuntimeException(e);
+//        }
+        // 使用 webClient 进行请求
+        Mono<String> stringMono = getWebClient().get()
+                .uri(url)
+                .retrieve()
+                .bodyToMono(String.class);
+        return parseJsonResult(stringMono.block(), responseDataType);
     }
 
     /**
@@ -194,12 +210,16 @@ public class CallOneBotUtil {
     public static <T extends OneBotApiData> T parseJsonResult(ResponseEntity<String> responseEntity, Class<T> responseDataType) {
         // 获取响应体中的 json 字符串
         String result = responseEntity.getBody();
+        return parseJsonResult(result, responseDataType);
+    }
+
+    public static <T extends OneBotApiData> T parseJsonResult(String responseJson, Class<T> responseDataType) {
         // 获取 objectMapper 实例，该实例中维护了子类关系
         ObjectMapper objectMapper = getObjectMapper();
         // 遇到匹配不上实体类中字段的 json 属性时，跳过该属性
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         // 先借助 hutool 的 JSONUtil 获取 OneBotApiRes<?> 实例
-        OneBotApiRes<T> oneBotApiRes = JSONUtil.toBean(result, OneBotApiRes.class);
+        OneBotApiRes<T> oneBotApiRes = JSONUtil.toBean(responseJson, OneBotApiRes.class);
         // 然后再将半成品的 oneBotApiRes.data 作为字符串再取出（TODO 我的天，这里一定要优化）
         String resDataJson = JSONUtil.toJsonStr((JSONObject) oneBotApiRes.getData());
         T resData;
