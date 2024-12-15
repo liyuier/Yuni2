@@ -1,10 +1,10 @@
 package com.yuier.yuni.core;
 
-import com.yuier.yuni.common.domain.bot.BotsConfig;
+import org.apache.dubbo.config.spring.context.annotation.EnableDubbo;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 
+@EnableDubbo
 @SpringBootApplication
 public class YuniCoreApplication {
 

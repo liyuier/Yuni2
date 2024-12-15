@@ -32,3 +32,8 @@ application.yml
 **/mvnw.cmd
 **/.mvn
 **/target/
+
+# 忽略 Maven 构建输出目录
+**/*/target/
+# 忽略 Gradle 构建输出目录
+**/*/build/

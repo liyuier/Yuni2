@@ -13,6 +13,7 @@
         <module>yuni-common</module>
         <module>yuni-core</module>
         <module>yuni-breq</module>
+        <module>yuni-api</module>
     </modules>
 
 </project>
