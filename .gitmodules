@@ -1,0 +1,3 @@
+[submodule "yuni_python_utils_service"]
+	path = yuni_python_utils_service
+	url = ./yuni_python_utils_service
