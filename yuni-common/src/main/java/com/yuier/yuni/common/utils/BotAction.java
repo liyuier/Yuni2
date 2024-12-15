@@ -41,6 +41,7 @@ public class BotAction {
         return CallOneBotUtil.postOneBotForEntity(
                 getMessageUrl,
                 new GetMessagePojo(messageId),
+                GetMessagePojo.class,
                 GetMessageResData.class
         );
     }
@@ -94,6 +95,7 @@ public class BotAction {
         return CallOneBotUtil.postOneBotForEntity(
                 sendGroupMessageUrl,
                 new SendGroupMessagePojo(groupId, messageSegs),
+                SendGroupMessagePojo.class,
                 SendGroupMessageResData.class
         );
     }
@@ -109,6 +111,7 @@ public class BotAction {
         return CallOneBotUtil.postOneBotForEntity(
                 sendGroupMessageUrl,
                 new SendGroupMessagePojo(groupId, chain),
+                SendGroupMessagePojo.class,
                 SendGroupMessageResData.class
         );
     }
@@ -124,6 +127,7 @@ public class BotAction {
         return CallOneBotUtil.postOneBotForEntity(
                 sendPrivateMessageUrl,
                 new SendPrivateMessagePojo(userId, messageSegs),
+                SendPrivateMessagePojo.class,
                 SendPrivateMessageResData.class
         );
     }
@@ -139,6 +143,7 @@ public class BotAction {
         return CallOneBotUtil.postOneBotForEntity(
                 sendPrivateMessageUrl,
                 new SendPrivateMessagePojo(userId, chain),
+                SendPrivateMessagePojo.class,
                 SendPrivateMessageResData.class
         );
     }
