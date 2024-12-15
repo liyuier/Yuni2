@@ -1,0 +1,24 @@
+server:
+  port: 11452
+spring:
+  application:
+    name: yuni-req
+  datasource:
+    url: jdbc:mysql://localhost:3306/yuni2_cms?characterEncoding=utf-8&serverTimezone=Asia/Shanghai
+    username: username
+    password: password
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+dubbo:
+  application:
+    name: yuni-req
+    logger: slf4j
+    qosEnable: true
+    qosPort: 11462
+    qosAcceptForeignIp: false
+  protocol:
+    name: tri
+    port: -1
+  registry:
+    id: nacos-registry
+    address: nacos://localhost:8848

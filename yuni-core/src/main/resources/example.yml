@@ -1,5 +1,5 @@
 server:
-  port: 11454
+  port: 11451
 spring:
   application:
     name: yuni-core
@@ -8,6 +8,20 @@ spring:
     username: username
     password: password
     driver-class-name: com.mysql.cj.jdbc.Driver
+
+dubbo:
+  application:
+    name: yuni-core
+    logger: slf4j
+    qosEnable: true
+    qosPort: 11461
+    qosAcceptForeignIp: false
+  protocol:
+    name: tri
+    port: -1
+  registry:
+    id: nacos-registry
+    address: nacos://localhost:8848
 
 mybatis-plus:
   configuration:
