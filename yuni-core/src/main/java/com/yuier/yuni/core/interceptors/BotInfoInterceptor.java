@@ -1,4 +1,4 @@
-package com.yuier.yuni.common.interceptors;
+package com.yuier.yuni.core.interceptors;
 
 import com.yuier.yuni.common.utils.ThreadLocalUtil;
 import jakarta.servlet.http.HttpServletRequest;
