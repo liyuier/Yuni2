@@ -8,7 +8,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yuier.yuni.common.domain.onebotapi.OneBotApiRes;
 import com.yuier.yuni.common.interfaces.onebotapi.OneBotApiData;
 import org.springframework.http.MediaType;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
