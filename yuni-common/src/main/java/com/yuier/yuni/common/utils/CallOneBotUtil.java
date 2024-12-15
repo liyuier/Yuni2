@@ -61,21 +61,6 @@ public class CallOneBotUtil {
      * @param <T>  限定返回类型
      */
     public static <T extends OneBotApiData> T getOneBotForEntity(String url, Class<T> responseDataType) {
-        // 获取请求头，设置响应内容类型为 JSON
-//        HttpHeaders header = createJsonContentHeader();
-//        ResponseEntity<String> responseEntity = null;
-//        try {
-//            // 发出请求，这里接收响应的 JSON 消息
-//            responseEntity = getRestTemplate().getForEntity(new URL(url).toURI(), String.class);
-//            if (responseEntity.getHttpStatus().is2xxSuccessful()) {
-//                // 获取响应字符串，并解析为返回的实体类
-//                return parseJsonResult(responseEntity, responseDataType);
-//            } else {
-//                throw new RuntimeException("Failed to fetch data from " + url + ". Status code: " + responseEntity.getStatusCode());
-//            }
-//        } catch (URISyntaxException | MalformedURLException e) {
-//            throw new RuntimeException(e);
-//        }
         // 使用 webClient 进行请求
         Mono<String> stringMono = getWebClient().get()
                 .uri(url)
