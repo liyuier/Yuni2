@@ -7,15 +7,10 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yuier.yuni.common.domain.onebotapi.OneBotApiRes;
 import com.yuier.yuni.common.interfaces.onebotapi.OneBotApiData;
-import org.springframework.http.*;
+import org.springframework.http.MediaType;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
-
-import java.net.MalformedURLException;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.util.Map;
 
 import static com.yuier.yuni.common.constants.OneBotApiRetCode.ASYNC;
 import static com.yuier.yuni.common.constants.OneBotApiRetCode.OK;
@@ -31,21 +26,12 @@ import static com.yuier.yuni.common.constants.OneBotApiRetCode.OK;
 
 public class CallOneBotUtil {
 
-    private static RestTemplate restTemplate;
-
     private static WebClient webClient;
 
     private static ObjectMapper getObjectMapper() {
         return ApplicationContextProvider.getBean(ObjectMapper.class);
     }
 
-    private static RestTemplate getRestTemplate() {
-        if (restTemplate == null) {
-            restTemplate = new RestTemplate();
-            return restTemplate;
-        }
-        return restTemplate;
-    }
     private static WebClient getWebClient() {
         if (webClient == null) {
             webClient = WebClient.builder().build();
@@ -72,99 +58,21 @@ public class CallOneBotUtil {
     /**
      * 请求 OneBot API
      * @param url  url
-     * @param responseDataType  想要接收的响应 data 的 class
-     * @param uriVariables  请求参数
-     * @return  封装好的 OneBotApiRes 实体类
-     * @param <T>  限定返回类型
-     */
-    public static <T extends OneBotApiData> T getOneBotForEntity(String url, Class<T> responseDataType, Object... uriVariables) {
-        ResponseEntity<String> responseEntity = getRestTemplate().getForEntity(url, String.class, uriVariables);
-        if (responseEntity.getStatusCode().is2xxSuccessful()) {
-            return parseJsonResult(responseEntity, responseDataType);
-        } else {
-            throw new RuntimeException("Failed to fetch data from " + url + ". Status code: " + responseEntity.getStatusCode());
-        }
-    }
-
-    /**
-     * 请求 OneBot API
-     * @param url  url
-     * @param responseDataType  想要接收的响应 data 的 class
-     * @param uriVariables  请求参数
-     * @return  封装好的 OneBotApiRes 实体类
-     * @param <T>  限定返回类型
-     */
-    public static <T extends OneBotApiData> T getOneBotForEntity(String url, Class<T> responseDataType, Map<String, ?> uriVariables) {
-        ResponseEntity<String> responseEntity = getRestTemplate().getForEntity(url, String.class, uriVariables);
-        if (responseEntity.getStatusCode().is2xxSuccessful()) {
-            return parseJsonResult(responseEntity, responseDataType);
-        } else {
-            throw new RuntimeException("Failed to fetch data from " + url + ". Status code: " + responseEntity.getStatusCode());
-        }
-    }
-
-    /**
-     * 请求 OneBot API
-     * @param url  url
      * @param requestBody  请求数据实体类
+     * @param requestBodyClass  发送的请求体的 class
      * @param responseDataType  想要接收的响应 data 的 class
      * @return  封装好的 OneBotApiRes 实体类
      * @param <T>  限定返回类型
      * @param <S>  请求数据实体类泛型
      */
-    public static <T extends OneBotApiData, S> T postOneBotForEntity(String url, S requestBody, Class<T> responseDataType) {
-        // 组装请求头，设置响应类型为 JSON 类型
-        ResponseEntity<String> responseEntity  = null;
-        try {
-            responseEntity = getRestTemplate().postForEntity(new URL(url).toURI(), createHeadForJsonContentType(requestBody), String.class);
-        } catch (URISyntaxException | MalformedURLException e) {
-            throw new RuntimeException(e);
-        }
-        if (responseEntity.getStatusCode().is2xxSuccessful()) {
-            return parseJsonResult(responseEntity, responseDataType);
-        } else {
-            throw new RuntimeException("Failed to post data to " + url + ". Status code: " + responseEntity.getStatusCode());
-        }
-    }
-
-    /**
-     * 请求 OneBot API
-     * @param url  url
-     * @param requestBody  请求数据实体类
-     * @param responseDataType  想要接收的响应 data 的 class
-     * @param uriVariables  请求参数
-     * @return  封装好的 OneBotApiRes 实体类
-     * @param <T>  限定返回类型
-     * @param <S>  请求数据实体类泛型
-     */
-    public static <T extends OneBotApiData, S> T postOneBotForEntity(String url, S requestBody, Class<T> responseDataType, Object... uriVariables) {
-        ResponseEntity<String> responseEntity  = null;
-        responseEntity = getRestTemplate().postForEntity(url, createHeadForJsonContentType(requestBody), String.class, uriVariables);
-        if (responseEntity.getStatusCode().is2xxSuccessful()) {
-            return parseJsonResult(responseEntity, responseDataType);
-        } else {
-            throw new RuntimeException("Failed to post data to " + url + ". Status code: " + responseEntity.getStatusCode());
-        }
-    }
-
-    /**
-     * 请求 OneBot API
-     * @param url  url
-     * @param requestBody  请求数据实体类
-     * @param responseDataType  想要接收的响应 data 的 class
-     * @param uriVariables  请求参数
-     * @return  封装好的 OneBotApiRes 实体类
-     * @param <T>  限定返回类型
-     * @param <S>  请求数据实体类泛型
-     */
-    public static <T extends OneBotApiData, S> T postOneBotForEntity(String url, S requestBody, Class<T> responseDataType, Map<String, ?> uriVariables) {
-        ResponseEntity<String> responseEntity  = null;
-        responseEntity = getRestTemplate().postForEntity(url, createHeadForJsonContentType(requestBody), String.class, uriVariables);
-        if (responseEntity.getStatusCode().is2xxSuccessful()) {
-            return parseJsonResult(responseEntity, responseDataType);
-        } else {
-            throw new RuntimeException("Failed to post data to " + url + ". Status code: " + responseEntity.getStatusCode());
-        }
+    public static <T extends OneBotApiData, S> T postOneBotForEntity(String url, S requestBody, Class<S> requestBodyClass, Class<T> responseDataType) {
+        Mono<String> stringMono = getWebClient().post()
+                .uri(url)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(Mono.just(requestBody), requestBodyClass)
+                .retrieve()
+                .bodyToMono(String.class);
+        return parseJsonResult(stringMono.block(), responseDataType);
     }
 
     /**
@@ -185,19 +93,6 @@ public class CallOneBotUtil {
         return response.getData();
     }
 
-    /**
-     * 将 JSON 字符串格式的响应结果解析为 OneBotApiRes<T> 类型
-     * @param responseEntity  响应体
-     * @param responseDataType  需要获取的 OneBot API 响应结果的 data 字段类型
-     * @return  OneBotApiRes<T> 类型的响应结构
-     * @param <T>  限定返回值为 OneBotApiData 类型
-     */
-    public static <T extends OneBotApiData> T parseJsonResult(ResponseEntity<String> responseEntity, Class<T> responseDataType) {
-        // 获取响应体中的 json 字符串
-        String result = responseEntity.getBody();
-        return parseJsonResult(result, responseDataType);
-    }
-
     public static <T extends OneBotApiData> T parseJsonResult(String responseJson, Class<T> responseDataType) {
         // 获取 objectMapper 实例，该实例中维护了子类关系
         ObjectMapper objectMapper = getObjectMapper();
@@ -216,26 +111,5 @@ public class CallOneBotUtil {
         }
         // 完成
         return checkOneBotResponse(oneBotApiRes.build(resData));
-    }
-
-    /**
-     * 获取请求头
-     * 设置响应消息类型为 JSON
-     * @return HttpHeaders 实例
-     */
-    private static HttpHeaders createJsonContentHeader() {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        return headers;
-    }
-
-    /**
-     * 构造 POST 请求体，其中的请求头设置响应消息类型为 JSON
-     * @param requestBody  请求数据实体类
-     * @return  HttpEntity 实体类
-     * @param <T>  反正就是一个泛型吧
-     */
-    private static <T> HttpEntity<?> createHeadForJsonContentType(T requestBody) {
-        return new HttpEntity<>(requestBody, createJsonContentHeader());
     }
 }
