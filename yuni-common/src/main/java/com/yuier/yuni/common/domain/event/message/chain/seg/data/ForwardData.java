@@ -22,7 +22,7 @@ import lombok.NoArgsConstructor;
 @MessageDataEntity(dataType = MessageDataEnum.FORWARD)
 public class ForwardData extends MessageData {
     /**
-     * 合并转发 id，需通过 get_forward_msg API 获取具体内容
+     * 合并转发 name，需通过 get_forward_msg API 获取具体内容
      */
     private String id;
 

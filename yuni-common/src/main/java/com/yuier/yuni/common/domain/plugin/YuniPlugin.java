@@ -15,8 +15,11 @@ import lombok.Data;
 @Data
 public class YuniPlugin {
 
-    // 插件 ID
-    private String id;
+    // 插件数字 ID
+    private Integer id;
+
+    // 插件 name
+    private String name;
 
     // 插件 Bean 本体
     private PluginBean pluginBean;

@@ -23,6 +23,10 @@ dubbo:
     id: nacos-registry
     address: nacos://localhost:8848
 
+logging:
+  level:
+    org.apache.dubbo: WARN
+
 mybatis-plus:
   configuration:
     # 日志

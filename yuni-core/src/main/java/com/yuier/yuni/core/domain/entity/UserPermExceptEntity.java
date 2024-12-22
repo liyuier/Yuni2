@@ -21,13 +21,13 @@ import com.baomidou.mybatisplus.annotation.TableName;
 public class UserPermExceptEntity {
     
     /**
-    * id
+    * name
     */
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
     
     /**
-    * 用户 id
+    * 用户 name
     */
     private Long userId;
     
@@ -37,12 +37,12 @@ public class UserPermExceptEntity {
     private String position;
     
     /**
-    * 位置 id
+    * 位置 name
     */
     private Long posId;
     
     /**
-    * bot id
+    * bot name
     */
     private Long botId;
     

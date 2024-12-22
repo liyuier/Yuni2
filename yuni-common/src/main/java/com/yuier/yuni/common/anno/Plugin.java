@@ -23,7 +23,7 @@ public @interface Plugin {
      * @return 插件 ID，可自定义
      *         默认为插件名 —— 由框架实现
      */
-    String id() default "";
+    String name() default "";
 
     /**
      * @return 可触发该插件的权限等级，仅当上报事件为消息事件时使用。

@@ -7,7 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * @Title: OneBotApiRes
+ * @Title: YuniBaseApiRes
  * @Author yuier
  * @Package com.yuier.yuni.common.domain.onebotapi
  * @Date 2024/11/13 0:54
@@ -18,7 +18,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class OneBotApiRes<T>{
+public class YuniBaseApiRes<T>{
 
     private Integer retcode;
 
@@ -32,14 +32,14 @@ public class OneBotApiRes<T>{
 
     private T data;
 
-    public OneBotApiRes<T> build(T data) {
+    public YuniBaseApiRes<T> build(T data) {
         this.data = data;
         return this;
     }
 
     @Override
     public String toString() {
-        return "OneBotApiRes{" +
+        return "YuniBaseApiRes{" +
                 "retcode=" + retcode +
                 ", message='" + message + '\'' +
                 ", wording='" + wording + '\'' +

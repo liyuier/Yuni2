@@ -29,6 +29,8 @@ public class YuniLogUtils {
      */
     public static String receiveMessageLogStr(MessageEvent<?> event) {
         String timeStr = "";
+        // 收到该消息的 bot
+        String bot = "";
         String senderStr = "";
         // 介词，用于输出群聊消息时在群号前加个 "于" 字
         String preposition = "";
@@ -39,6 +41,9 @@ public class YuniLogUtils {
         timeStr = new SimpleDateFormat("yyyy-MM-dd HH:mm")
                                 .format(new Date(event.getTime() * 1000L));
         MessageSender sender = event.getSender();
+
+        // 拼装收到消息的机器人
+        String botGetMessage = "[" + ThreadLocalUtil.getBot().getNickName() + "]";
 
         if (sender instanceof GroupMessageSender) {
             // 拼装消息发送人
@@ -62,6 +67,7 @@ public class YuniLogUtils {
 
         // 拼装最终日志
         String logStr = timeStr + " " +  // 时间
+                buildPurpleLog(botGetMessage) + " " + // 收到消息的 bot
                 buildBrightRedLog(senderStr) + " " +  // 消息发送人
                 preposition +  // 如果是群消息，这里加一个 “于”
                 buildCyanLog(groupStr) +  // 如果是群消息，这里是群号
@@ -87,6 +93,11 @@ public class YuniLogUtils {
     // 亮蓝
     private static String buildBrightBlueLog(String input) {
         return "\033[92m" + input + "\033[0m";
+    }
+
+    // 紫色
+    private static String buildPurpleLog(String input) {
+        return "\033[35m" + input + "\033[0m";
     }
 
     /**
