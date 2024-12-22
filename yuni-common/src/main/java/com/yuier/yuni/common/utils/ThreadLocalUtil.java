@@ -30,10 +30,10 @@ public class ThreadLocalUtil {
         THREAD_LOCAL.remove();
     }
 
-    // 获取 bot id
+    // 获取 bot name
     public static YuniBot getBot() {
         HashMap<String, Object> localInfo = get();
-        YuniBot botId = (YuniBot) localInfo.get(LOCAL_BOT);
-        return botId;
+        YuniBot currentBot = (YuniBot) localInfo.get(LOCAL_BOT);
+        return currentBot;
     }
 }

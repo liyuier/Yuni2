@@ -24,8 +24,8 @@ public class DubboTestTask implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        System.out.println("DubboTestTask.....");
-        GreeterReply result = greeter.greet(GreeterRequest.newBuilder().setName("name").build());
-        System.out.println("Received result ======> " + result.getMessage());
+//        System.out.println("DubboTestTask.....");
+//        GreeterReply result = greeter.greet(GreeterRequest.newBuilder().setName("name").build());
+//        System.out.println("Received result ======> " + result.getMessage());
     }
 }

@@ -30,6 +30,6 @@ public class PokeData extends MessageData {
 
     @Override
     public String toString() {
-        return "[戳一戳消息<type=" + this.type + "><id=" + this.id + "><name=" + this.name + ">]";
+        return "[戳一戳消息<type=" + this.type + "><name=" + this.id + "><name=" + this.name + ">]";
     }
 }

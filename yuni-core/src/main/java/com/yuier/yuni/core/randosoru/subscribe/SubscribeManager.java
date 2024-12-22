@@ -100,7 +100,7 @@ public class SubscribeManager {
     private Integer querySubscExcepCondition(MessageEvent<?> event, YuniMessagePlugin plugin) {
         String position = event.getPosition().getMessageType().toString();
         Long posId = event.getPosition().getPositionId();
-        String pluginId = plugin.getId();
+        String pluginId = plugin.getName();
         return querySubscExcepCondition(position, posId, pluginId);
     }
 

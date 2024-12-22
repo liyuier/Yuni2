@@ -21,7 +21,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 public class PluginSubscExceptEntity {
     
     /**
-    * id
+    * name
     */
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
@@ -32,12 +32,12 @@ public class PluginSubscExceptEntity {
     private String position;
     
     /**
-    * 位置 id
+    * 位置 name
     */
     private Long posId;
     
     /**
-    * 插件 id
+    * 插件 name
     */
     private String pluginId;
     
