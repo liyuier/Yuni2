@@ -1,3 +1,5 @@
 bots:
   - nickname: xcw
     onebot-url: http://127.0.0.1:3010/
+  - nickname: sagiri
+    onebot-url: http://127.0.0.1:3000/

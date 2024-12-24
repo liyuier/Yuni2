@@ -5,7 +5,7 @@ import cn.hutool.json.JSONUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.yuier.yuni.common.domain.onebotapi.YuniBaseApiRes;
+import com.yuier.yuni.common.domain.onebotapi.pojo.YuniBaseApiRes;
 import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;

@@ -1,4 +1,4 @@
-package com.yuier.yuni.common.domain.onebotapi;
+package com.yuier.yuni.common.domain.onebotapi.pojo;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;

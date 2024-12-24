@@ -2,11 +2,10 @@ package com.yuier.yuni.core.randosoru.subscribe;
 
 import com.yuier.yuni.common.anno.Plugin;
 import com.yuier.yuni.common.domain.event.message.MessageEvent;
-import com.yuier.yuni.common.domain.plugin.YuniMessagePlugin;
+import com.yuier.yuni.common.domain.plugin.YuniPlugin;
 import com.yuier.yuni.common.enums.SubscribeCondition;
 import com.yuier.yuni.common.utils.RedisCache;
 import com.yuier.yuni.core.domain.entity.PluginSubscExceptEntity;
-import com.yuier.yuni.core.randosoru.plugin.PluginManager;
 import com.yuier.yuni.core.service.PluginSubscExceptService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -27,8 +26,6 @@ import java.util.stream.Collectors;
 @Component
 public class SubscribeManager {
 
-    @Autowired
-    PluginManager pluginManager;
     @Autowired
     PluginSubscExceptService pluginSubscExceptService;
     @Autowired
@@ -69,7 +66,7 @@ public class SubscribeManager {
      * @param event 消息事件
      * @return 订阅情况
      */
-    public SubscribeCondition querySubscCondition(MessageEvent<?> event, YuniMessagePlugin plugin) {
+    public SubscribeCondition querySubscCondition(MessageEvent<?> event, YuniPlugin plugin) {
         Integer subscExcepCondition = querySubscExcepCondition(event, plugin);
         if (subscExcepCondition.equals(UNKNOWN_SUBSC_CONDITION)) {
             // 没有查出特殊订阅情况，构造默认订阅情况
@@ -97,27 +94,27 @@ public class SubscribeManager {
      * @param event 消息事件
      * @return 订阅情况数字
      */
-    private Integer querySubscExcepCondition(MessageEvent<?> event, YuniMessagePlugin plugin) {
+    private Integer querySubscExcepCondition(MessageEvent<?> event, YuniPlugin plugin) {
         String position = event.getPosition().getMessageType().toString();
         Long posId = event.getPosition().getPositionId();
-        String pluginId = plugin.getName();
-        return querySubscExcepCondition(position, posId, pluginId);
+        String pluginName = plugin.getName();
+        return querySubscExcepCondition(position, posId, pluginName);
     }
 
     /**
      * 查找订阅特殊情况
      * @param position 位置，group 或 private
      * @param posId 位置 ID，群号或用户号
-     * @param pluginId 插件 ID
+     * @param pluginName 插件 name
      * @return 订阅特殊情况数字
      */
-    private Integer querySubscExcepCondition(String position, Long posId, String pluginId) {
+    private Integer querySubscExcepCondition(String position, Long posId, String pluginName) {
         // 到 redis 中查询特殊订阅情况
         Map<String, Integer> subscExceptMap = redisCache.getCacheMap(SUBSCRIBE_PLUGIN_EXCEP_MAP);
         if (subscExceptMap.isEmpty()) {
             return UNKNOWN_SUBSC_CONDITION;
         }
-        String redisSubscKey = buildRedisSubscKey(position, posId, pluginId);
+        String redisSubscKey = buildRedisSubscKey(position, posId, pluginName);
         if (!subscExceptMap.containsKey(redisSubscKey)) {
             return UNKNOWN_SUBSC_CONDITION;
         }
@@ -128,33 +125,33 @@ public class SubscribeManager {
      * 设置特殊订阅情况表
      * @param position 位置，group 或 private
      * @param posId 位置 ID，群号或用户号
-     * @param pluginId 插件 ID
+     * @param pluginName 插件 ID
      * @param subscFlag 特殊订阅情况
      */
-    public void setSubscExcepCondition(String position, Long posId, String pluginId, Integer subscFlag) {
+    public void setSubscExcepCondition(String position, Long posId, String pluginName, Integer subscFlag) {
         // 刷新 redis 中的特殊情况表
-        refreshRedisSubscExcepMap(position, posId, pluginId, subscFlag);
+        refreshRedisSubscExcepMap(position, posId, pluginName, subscFlag);
         // 刷新数据库中的特殊情况表
-        refreshDbSubsc(position, posId, pluginId, subscFlag);
+        refreshDbSubsc(position, posId, pluginName, subscFlag);
     }
 
     /**
      * 刷新数据库中的特殊订阅情况表
      * @param position 位置，group 或 private
      * @param posId 位置 ID，群号或用户号
-     * @param pluginId 插件 ID
+     * @param pluginName 插件 ID
      * @param subscFlag 特殊订阅情况
      */
-    private void refreshDbSubsc(String position, Long posId, String pluginId, Integer subscFlag) {
+    private void refreshDbSubsc(String position, Long posId, String pluginName, Integer subscFlag) {
         if (!subscFlag.equals(SUBSCRIBE_OFF) && !subscFlag.equals(SUBSCRIBE_ON)) {
             throw new RuntimeException("错误的订阅类型：" + subscFlag);
         }
         // 首先查找当前定位下是否已经设置了特殊订阅情况
-        List<PluginSubscExceptEntity> subscExceptEntityList = pluginSubscExceptService.listSubscs(position, posId, pluginId);
+        List<PluginSubscExceptEntity> subscExceptEntityList = pluginSubscExceptService.listSubscs(position, posId, pluginName);
         if (subscExceptEntityList == null || subscExceptEntityList.isEmpty()) {
-            pluginSubscExceptService.addSubsc(position, posId, pluginId, subscFlag);
+            pluginSubscExceptService.addSubsc(position, posId, pluginName, subscFlag);
         } else {
-            pluginSubscExceptService.updateSubsc(position, posId, pluginId, subscFlag);
+            pluginSubscExceptService.updateSubsc(position, posId, pluginName, subscFlag);
         }
     }
 
@@ -162,14 +159,14 @@ public class SubscribeManager {
      * 刷新 redis 中的特殊订阅情况表
      * @param position 位置，group 或 private
      * @param posId 位置 ID，群号或用户号
-     * @param pluginId 插件 ID
+     * @param pluginName 插件 name
      * @param subscFlag 特殊订阅情况
      */
-    private void refreshRedisSubscExcepMap(String position, Long posId, String pluginId, Integer subscFlag) {
+    private void refreshRedisSubscExcepMap(String position, Long posId, String pluginName, Integer subscFlag) {
         if (!subscFlag.equals(SUBSCRIBE_OFF) && !subscFlag.equals(SUBSCRIBE_ON)) {
             throw new RuntimeException("错误的订阅类型：" + subscFlag);
         }
-        String redisSubscKey = buildRedisSubscKey(position, posId, pluginId);
+        String redisSubscKey = buildRedisSubscKey(position, posId, pluginName);
         Map<String, Integer> subscExceptMap;
         subscExceptMap = redisCache.getCacheMap(SUBSCRIBE_PLUGIN_EXCEP_MAP);
         if (subscExceptMap == null) {
@@ -183,13 +180,13 @@ public class SubscribeManager {
      * 根据数据库中的记录，构建 redis 中存储订阅特殊情况的 Map 结构的表
      * @param entity 订阅特殊情况表实体类
      * @return 构建出的键
-     *         position:posId:pluginId
+     *         position:posId:pluginName
      */
     private String buildRedisSubscKey(PluginSubscExceptEntity entity) {
         return buildRedisSubscKey(
                 entity.getPosition(),
                 entity.getPosId(),
-                entity.getPluginId()
+                entity.getPluginName()
         );
     }
 
@@ -197,12 +194,12 @@ public class SubscribeManager {
      * 构建 redis 中存储订阅特殊情况的 Map 结构的表
      * @param position 位置，group 或 private
      * @param posId 位置 ID，群号或用户号
-     * @param pluginId 插件 ID
+     * @param pluginName 插件 ID
      * @return 构建出的键
      */
-    private String buildRedisSubscKey(String position, Long posId, String pluginId) {
+    private String buildRedisSubscKey(String position, Long posId, String pluginName) {
         return position + ":" +
                 posId + ":" +
-                pluginId;
+                pluginName;
     }
 }

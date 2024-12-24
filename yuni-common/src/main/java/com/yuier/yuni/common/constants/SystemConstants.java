@@ -21,6 +21,9 @@ public final class SystemConstants {
     public static final Integer GROUP_PLUGIN_CLOSE = 0;
     public static final Integer GROUP_PLUGIN_OPEN = 1;
 
+    public static final String FILE_CACHE_MAP = "file:cache:map";
+    public static final String OBJECT_HASH_MAP = "object:hash:map";
+
     public static final class REDIS_KEY {
         public static final String BILIBILI = "bilibili";
         public static final String BILI_COOKIE = "bili:cookie";

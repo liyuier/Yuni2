@@ -19,7 +19,7 @@ import org.springframework.stereotype.Component;
  */
 
 @Component
-@Plugin(permission = PermissionLevel.MASTER)
+@Plugin(permission = PermissionLevel.MASTER, name = "原神启动")
 public class GenShinStart implements MessagePluginBean<OrderDetector> {
 
     @Override
