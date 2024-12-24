@@ -114,8 +114,7 @@ public class ManagePlugins implements MessagePluginBean<OrderDetector> {
         objectHashCodeMap.put(PLUGIN_MAP_HASH + positionStr, pojoMapHashCode);
         redisCache.setCacheMap(OBJECT_HASH_MAP, objectHashCodeMap);
         // 请求 python 服务
-        SayHelloToPythonPojo s = pyServCaller.sayHello();
-        System.out.println(s);
+
         // 刷新缓存
     }
 
