@@ -20,5 +20,11 @@ import lombok.NoArgsConstructor;
 @JsonTypeDefine("image")
 @EqualsAndHashCode(callSuper = true)
 public class ImageSeg extends MessageSeg<ImageData> {
+    public ImageSeg(ImageData imageData) {
+        this.data = imageData;
+    }
 
+    public ImageSeg(String image) {
+        this(new ImageData(image));
+    }
 }

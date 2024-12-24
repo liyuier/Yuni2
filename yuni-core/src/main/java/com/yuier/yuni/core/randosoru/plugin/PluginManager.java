@@ -16,9 +16,9 @@ import com.yuier.yuni.common.interfaces.plugin.MessagePluginBean;
 import com.yuier.yuni.common.interfaces.plugin.NegativePluginBean;
 import com.yuier.yuni.common.interfaces.plugin.PluginBean;
 import com.yuier.yuni.common.utils.BeanCopyUtils;
-import com.yuier.yuni.common.utils.ThreadLocalUtil;
 import com.yuier.yuni.core.randosoru.bot.BotManager;
 import com.yuier.yuni.core.randosoru.perm.PermissionManager;
+import com.yuier.yuni.core.randosoru.subscribe.SubscribeManager;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,17 +49,36 @@ public class PluginManager {
     BotManager botManager;
     @Autowired
     PermissionManager permissionManager;
+    @Autowired
+    SubscribeManager subscribeManager;
 
     // 消息事件触发的插件集合
-    private HashMap<Integer, YuniMessagePlugin> orderMessagePluginMapByNumber;
-    private HashMap<Integer, YuniMessagePlugin> patternMessagePluginMapByNumber;
+    private HashMap<Integer, YuniMessagePlugin> orderMessagePluginMap;
+    private HashMap<Integer, YuniMessagePlugin> patternMessagePluginMap;
 
-    private Integer totalPluginNumber;
+    // 使用过的插件名称，用于辅助构建插件
+    private HashMap<String, String> pluginNamesUsed;
+
+    public Integer totalPluginNumber;
 
     public PluginManager() {
         totalPluginNumber = 0;
-        orderMessagePluginMapByNumber = new HashMap<>();
-        patternMessagePluginMapByNumber = new HashMap<>();
+        orderMessagePluginMap = new HashMap<>();
+        patternMessagePluginMap = new HashMap<>();
+        pluginNamesUsed = new HashMap<>();
+    }
+
+    public YuniPlugin getPluginById(Integer pluginId) {
+        if (pluginId <= 0 || pluginId > totalPluginNumber) {
+            throw new RuntimeException("插件 ID 不在范围中！");
+        }
+        if (orderMessagePluginMap.containsKey(pluginId)) {
+            return orderMessagePluginMap.get(pluginId);
+        }
+        if (patternMessagePluginMap.containsKey(pluginId)) {
+            return patternMessagePluginMap.get(pluginId);
+        }
+        return null;
     }
 
     /**
@@ -85,9 +104,9 @@ public class PluginManager {
          * 如果没有匹配上指令插件，再继续匹配模式插件。模式插件匹配上了也继续匹配，不中途退出。
          */
         boolean orderPluginCalled = false;
-        for (YuniMessagePlugin plugin: orderMessagePluginMapByNumber.values()) {
-            // 检查插件是否被当前 BOT 实例订阅
-            if (!pluginIsSubscribedByBot(plugin, ThreadLocalUtil.getBot().getId())) {
+        for (YuniMessagePlugin plugin: orderMessagePluginMap.values()) {
+            // 检查插件是否被当前位置订阅
+            if (!pluginIsSubscribedAtThePosition(event, plugin)) {
                 continue;
             }
             // 检查当前插件是否被消息命中
@@ -107,9 +126,9 @@ public class PluginManager {
         if (orderPluginCalled) {
             return;
         }
-        for (YuniMessagePlugin plugin : patternMessagePluginMapByNumber.values()) {
+        for (YuniMessagePlugin plugin : patternMessagePluginMap.values()) {
             // 检查插件是否被当前 BOT 实例订阅
-            if (!pluginIsSubscribedByBot(plugin, ThreadLocalUtil.getBot().getId())) {
+            if (!pluginIsSubscribedAtThePosition(event, plugin)) {
                 continue;
             }
             // 检查当前插件是否被消息命中
@@ -203,12 +222,20 @@ public class PluginManager {
         YuniPlugin yuniPlugin = new YuniPlugin();
 
         // 设置插件 name
+        String pluginName = "";
         if (pluginAnno.name().isEmpty()) {
-            // 以 Bean 的类作为插件 name
-            yuniPlugin.setName(targetPluginBean.getClass().getSimpleName());
+            // 以 Bean 的类名作为插件 name
+            pluginName = targetPluginBean.getClass().getSimpleName();
         } else {
-            yuniPlugin.setName(pluginAnno.name());
+            pluginName = pluginAnno.name();
         }
+        // 判断插件名称是否重复
+        if (pluginNamesUsed.containsKey(pluginName)) {
+            throw new RuntimeException("插件 " + targetPluginBean.getClass().getName() +
+                    " 的名称 " + pluginName + "已经存在!");
+        }
+        pluginNamesUsed.put(pluginName, pluginName);
+        yuniPlugin.setName(pluginName);
 
         // 设置插件的 Bean 本体
         yuniPlugin.setPluginBean(targetPluginBean);
@@ -282,12 +309,14 @@ public class PluginManager {
      */
     private void putMessagePluginsIntoMap(YuniMessagePlugin yuniMessagePlugin) {
         EventDetector<?> detector = yuniMessagePlugin.getDetector();
-        totalPluginNumber ++;
-        yuniMessagePlugin.setId(totalPluginNumber);
         if (detector instanceof OrderDetector) {
-            orderMessagePluginMapByNumber.put(totalPluginNumber, yuniMessagePlugin);
+            totalPluginNumber ++;
+            yuniMessagePlugin.setId(totalPluginNumber);
+            orderMessagePluginMap.put(totalPluginNumber, yuniMessagePlugin);
         } else if (detector instanceof PatternDetector) {
-            patternMessagePluginMapByNumber.put(totalPluginNumber, yuniMessagePlugin);
+            totalPluginNumber ++;
+            yuniMessagePlugin.setId(totalPluginNumber);
+            patternMessagePluginMap.put(totalPluginNumber, yuniMessagePlugin);
         }
     }
 
@@ -310,17 +339,12 @@ public class PluginManager {
     }
 
     /**
-     * 检查插件是否被当前 Bot 订阅了
+     * 检查插件是否被当前位置订阅了
+     * @param event 事件
      * @param plugin  插件
-     * @param botId  Bot ID
      * @return  插件是否被该 Bot 订阅
      */
-    private Boolean pluginIsSubscribedByBot(YuniPlugin plugin, Long botId) {
-        // 检查插件是否被 Bot 订阅
-        if (!plugin.getIsSubscribed()) {
-            return false;
-        }
-        // TODO
-        return true;
+    public Boolean pluginIsSubscribedAtThePosition(MessageEvent<?> event, YuniPlugin plugin) {
+        return subscribeManager.querySubscCondition(event, plugin).equals(SubscribeCondition.YES);
     }
 }

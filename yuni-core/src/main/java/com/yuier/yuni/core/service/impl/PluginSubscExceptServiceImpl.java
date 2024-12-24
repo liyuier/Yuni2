@@ -33,7 +33,7 @@ public class PluginSubscExceptServiceImpl extends ServiceImpl<PluginSubscExceptM
         LambdaQueryWrapper<PluginSubscExceptEntity> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(PluginSubscExceptEntity::getPosition, position);
         wrapper.eq(PluginSubscExceptEntity::getPosId, posId);
-        wrapper.eq(PluginSubscExceptEntity::getPluginId, pluginId);
+        wrapper.eq(PluginSubscExceptEntity::getPluginName, pluginId);
         return list(wrapper);
     }
 

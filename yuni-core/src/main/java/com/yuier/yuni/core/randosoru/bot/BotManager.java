@@ -7,6 +7,7 @@ import com.yuier.yuni.common.utils.BotAction;
 import com.yuier.yuni.core.domain.entity.User;
 import com.yuier.yuni.core.randosoru.bot.user.UserManager;
 import com.yuier.yuni.core.util.YamlParser;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
@@ -26,6 +27,7 @@ import java.util.List;
  * @description: 机器人管理容器
  */
 
+@Slf4j
 @Component
 public class BotManager {
 
@@ -49,7 +51,16 @@ public class BotManager {
     public void initialize() {
         // 加载配置文件中的 Bot 定义
         loadBots();
+        botsLoadedLog();
         userManager.initialize();
+    }
+
+    private void botsLoadedLog() {
+        log.info("bot 实例加载完毕，共对接 " + botMap.size() + " 个 OneBot 客户端：");
+        for (YuniBot bot : botMap.values()) {
+            String botsInfo = "账号：" + bot.getId() + "  昵称：" + bot.getNickName();
+            log.info(botsInfo);
+        }
     }
 
     public YuniBot getBotById(Long botId) {
