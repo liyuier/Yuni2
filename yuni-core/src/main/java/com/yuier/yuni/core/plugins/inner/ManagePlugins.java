@@ -5,22 +5,20 @@ import com.yuier.yuni.common.detect.message.matchedout.order.OrderMatchedOut;
 import com.yuier.yuni.common.detect.message.order.OrderDetector;
 import com.yuier.yuni.common.detect.message.order.OrderOptionContainer;
 import com.yuier.yuni.common.domain.event.message.MessageEvent;
-import com.yuier.yuni.common.domain.event.message.chain.MessageChain;
 import com.yuier.yuni.common.domain.event.message.chain.seg.ImageSeg;
 import com.yuier.yuni.common.domain.event.message.chain.seg.MessageSeg;
-import com.yuier.yuni.common.domain.event.message.chain.seg.data.ImageData;
 import com.yuier.yuni.common.domain.plugin.YuniPlugin;
-import com.yuier.yuni.common.domain.pojo.GetPluginsInfoPicPojo;
+import com.yuier.yuni.core.domain.pojo.request.PluginInfoPojo;
 import com.yuier.yuni.common.interfaces.plugin.MessagePluginBean;
 import com.yuier.yuni.common.utils.BotAction;
 import com.yuier.yuni.common.utils.RedisCache;
-import com.yuier.yuni.core.domain.pojo.SayHelloToPythonPojo;
+import com.yuier.yuni.core.domain.pojo.request.PluginsInfoPicPojo;
+import com.yuier.yuni.core.domain.pojo.response.GetPluginsInfoPicResPojo;
 import com.yuier.yuni.core.randosoru.plugin.PluginManager;
 import com.yuier.yuni.core.util.CallPythonServiceUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -77,10 +75,10 @@ public class ManagePlugins implements MessagePluginBean<OrderDetector> {
     private void showPlugins() {
         // 应该先拼出一个当前位置插件信息的对象，然后再计算哈希
         // 然后再根据哈希决定是否使用缓存文件
-        HashMap<Integer, GetPluginsInfoPicPojo> pluginsInfoPojoMap  = new HashMap<>();
+        HashMap<Integer, PluginInfoPojo> pluginsInfoPojoMap  = new HashMap<>();
         for (Integer pluginId = 1; pluginId <= pluginManager.getTotalPluginNumber(); pluginId++) {
             YuniPlugin plugin = pluginManager.getPluginById(pluginId);
-            GetPluginsInfoPicPojo pluginInfoPicPojo = new GetPluginsInfoPicPojo(
+            PluginInfoPojo pluginInfoPicPojo = new PluginInfoPojo(
                     pluginId,
                     plugin.getName(),
                     pluginManager.pluginIsSubscribedAtThePosition(localEvent, plugin)
@@ -114,8 +112,18 @@ public class ManagePlugins implements MessagePluginBean<OrderDetector> {
         objectHashCodeMap.put(PLUGIN_MAP_HASH + positionStr, pojoMapHashCode);
         redisCache.setCacheMap(OBJECT_HASH_MAP, objectHashCodeMap);
         // 请求 python 服务
-
+        GetPluginsInfoPicResPojo pluginsInfo = pyServCaller.getPluginsInfo(new PluginsInfoPicPojo(pluginsInfoPojoMap));
+        System.out.println(pluginsInfo.getImage());
         // 刷新缓存
+        // TODO
+        // 发送图片
+        BotAction.sendMessage(
+                localEvent.getPosition(),
+                new MessageSeg<?>[] {
+                        // TODO
+                        new ImageSeg("https://img2.baidu.com/it/u=402842293,2018792673&fm=253&fmt=auto&app=120&f=JPEG?w=500&h=500")
+                }
+        );
     }
 
     @Override

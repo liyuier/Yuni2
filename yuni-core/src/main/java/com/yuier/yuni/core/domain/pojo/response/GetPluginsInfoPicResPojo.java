@@ -1,4 +1,4 @@
-package com.yuier.yuni.core.domain.pojo;
+package com.yuier.yuni.core.domain.pojo.response;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
@@ -7,17 +7,17 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * @Title: SayHelloToPythonPojo
+ * @Title: GetPluginsInfoPicResPojo
  * @Author yuier
- * @Package com.yuier.yuni.core.domain.pojo
- * @Date 2024/12/24 1:37
- * @description: 测试，调用 python 服务的 hello 接口
+ * @Package com.yuier.yuni.core.domain.pojo.response
+ * @Date 2024/12/25 23:51
+ * @description: 获取插件信息图片返回值的pojo
  */
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class SayHelloToPythonPojo {
-    String hello;
+public class GetPluginsInfoPicResPojo {
+    String image;
 }

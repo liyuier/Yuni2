@@ -1,12 +1,15 @@
-package com.yuier.yuni.common.domain.pojo;
+package com.yuier.yuni.core.domain.pojo.request;
 
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Objects;
 
 /**
- * @Title: GetPluginsInfoPicPojo
+ * @Title: PluginInfoPojo
  * @Author yuier
  * @Package com.yuier.yuni.common.domain.onebotapi.pojo
  * @Date 2024/12/23 2:23
@@ -14,8 +17,10 @@ import java.util.Objects;
  */
 
 @Data
+@NoArgsConstructor
 @AllArgsConstructor
-public class GetPluginsInfoPicPojo {
+@JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
+public class PluginInfoPojo {
     Integer id;
     String name;
     Boolean ordered;

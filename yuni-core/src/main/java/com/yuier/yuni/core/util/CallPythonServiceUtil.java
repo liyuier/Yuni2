@@ -1,7 +1,9 @@
 package com.yuier.yuni.core.util;
 
 import com.yuier.yuni.common.utils.CallYuniServiceUtil;
-import com.yuier.yuni.core.domain.pojo.SayHelloToPythonPojo;
+import com.yuier.yuni.core.domain.pojo.request.PluginsInfoPicPojo;
+import com.yuier.yuni.core.domain.pojo.response.GetPluginsInfoPicResPojo;
+import com.yuier.yuni.core.domain.pojo.response.SayHelloToPythonPojo;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -30,6 +32,16 @@ public class CallPythonServiceUtil {
 
     public SayHelloToPythonPojo sayHello() {
         CallYuniServiceUtil pyCaller = getPythonServiceCaller();
-        return pyCaller.getOneBotForEntity("api/hello", SayHelloToPythonPojo.class);
+        return pyCaller.getOneBotForEntity("apis/hello", SayHelloToPythonPojo.class);
+    }
+
+    public GetPluginsInfoPicResPojo getPluginsInfo(PluginsInfoPicPojo requestPojo) {
+        CallYuniServiceUtil pyCaller = getPythonServiceCaller();
+        return pyCaller.postOneBotForEntity(
+                "plugin/list",
+                requestPojo,
+                PluginsInfoPicPojo.class,
+                GetPluginsInfoPicResPojo.class
+        );
     }
 }
