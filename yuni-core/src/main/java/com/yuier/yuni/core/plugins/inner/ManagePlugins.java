@@ -106,6 +106,7 @@ public class ManagePlugins implements MessagePluginBean<OrderDetector> {
                         }
                 );
             }
+            return;
         }
         // 二者不相等，或缓存中没有图片，请求 python 工具
         // 刷新哈希
@@ -113,15 +114,16 @@ public class ManagePlugins implements MessagePluginBean<OrderDetector> {
         redisCache.setCacheMap(OBJECT_HASH_MAP, objectHashCodeMap);
         // 请求 python 服务
         GetPluginsInfoPicResPojo pluginsInfo = pyServCaller.getPluginsInfo(new PluginsInfoPicPojo(pluginsInfoPojoMap));
-        System.out.println(pluginsInfo.getImage());
+        String image = pluginsInfo.getImage();
         // 刷新缓存
-        // TODO
+        Map<String, String> fileCacheMap = new HashMap<>();
+        fileCacheMap.put(PLUGIN_LIST_PIC_CACHE + positionStr, image);
+        redisCache.setCacheMap(FILE_CACHE_MAP, fileCacheMap);
         // 发送图片
         BotAction.sendMessage(
                 localEvent.getPosition(),
                 new MessageSeg<?>[] {
-                        // TODO
-                        new ImageSeg("https://img2.baidu.com/it/u=402842293,2018792673&fm=253&fmt=auto&app=120&f=JPEG?w=500&h=500")
+                        new ImageSeg(image)
                 }
         );
     }
