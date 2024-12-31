@@ -5,9 +5,12 @@ import com.yuier.yuni.common.detect.message.matchedout.order.OrderMatchedOut;
 import com.yuier.yuni.common.detect.message.order.OrderDetector;
 import com.yuier.yuni.common.detect.message.order.OrderOptionContainer;
 import com.yuier.yuni.common.domain.event.message.MessageEvent;
+import com.yuier.yuni.common.domain.event.message.MessageEventPosition;
+import com.yuier.yuni.common.domain.event.message.chain.MessageChain;
 import com.yuier.yuni.common.domain.event.message.chain.seg.ImageSeg;
 import com.yuier.yuni.common.domain.event.message.chain.seg.MessageSeg;
 import com.yuier.yuni.common.domain.plugin.YuniPlugin;
+import com.yuier.yuni.common.enums.OrderArgAcceptType;
 import com.yuier.yuni.core.domain.pojo.request.PluginInfoPojo;
 import com.yuier.yuni.common.interfaces.plugin.MessagePluginBean;
 import com.yuier.yuni.common.utils.BotAction;
@@ -15,6 +18,7 @@ import com.yuier.yuni.common.utils.RedisCache;
 import com.yuier.yuni.core.domain.pojo.request.PluginsInfoPicPojo;
 import com.yuier.yuni.core.domain.pojo.response.GetPluginsInfoPicResPojo;
 import com.yuier.yuni.core.randosoru.plugin.PluginManager;
+import com.yuier.yuni.core.randosoru.subscribe.SubscribeManager;
 import com.yuier.yuni.core.util.CallPythonServiceUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -22,8 +26,7 @@ import org.springframework.stereotype.Component;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.yuier.yuni.common.constants.SystemConstants.FILE_CACHE_MAP;
-import static com.yuier.yuni.common.constants.SystemConstants.OBJECT_HASH_MAP;
+import static com.yuier.yuni.common.constants.SystemConstants.*;
 
 /**
  * @Title: PluginManager
@@ -50,6 +53,9 @@ public class ManagePlugins implements MessagePluginBean<OrderDetector> {
     private final String PLUGIN_LIST_PIC_CACHE = "plugin:list:pic:cache:";
 
     private final String PLUGINS_CHECK = "check";
+    private final String PLUGIN_SUBSCRIBE = "subscribe";
+    private final String PLUGIN_UNSUBSCRIBE = "unsubscribe";
+    private final String PLUGIN_ID = "pluginId";
 
     @Override
     public OrderDetector detector() {
@@ -58,6 +64,18 @@ public class ManagePlugins implements MessagePluginBean<OrderDetector> {
                 .addOption(
                         new OrderOptionContainer.OptionBuilder()
                                 .setNameAndFlag(PLUGINS_CHECK, "查看")
+                                .build()
+                )
+                .addOption(
+                        new OrderOptionContainer.OptionBuilder()
+                                .setNameAndFlag(PLUGIN_SUBSCRIBE, "订阅")
+                                .addRequiredArg(PLUGIN_ID, OrderArgAcceptType.NUMBER)
+                                .build()
+                )
+                .addOption(
+                        new OrderOptionContainer.OptionBuilder()
+                                .setNameAndFlag(PLUGIN_UNSUBSCRIBE, "退订")
+                                .addRequiredArg(PLUGIN_ID, OrderArgAcceptType.NUMBER)
                                 .build()
                 )
                 .build();
@@ -70,8 +88,45 @@ public class ManagePlugins implements MessagePluginBean<OrderDetector> {
         if (orderMatchedOut.optionExists(PLUGINS_CHECK)) {
             showPlugins();
         }
+        if (orderMatchedOut.optionExists(PLUGIN_SUBSCRIBE)) {
+            subscribePlugin(orderMatchedOut.getOptionArgByName(PLUGIN_SUBSCRIBE, PLUGIN_ID).asInteger());
+        }
+        if (orderMatchedOut.optionExists(PLUGIN_UNSUBSCRIBE)) {
+            unsubscribePlugin(orderMatchedOut.getOptionArgByName(PLUGIN_UNSUBSCRIBE, PLUGIN_ID).asInteger());
+        }
     }
 
+    /**
+     * 在当前位置下取消订阅插件
+     * @param pluginId 插件 id
+     */
+    private void unsubscribePlugin(Integer pluginId) {
+        if (!pluginManager.pluginIdLegal(pluginId)) {
+            BotAction.sendMessage(localEvent.getPosition(), new MessageChain("插件 ID 不在范围内，请重新下发指令！"));
+        }
+        pluginManager.unsubscribePlugin(localEvent.getPosition(), pluginId);
+        String pluginName = pluginManager.getPluginNameById(pluginId);
+        String reply = "插件 ID: " + pluginId + ", 名称：" +  pluginName + ". 退订成功！";
+        BotAction.sendMessage(localEvent.getPosition(), new MessageChain(reply));
+    }
+
+    /**
+     * 在当前位置下订阅插件
+     * @param pluginId 插件 id
+     */
+    private void subscribePlugin(Integer pluginId) {
+        if (!pluginManager.pluginIdLegal(pluginId)) {
+            BotAction.sendMessage(localEvent.getPosition(), new MessageChain("插件 ID 不在范围内，请重新下发指令！"));
+        }
+        pluginManager.subscribePlugin(localEvent.getPosition(), pluginId);
+        String pluginName = pluginManager.getPluginNameById(pluginId);
+        String reply = "插件 ID: " + pluginId + ", 名称：" +  pluginName + ". 订阅成功！";
+        BotAction.sendMessage(localEvent.getPosition(), new MessageChain(reply));
+    }
+
+    /**
+     * 展示当前位置下插件信息
+     */
     private void showPlugins() {
         // 应该先拼出一个当前位置插件信息的对象，然后再计算哈希
         // 然后再根据哈希决定是否使用缓存文件
@@ -85,8 +140,8 @@ public class ManagePlugins implements MessagePluginBean<OrderDetector> {
             );
             pluginsInfoPojoMap.put(pluginId, pluginInfoPicPojo);
         }
-        // 计算当前插件信息集合的哈希
-        Integer pojoMapHashCode = pluginsInfoPojoMap.hashCode();
+        // 计算当前插件信息集合在当前位置的哈希
+        Integer pojoMapHashCode = pluginsInfoPojoMap.hashCode() + localEvent.getPosition().hashCode();
         // 获取缓存中的哈希
         Map<String, Integer> objectHashCodeMap = redisCache.getCacheMap(OBJECT_HASH_MAP);
         // 每个位置下订阅情况不同，所以哈希也不同

@@ -9,6 +9,7 @@ import com.yuier.yuni.core.domain.entity.PluginSubscExceptEntity;
 import com.yuier.yuni.core.service.PluginSubscExceptService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.List;
@@ -123,16 +124,16 @@ public class SubscribeManager {
 
     /**
      * 设置特殊订阅情况表
-     * @param position 位置，group 或 private
+     * @param positionType 位置，group 或 private
      * @param posId 位置 ID，群号或用户号
      * @param pluginName 插件 ID
      * @param subscFlag 特殊订阅情况
      */
-    public void setSubscExcepCondition(String position, Long posId, String pluginName, Integer subscFlag) {
+    public void setSubscExcepCondition(String positionType, Long posId, String pluginName, Integer subscFlag) {
         // 刷新 redis 中的特殊情况表
-        refreshRedisSubscExcepMap(position, posId, pluginName, subscFlag);
+        refreshRedisSubscExcepMap(positionType, posId, pluginName, subscFlag);
         // 刷新数据库中的特殊情况表
-        refreshDbSubsc(position, posId, pluginName, subscFlag);
+        refreshDbSubsc(positionType, posId, pluginName, subscFlag);
     }
 
     /**
@@ -142,16 +143,14 @@ public class SubscribeManager {
      * @param pluginName 插件 ID
      * @param subscFlag 特殊订阅情况
      */
-    private void refreshDbSubsc(String position, Long posId, String pluginName, Integer subscFlag) {
+    public void refreshDbSubsc(String position, Long posId, String pluginName, Integer subscFlag) {
         if (!subscFlag.equals(SUBSCRIBE_OFF) && !subscFlag.equals(SUBSCRIBE_ON)) {
             throw new RuntimeException("错误的订阅类型：" + subscFlag);
         }
-        // 首先查找当前定位下是否已经设置了特殊订阅情况
-        List<PluginSubscExceptEntity> subscExceptEntityList = pluginSubscExceptService.listSubscs(position, posId, pluginName);
-        if (subscExceptEntityList == null || subscExceptEntityList.isEmpty()) {
-            pluginSubscExceptService.addSubsc(position, posId, pluginName, subscFlag);
-        } else {
-            pluginSubscExceptService.updateSubsc(position, posId, pluginName, subscFlag);
+        try {
+            pluginSubscExceptService.refreshDbSubsc(position, posId, pluginName, subscFlag);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
     }
 

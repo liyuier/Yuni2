@@ -5,6 +5,7 @@ import com.yuier.yuni.common.detect.message.order.OrderDetector;
 import com.yuier.yuni.common.detect.message.pattern.PatternDetector;
 import com.yuier.yuni.common.domain.event.OneBotEvent;
 import com.yuier.yuni.common.domain.event.message.MessageEvent;
+import com.yuier.yuni.common.domain.event.message.MessageEventPosition;
 import com.yuier.yuni.common.domain.plugin.YuniMessagePlugin;
 import com.yuier.yuni.common.domain.plugin.YuniNegativePlugin;
 import com.yuier.yuni.common.domain.plugin.YuniPlugin;
@@ -29,6 +30,9 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
+
+import static com.yuier.yuni.common.constants.SystemConstants.SUBSCRIBE_PLUGIN;
+import static com.yuier.yuni.common.constants.SystemConstants.UNSUBSCRIBE_PLUGIN;
 
 /**
  * @Title: PluginManager
@@ -346,5 +350,58 @@ public class PluginManager {
      */
     public Boolean pluginIsSubscribedAtThePosition(MessageEvent<?> event, YuniPlugin plugin) {
         return subscribeManager.querySubscCondition(event, plugin).equals(SubscribeCondition.YES);
+    }
+
+    /**
+     * 在当前位置下订阅插件
+     * @param position 当前位置
+     * @param pluginId 插件 ID
+     */
+    public void subscribePlugin(MessageEventPosition position, Integer pluginId) {
+        // 设置当前位置下插件 id 特殊订阅情况为 true
+        String positionType = position.getPositionType();
+        Long positionId = position.getPositionId();
+        String pluginName = getPluginNameById(pluginId);
+        if (pluginName != null) {
+            subscribeManager.setSubscExcepCondition(positionType, positionId, pluginName, SUBSCRIBE_PLUGIN);
+        }
+    }
+
+    /**
+     * 根据插件 ID 获取插件名称
+     * @param pluginId 插件 ID
+     * @return 插件名称
+     */
+    public String getPluginNameById(Integer pluginId) {
+        if (pluginIdLegal(pluginId)) {
+            // 好丑陋的写法
+            if (orderMessagePluginMap.containsKey(pluginId)) {
+                return orderMessagePluginMap.get(pluginId).getName();
+            }
+            if (patternMessagePluginMap.containsKey(pluginId)) {
+                return patternMessagePluginMap.get(pluginId).getName();
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 检查传入的插件 ID 是否合法，即在 1 与最大插件数之间
+     * @param pluginId 插件 ID
+     * @return ID 是否合法
+     */
+    public Boolean pluginIdLegal(Integer pluginId) {
+        return pluginId >= 1 && pluginId <= totalPluginNumber;
+    }
+
+    public void unsubscribePlugin(MessageEventPosition position, Integer pluginId) {
+        // 设置当前位置下插件 id 特殊订阅情况为 true
+        String positionType = position.getPositionType();
+        Long positionId = position.getPositionId();
+        String pluginName = getPluginNameById(pluginId);
+        if (pluginName != null) {
+            subscribeManager.setSubscExcepCondition(positionType, positionId, pluginName, UNSUBSCRIBE_PLUGIN);
+        }
+
     }
 }
