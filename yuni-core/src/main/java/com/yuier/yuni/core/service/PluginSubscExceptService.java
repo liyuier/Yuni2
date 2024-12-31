@@ -20,5 +20,7 @@ public interface PluginSubscExceptService extends IService<PluginSubscExceptEnti
     void addSubsc(String position, Long posId, String pluginId, Integer subscFlag);
 
     void updateSubsc(String position, Long posId, String pluginId, Integer subscFlag);
+
+    void refreshDbSubsc(String position, Long posId, String pluginName, Integer subscFlag) throws InterruptedException;
 }
 

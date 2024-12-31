@@ -24,4 +24,8 @@ public class MessageEventPosition {
      * 如果消息链来自私聊，则为 QQ 号
      */
     private Long positionId;
+
+    public String getPositionType() {
+        return messageType.getMsgType();
+    }
 }

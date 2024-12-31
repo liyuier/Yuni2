@@ -24,6 +24,9 @@ public final class SystemConstants {
     public static final String FILE_CACHE_MAP = "file:cache:map";
     public static final String OBJECT_HASH_MAP = "object:hash:map";
 
+    public static final Integer SUBSCRIBE_PLUGIN = 1;
+    public static final Integer UNSUBSCRIBE_PLUGIN = 0;
+
     public static final class REDIS_KEY {
         public static final String BILIBILI = "bilibili";
         public static final String BILI_COOKIE = "bili:cookie";
