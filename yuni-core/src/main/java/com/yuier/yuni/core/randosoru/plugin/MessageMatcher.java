@@ -7,7 +7,6 @@ import com.yuier.yuni.common.domain.event.message.MessageEvent;
 import com.yuier.yuni.common.domain.event.message.PrivateMessageEvent;
 import com.yuier.yuni.common.domain.plugin.YuniMessagePlugin;
 import com.yuier.yuni.common.enums.MessageTypeEnum;
-import com.yuier.yuni.common.utils.BeanCopyUtils;
 
 /**
  * @Title: MessageMatcher

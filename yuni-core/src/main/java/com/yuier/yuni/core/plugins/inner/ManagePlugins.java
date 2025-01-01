@@ -104,7 +104,7 @@ public class ManagePlugins implements MessagePluginBean<OrderDetector> {
     }
 
     /**
-     * 展示插件相信信息
+     * 展示插件详细信息
      * @param pluginId 插件 ID
      */
     private void showPluginDetail(Integer pluginId) {
@@ -251,6 +251,11 @@ public class ManagePlugins implements MessagePluginBean<OrderDetector> {
 
     @Override
     public String helpInfo() {
-        return "管理插件的插件。";
+        return """
+                管理插件的插件。
+                - 使用 `/插件 查看` 查看当前群聊或私聊插件列表
+                - 使用 `/插件 查看 {id}` 查看指定 id 插件的详情。如：/插件 查看 1
+                - 使用 `/插件 订阅 {id}` 订阅指定 id 插件。如：/插件 订阅 1
+                - 使用 `/插件 退订 {id}` 取消订阅指定 id 插件。如：/插件 退订 1""";
     }
 }

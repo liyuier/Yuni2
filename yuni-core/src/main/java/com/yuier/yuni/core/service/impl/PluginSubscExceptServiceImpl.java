@@ -6,14 +6,12 @@ import com.yuier.yuni.core.domain.entity.PluginSubscExceptEntity;
 import com.yuier.yuni.core.mapper.PluginSubscExceptMapper;
 import com.yuier.yuni.core.service.PluginSubscExceptService;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 import static com.yuier.yuni.common.constants.SystemConstants.FIRST_INDEX;
-import static java.lang.Thread.sleep;
 
 /**
  * (PluginSbscExcept)表服务实现类
