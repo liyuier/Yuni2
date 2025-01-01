@@ -254,6 +254,9 @@ public class PluginManager {
         // 根据插件默认订阅策略设置插件初始状态
         yuniPlugin.setIsSubscribed(yuniPlugin.getSubmitCondition().equals(SubscribeCondition.YES));
 
+        // 插件是否为内置插件；内置插件无法删除
+        yuniPlugin.setInner(pluginAnno.inner());
+
         // 如果插件为被动插件，继续构建
         if (targetPluginBean instanceof NegativePluginBean<?, ?>) {
             buildFurtherForNegativePlugin(yuniPlugin, (NegativePluginBean<?, ?>) targetPluginBean);

@@ -32,4 +32,7 @@ public class YuniPlugin {
 
     // 插件是否活跃
     private Boolean isSubscribed;
+
+    // 是否内置插件；内置插件无法退订
+    private Boolean inner;
 }
