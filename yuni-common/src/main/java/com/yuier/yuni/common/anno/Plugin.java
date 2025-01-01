@@ -36,4 +36,6 @@ public @interface Plugin {
      *         默认订阅
      */
     SubscribeCondition subscribe() default SubscribeCondition.YES;
+
+    boolean inner() default false;
 }
