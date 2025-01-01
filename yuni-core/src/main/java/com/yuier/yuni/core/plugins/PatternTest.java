@@ -31,6 +31,6 @@ public class PatternTest implements MessagePluginBean<PatternDetector> {
 
     @Override
     public String helpInfo() {
-        return null;
+        return "基础匹配器插件测试";
     }
 }

@@ -13,9 +13,10 @@ import com.yuier.yuni.common.enums.OrderArgAcceptType;
 import com.yuier.yuni.common.interfaces.plugin.MessagePluginBean;
 import com.yuier.yuni.common.utils.BotAction;
 import com.yuier.yuni.common.utils.RedisCache;
+import com.yuier.yuni.core.domain.pojo.request.PluginDetailPojo;
 import com.yuier.yuni.core.domain.pojo.request.PluginInfoPojo;
 import com.yuier.yuni.core.domain.pojo.request.PluginsInfoPicPojo;
-import com.yuier.yuni.core.domain.pojo.response.GetPluginsInfoPicResPojo;
+import com.yuier.yuni.core.domain.pojo.response.PythonUtilImageRes;
 import com.yuier.yuni.core.randosoru.plugin.PluginManager;
 import com.yuier.yuni.core.util.CallPythonServiceUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,6 +51,8 @@ public class ManagePlugins implements MessagePluginBean<OrderDetector> {
 
     private final String PLUGIN_MAP_HASH = "plugin:map:hash:";
     private final String PLUGIN_LIST_PIC_CACHE = "plugin:list:pic:cache:";
+    private final String PLUGIN_DETAIL_HASH = "plugin:detail:hash:";
+    private final String PLUGIN_DETAIL_PIC_CACHE = "plugin:detail:pic:cache:";
 
     private final String PLUGINS_CHECK = "check";
     private final String PLUGIN_SUBSCRIBE = "subscribe";
@@ -63,6 +66,7 @@ public class ManagePlugins implements MessagePluginBean<OrderDetector> {
                 .addOption(
                         new OrderOptionContainer.OptionBuilder()
                                 .setNameAndFlag(PLUGINS_CHECK, "查看")
+                                .addOptionalArg(PLUGIN_ID, OrderArgAcceptType.NUMBER)
                                 .build()
                 )
                 .addOption(
@@ -85,7 +89,11 @@ public class ManagePlugins implements MessagePluginBean<OrderDetector> {
         localEvent = event;
         OrderMatchedOut orderMatchedOut = detector.getOrderMatchedOut();
         if (orderMatchedOut.optionExists(PLUGINS_CHECK)) {
-            showPlugins();
+            if (orderMatchedOut.optionArgExists(PLUGINS_CHECK, PLUGIN_ID)) {
+                showPluginDetail(orderMatchedOut.getOptionArgByName(PLUGINS_CHECK, PLUGIN_ID).asInteger());
+            } else {
+                showPlugins();
+            }
         }
         if (orderMatchedOut.optionExists(PLUGIN_SUBSCRIBE)) {
             subscribePlugin(orderMatchedOut.getOptionArgByName(PLUGIN_SUBSCRIBE, PLUGIN_ID).asInteger());
@@ -93,6 +101,57 @@ public class ManagePlugins implements MessagePluginBean<OrderDetector> {
         if (orderMatchedOut.optionExists(PLUGIN_UNSUBSCRIBE)) {
             unsubscribePlugin(orderMatchedOut.getOptionArgByName(PLUGIN_UNSUBSCRIBE, PLUGIN_ID).asInteger());
         }
+    }
+
+    /**
+     * 展示插件相信信息
+     * @param pluginId 插件 ID
+     */
+    private void showPluginDetail(Integer pluginId) {
+        if (!pluginManager.pluginIdLegal(pluginId)) {
+            BotAction.sendMessage(localEvent.getPosition(), new MessageChain("插件 ID 不在范围内，请重新下发指令！"));
+            return;
+        }
+        // 构造出插件信息
+        YuniPlugin plugin = pluginManager.getPluginById(pluginId);
+        PluginDetailPojo pluginDetailPojo = new PluginDetailPojo(plugin.getId(), plugin.getName(), plugin.getHelpInfo());
+        // 检查是否存在缓存
+        Integer pluginDetailHash = pluginDetailPojo.hashCode();
+        Map<String, Integer> objectHashCodeMap = redisCache.getCacheMap(OBJECT_HASH_MAP);
+        Integer pluginDetailHashInCache = objectHashCodeMap.getOrDefault(PLUGIN_DETAIL_HASH + plugin.getName(), null);
+        // 如果二者相等，且缓存中存在图片，使用缓存中的图片
+        if (pluginDetailHash.equals(pluginDetailHashInCache)) {
+            // 尝试获取缓存中的图片
+            Map<String, String> fileCacheMap = redisCache.getCacheMap(FILE_CACHE_MAP);
+            // 对象存储中的文件
+            String fileCache = fileCacheMap.getOrDefault(PLUGIN_DETAIL_PIC_CACHE + plugin.getName(), null);
+            if (fileCache != null) {
+                BotAction.sendMessage(
+                        localEvent.getPosition(),
+                        new MessageSeg<?>[] {
+                                new ImageSeg(fileCache)
+                        }
+                );
+                return;
+            }
+        }
+        // 二者不相等，或缓存中没有图片，请求 python 工具
+        // 刷新哈希
+        objectHashCodeMap.put(PLUGIN_DETAIL_HASH + plugin.getName(), pluginDetailHash);
+        redisCache.setCacheMap(OBJECT_HASH_MAP, objectHashCodeMap);
+        // 请求 python 服务
+        PythonUtilImageRes pluginsInfo = pyServCaller.getPluginDetailInfo(pluginDetailPojo);
+        // 刷新缓存
+        Map<String, String> fileCacheMap = redisCache.getCacheMap(FILE_CACHE_MAP);
+        fileCacheMap.put(PLUGIN_DETAIL_PIC_CACHE + plugin.getName(), pluginsInfo.getImage());
+        redisCache.setCacheMap(FILE_CACHE_MAP, fileCacheMap);
+        // 发送图片
+        BotAction.sendMessage(
+                localEvent.getPosition(),
+                new MessageSeg<?>[] {
+                        new ImageSeg(pluginsInfo.getImage())
+                }
+        );
     }
 
     /**
@@ -167,18 +226,18 @@ public class ManagePlugins implements MessagePluginBean<OrderDetector> {
                                 new ImageSeg(fileCache)
                         }
                 );
+                return;
             }
-            return;
         }
         // 二者不相等，或缓存中没有图片，请求 python 工具
         // 刷新哈希
         objectHashCodeMap.put(PLUGIN_MAP_HASH + positionStr, pojoMapHashCode);
         redisCache.setCacheMap(OBJECT_HASH_MAP, objectHashCodeMap);
         // 请求 python 服务
-        GetPluginsInfoPicResPojo pluginsInfo = pyServCaller.getPluginsInfo(new PluginsInfoPicPojo(pluginsInfoPojoMap));
+        PythonUtilImageRes pluginsInfo = pyServCaller.getPluginsInfo(new PluginsInfoPicPojo(pluginsInfoPojoMap));
         String image = pluginsInfo.getImage();
         // 刷新缓存
-        Map<String, String> fileCacheMap = new HashMap<>();
+        Map<String, String> fileCacheMap = redisCache.getCacheMap(FILE_CACHE_MAP);
         fileCacheMap.put(PLUGIN_LIST_PIC_CACHE + positionStr, image);
         redisCache.setCacheMap(FILE_CACHE_MAP, fileCacheMap);
         // 发送图片
@@ -192,6 +251,6 @@ public class ManagePlugins implements MessagePluginBean<OrderDetector> {
 
     @Override
     public String helpInfo() {
-        return "管理插件的插件";
+        return "管理插件的插件。";
     }
 }
