@@ -4,7 +4,6 @@ import com.yuier.yuni.common.domain.event.message.MessageEvent;
 import com.yuier.yuni.common.domain.event.message.sender.GroupMessageSender;
 import com.yuier.yuni.common.domain.event.message.sender.MessageSender;
 import com.yuier.yuni.common.domain.event.message.sender.PrivateMessageSender;
-import com.yuier.yuni.common.domain.plugin.YuniMessagePlugin;
 import com.yuier.yuni.common.enums.PermissionLevel;
 import com.yuier.yuni.common.utils.RedisCache;
 import com.yuier.yuni.common.utils.ThreadLocalUtil;

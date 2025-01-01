@@ -9,7 +9,6 @@ import com.yuier.yuni.core.domain.entity.PluginSubscExceptEntity;
 import com.yuier.yuni.core.service.PluginSubscExceptService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.List;

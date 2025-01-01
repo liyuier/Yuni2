@@ -5,7 +5,6 @@ import com.yuier.yuni.common.detect.message.order.OrderDetector;
 import com.yuier.yuni.common.domain.event.message.MessageEvent;
 import com.yuier.yuni.common.domain.event.message.chain.MessageChain;
 import com.yuier.yuni.common.enums.MessageTypeEnum;
-import com.yuier.yuni.common.enums.PermissionLevel;
 import com.yuier.yuni.common.interfaces.plugin.MessagePluginBean;
 import com.yuier.yuni.common.utils.BotAction;
 import org.springframework.stereotype.Component;
@@ -19,7 +18,7 @@ import org.springframework.stereotype.Component;
  */
 
 @Component
-@Plugin(permission = PermissionLevel.MASTER, name = "原神启动")
+@Plugin(name = "原神启动")
 public class GenShinStart implements MessagePluginBean<OrderDetector> {
 
     @Override
@@ -35,8 +34,9 @@ public class GenShinStart implements MessagePluginBean<OrderDetector> {
 
     @Override
     public String helpInfo() {
-        return "MASTER 用户使用 /原神 指令，机器人回复 “启动！”。" +
-                "通常用于测试新功能，并不能真的启动原神（原p请停止幻想）。";
+        return """
+                用户使用 /原神 指令，机器人回复 “启动！”。
+                作者君一般用这个插件来测试新功能，并不能真的启动原神（原神玩家可以停止幻想）。""";
     }
 
     @Override
