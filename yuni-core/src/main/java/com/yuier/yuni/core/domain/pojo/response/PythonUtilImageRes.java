@@ -7,7 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * @Title: GetPluginsInfoPicResPojo
+ * @Title: PythonUtilImageRes
  * @Author yuier
  * @Package com.yuier.yuni.core.domain.pojo.response
  * @Date 2024/12/25 23:51
@@ -18,6 +18,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class GetPluginsInfoPicResPojo {
+public class PythonUtilImageRes {
     String image;
 }

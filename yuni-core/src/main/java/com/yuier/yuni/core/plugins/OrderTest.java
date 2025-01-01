@@ -92,6 +92,6 @@ public class OrderTest implements MessagePluginBean<OrderDetector> {
 
     @Override
     public String helpInfo() {
-        return "指令测试";
+        return "指令探测器插件测试";
     }
 }

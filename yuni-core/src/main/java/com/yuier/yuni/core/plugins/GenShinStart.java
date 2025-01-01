@@ -35,7 +35,8 @@ public class GenShinStart implements MessagePluginBean<OrderDetector> {
 
     @Override
     public String helpInfo() {
-        return "原神，启动！";
+        return "MASTER 用户使用 /原神 指令，机器人回复 “启动！”。" +
+                "通常用于测试新功能，并不能真的启动原神（原p请停止幻想）。";
     }
 
     @Override
