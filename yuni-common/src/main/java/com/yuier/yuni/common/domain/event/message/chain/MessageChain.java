@@ -120,6 +120,37 @@ public class MessageChain {
         return false;
     }
 
+    /**
+     * 消息链中是否包含指定字符串
+     * @param str 指定字符串
+     * @return 是否包含
+     */
+    public Boolean contains(String str) {
+        for (MessageSeg<?> seg : this.content) {
+            if (seg.typeOf(MessageDataEnum.TEXT)) {
+                TextData data = (TextData) seg.getData();
+                if (data.getText().equals(str)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 替换消息链中字符串元素
+     * @param formerStr 原字符串
+     * @param latterStr 新字符串
+     */
+    public void replace(String formerStr, String latterStr) {
+        for (MessageSeg<?> seg : this.content) {
+            if (seg.typeOf(MessageDataEnum.TEXT)) {
+                TextData data = (TextData) seg.getData();
+                data.setText(data.getText().replace(formerStr, latterStr));
+            }
+        }
+    }
+
     @Override
     public String toString() {
         StringBuilder str = new StringBuilder();

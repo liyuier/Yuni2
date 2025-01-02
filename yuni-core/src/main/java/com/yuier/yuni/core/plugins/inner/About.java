@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
  */
 
 @Component
-@Plugin(name = "关于")
+@Plugin(name = "关于", inner = true)
 public class About implements MessagePluginBean<OrderDetector> {
 
     @Override
