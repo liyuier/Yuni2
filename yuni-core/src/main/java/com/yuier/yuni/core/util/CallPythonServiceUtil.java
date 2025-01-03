@@ -1,6 +1,7 @@
 package com.yuier.yuni.core.util;
 
 import com.yuier.yuni.common.utils.CallYuniServiceUtil;
+import com.yuier.yuni.core.domain.pojo.request.BALogoPojo;
 import com.yuier.yuni.core.domain.pojo.request.PluginDetailPojo;
 import com.yuier.yuni.core.domain.pojo.request.PluginsInfoPicPojo;
 import com.yuier.yuni.core.domain.pojo.response.PythonUtilImageRes;
@@ -52,6 +53,16 @@ public class CallPythonServiceUtil {
                 "plugin/detail",
                 pluginDetailPojo,
                 PluginDetailPojo.class,
+                PythonUtilImageRes.class
+        );
+    }
+
+    public PythonUtilImageRes getBaLogoPojo(BALogoPojo baLogoPojo) {
+        CallYuniServiceUtil pyCaller = getPythonServiceCaller();
+        return pyCaller.postOneBotForEntity(
+                "logo/ba",
+                baLogoPojo,
+                BALogoPojo.class,
                 PythonUtilImageRes.class
         );
     }
