@@ -45,7 +45,9 @@ public class OnContextRefreshedListener implements ApplicationListener<ContextRe
         String packageName = "com.yuier.yuni.common";
 
         Reflections reflections = new Reflections(packageName);
-        // 注册子类型，使用名称建立关联
+        /*
+         * 注册子类型，使用名称建立关联
+         */
         // 使用开源库 Reflections 扫描 JsonTypeInfo 定义的基类
         Set<Class<?>> types = reflections.getTypesAnnotatedWith(JsonTypeInfo.class);
         // 遍历基类
