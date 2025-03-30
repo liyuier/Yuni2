@@ -129,7 +129,7 @@ public class MessageChain {
         for (MessageSeg<?> seg : this.content) {
             if (seg.typeOf(MessageDataEnum.TEXT)) {
                 TextData data = (TextData) seg.getData();
-                if (data.getText().equals(str)) {
+                if (data.getText().contains(str)) {
                     return true;
                 }
             }
