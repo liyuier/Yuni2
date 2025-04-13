@@ -15,6 +15,8 @@ public final class SystemConstants {
 
     public static final String LOCAL_BOT = "localBot";
 
+    public static final String LOCAL_POST_JSON_STR = "LOCAL_POST_JSON_STR";
+
     public static final Integer HTTP_OK = 200;
     public static final String ONEBOT_OK_STATUS = "ok";
 

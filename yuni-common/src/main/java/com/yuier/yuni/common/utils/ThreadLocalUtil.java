@@ -5,6 +5,7 @@ import com.yuier.yuni.common.domain.bot.YuniBot;
 import java.util.HashMap;
 
 import static com.yuier.yuni.common.constants.SystemConstants.LOCAL_BOT;
+import static com.yuier.yuni.common.constants.SystemConstants.LOCAL_POST_JSON_STR;
 
 /**
  * ThreadLocal 工具类
@@ -33,7 +34,27 @@ public class ThreadLocalUtil {
     // 获取 bot name
     public static YuniBot getBot() {
         HashMap<String, Object> localInfo = get();
+        if (localInfo == null) {
+            localInfo = new HashMap<>();
+        }
         YuniBot currentBot = (YuniBot) localInfo.get(LOCAL_BOT);
         return currentBot;
+    }
+
+    // 储存请求 json 字符串
+    public static void setPostJsonStr(String postJson) {
+        HashMap<String, Object> localInfo = get();
+        if (localInfo == null) {
+            localInfo = new HashMap<>();
+        }
+        localInfo.put(LOCAL_POST_JSON_STR, postJson);
+        set(localInfo);
+    }
+
+    // 获取请求字符串
+    public static String getPostJson() {
+        HashMap<String, Object> localInfo = get();
+        String localPostJsonStr = (String) localInfo.getOrDefault(LOCAL_POST_JSON_STR, "");
+        return localPostJsonStr;
     }
 }

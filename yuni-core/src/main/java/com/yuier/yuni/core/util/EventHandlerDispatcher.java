@@ -16,7 +16,7 @@ import java.util.Map;
 import static com.yuier.yuni.common.constants.SystemConstants.LOCAL_BOT;
 
 /**
- * @Title: EventHandlerPatcher
+ * @Title: EventHandlerDispatcher
  * @Author yuier
  * @Package com.yuier.yuni.core.handler
  * @Date 2024/11/11 22:40
@@ -24,30 +24,12 @@ import static com.yuier.yuni.common.constants.SystemConstants.LOCAL_BOT;
  */
 
 @Component
-public class EventHandlerPatcher {
+public class EventHandlerDispatcher {
 
     @Autowired
     ApplicationContext applicationContext;
     @Autowired
     BotManager botManager;
-
-    public void patchEvent(OneBotEvent event) {
-        Map<String, Object> handlerBeans = applicationContext.getBeansWithAnnotation(EventHandler.class);
-        for (Object bean: handlerBeans.values()) {
-            Class<?> beanClass = bean.getClass();
-            EventHandler handlerAnno = beanClass.getAnnotation(EventHandler.class);
-            Class<? extends OneBotEvent> beanAcceptEventType = handlerAnno.eventType();
-            if (beanAcceptEventType.isInstance(event)) {
-                Method handle = null;
-                try {
-                    handle = beanClass.getMethod("handle", beanAcceptEventType);
-                    handle.invoke(bean, event);
-                } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        }
-    }
 
     /**
      * 收到事件请求后，在业务逻辑之前进行一些前期处理
