@@ -2,7 +2,7 @@ package com.yuier.yuni.common.interfaces.plugin;
 
 import com.yuier.yuni.common.domain.event.message.MessageEvent;
 import com.yuier.yuni.common.enums.MessageTypeEnum;
-import com.yuier.yuni.common.interfaces.detector.MessageDetector;
+import com.yuier.yuni.common.interfaces.detector.message.MessageDetector;
 
 /**
  * @Title: MessagePluginBean

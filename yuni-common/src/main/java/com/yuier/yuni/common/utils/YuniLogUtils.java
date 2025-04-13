@@ -4,6 +4,7 @@ import com.yuier.yuni.common.domain.event.message.GroupMessageEvent;
 import com.yuier.yuni.common.domain.event.message.MessageEvent;
 import com.yuier.yuni.common.domain.event.message.sender.GroupMessageSender;
 import com.yuier.yuni.common.domain.event.message.sender.MessageSender;
+import com.yuier.yuni.common.domain.event.notice.NoticeEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StringUtils;
 
@@ -30,7 +31,6 @@ public class YuniLogUtils {
     public static String receiveMessageLogStr(MessageEvent<?> event) {
         String timeStr = "";
         // 收到该消息的 bot
-        String bot = "";
         String senderStr = "";
         // 介词，用于输出群聊消息时在群号前加个 "于" 字
         String preposition = "";
@@ -73,6 +73,26 @@ public class YuniLogUtils {
                 buildCyanLog(groupStr) +  // 如果是群消息，这里是群号
                 sendMessageAction + " " +  // 发消息的具体描述，私聊与群聊不同
                 buildBrightBlueLog(messageStr);
+
+        // 特殊符号的处理
+        return escapeString(logStr);
+    }
+
+    public static String receiveNoticeLogStr(NoticeEvent event) {
+        String timeStr = "";
+        // 收到该消息的 bot
+        // 拼装消息发送时间
+        timeStr = new SimpleDateFormat("yyyy-MM-dd HH:mm")
+                .format(new Date(event.getTime() * 1000L));
+        // 拼装收到消息的机器人
+        String botGetMessage = "[" + ThreadLocalUtil.getBot().getNickName() + "]";
+        // 直接调用各子类自行实现的 toString
+        String noticeInfo = event.toString();
+
+        // 拼装最终日志
+        String logStr = timeStr + " " +  // 时间
+                buildPurpleLog(botGetMessage) + " " + // 收到消息的 bot
+                buildBrightBlueLog(noticeInfo);
 
         // 特殊符号的处理
         return escapeString(logStr);

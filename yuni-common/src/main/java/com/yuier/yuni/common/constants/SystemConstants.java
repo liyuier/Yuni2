@@ -73,4 +73,9 @@ public final class SystemConstants {
         public static final String DESCRIPTION = "description";
     }
 
+    // 通知事件类型
+    public static final class NOTICE_TYPE {
+        public static final String GROUP_RECALL = "group_recall";
+    }
+
 }

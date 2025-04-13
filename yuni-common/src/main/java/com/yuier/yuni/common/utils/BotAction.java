@@ -5,6 +5,7 @@ import com.yuier.yuni.common.domain.event.message.MessageEventPosition;
 import com.yuier.yuni.common.domain.event.message.chain.MessageChain;
 import com.yuier.yuni.common.domain.event.message.chain.seg.MessageSeg;
 import com.yuier.yuni.common.domain.onebotapi.data.*;
+import com.yuier.yuni.common.domain.onebotapi.pojo.GetGroupMemberInfoPojo;
 import com.yuier.yuni.common.domain.onebotapi.pojo.GetMessagePojo;
 import com.yuier.yuni.common.domain.onebotapi.pojo.SendGroupMessagePojo;
 import com.yuier.yuni.common.domain.onebotapi.pojo.SendPrivateMessagePojo;
@@ -176,5 +177,35 @@ public class BotAction {
         } else {
             return new SendMessageResData((sendPrivateMessageResData(position.getPositionId(), chain)));
         }
+    }
+
+    /**
+     * 获取群成员信息
+     * @param groupId  群 ID
+     * @param userId  群成员 ID
+     * @return  群成员信息
+     */
+    public static GetGroupMemberInfoResData getGroupMemberInfo(Long groupId, Long userId) {
+        return CallOneBotUtil.postOneBotForEntity(
+                getOneBotBaseUrl() + "/get_group_member_info",
+                new GetGroupMemberInfoPojo(groupId, userId),
+                GetGroupMemberInfoPojo.class,
+                GetGroupMemberInfoResData.class
+        );
+    }
+
+    /**
+     * 根据群成员 ID 获取群成员昵称
+     * @param groupId  群 ID
+     * @param userId  群成员 ID
+     * @return  群成员昵称
+     */
+    public static String GetGroupMemberName(Long groupId, Long userId) {
+        GetGroupMemberInfoResData groupMemberInfo = getGroupMemberInfo(groupId, userId);
+        String card = groupMemberInfo.getCard();
+        if (card != null && !card.isEmpty()) {
+            return card;
+        }
+        return groupMemberInfo.getNickname();
     }
 }

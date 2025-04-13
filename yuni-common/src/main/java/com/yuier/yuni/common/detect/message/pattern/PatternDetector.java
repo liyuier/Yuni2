@@ -1,8 +1,8 @@
 package com.yuier.yuni.common.detect.message.pattern;
 
 import com.yuier.yuni.common.domain.event.message.MessageEvent;
-import com.yuier.yuni.common.interfaces.detector.MessageDetector;
-import com.yuier.yuni.common.interfaces.detector.pattern.PatternMatcher;
+import com.yuier.yuni.common.interfaces.detector.message.MessageDetector;
+import com.yuier.yuni.common.interfaces.detector.message.pattern.PatternMatcher;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 

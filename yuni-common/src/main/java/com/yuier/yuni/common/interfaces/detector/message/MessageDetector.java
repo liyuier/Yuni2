@@ -1,6 +1,7 @@
-package com.yuier.yuni.common.interfaces.detector;
+package com.yuier.yuni.common.interfaces.detector.message;
 
 import com.yuier.yuni.common.domain.event.message.MessageEvent;
+import com.yuier.yuni.common.interfaces.detector.EventDetector;
 
 /**
  * @Title: MessageDetector
@@ -9,6 +10,7 @@ import com.yuier.yuni.common.domain.event.message.MessageEvent;
  * @Date 2024/11/9 16:29
  * @description: 消息探测器
  */
+
 public interface MessageDetector extends EventDetector<MessageEvent<?>> {
 
     /**

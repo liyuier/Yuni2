@@ -21,7 +21,7 @@ import java.util.ArrayList;
  * @Package com.yuier.yuni.common.domain.event
  * @Date 2024/11/10 21:07
  * @description: 继承 OneBotEvent, 用于接收消息事件的上报
- * 结构参考 https://283375.github.io/onebot_v11_vitepress/event/message.html#%E7%A7%81%E8%81%8A%E6%B6%88%E6%81%AF
+ * 结构参考 <a href="https://283375.github.io/onebot_v11_vitepress/event/message.html#%E7%A7%81%E8%81%8A%E6%B6%88%E6%81%AF">...</a>
  * 字段从父类中的 message_type 开始定义
  */
 

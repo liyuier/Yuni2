@@ -13,7 +13,7 @@ import com.yuier.yuni.common.domain.event.message.chain.seg.TextSeg;
 import com.yuier.yuni.common.domain.event.message.chain.seg.data.TextData;
 import com.yuier.yuni.common.enums.MessageDataEnum;
 import com.yuier.yuni.common.enums.OrderArgAcceptType;
-import com.yuier.yuni.common.interfaces.detector.MessageDetector;
+import com.yuier.yuni.common.interfaces.detector.message.MessageDetector;
 import com.yuier.yuni.common.utils.BotAction;
 import lombok.AllArgsConstructor;
 import lombok.Data;

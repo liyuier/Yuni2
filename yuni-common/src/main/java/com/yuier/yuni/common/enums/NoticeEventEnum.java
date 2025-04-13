@@ -12,7 +12,7 @@ import lombok.Getter;
 @Getter
 public enum NoticeEventEnum {
     GROUP_UPLOAD("group_upload", "群文件上传"),
-    GROUP_ADMIN("GROUP_ADMIN", "群管理员变动"),
+    GROUP_ADMIN("group_admin", "群管理员变动"),
     GROUP_DECREASE("group_decrease", "群成员减少"),
     GROUP_INCREASE("group_increase", "群成员增加"),
     GROUP_BAN("group_ban", "群禁言"),

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yuier.yuni.common.anno.OneBotEventDispatcher;
 import com.yuier.yuni.common.domain.event.OneBotEvent;
 import com.yuier.yuni.common.domain.event.message.MessageEvent;
+import com.yuier.yuni.common.domain.event.notice.NoticeEvent;
 import com.yuier.yuni.common.utils.ReflectionUtils;
 import com.yuier.yuni.common.utils.ThreadLocalUtil;
 import com.yuier.yuni.core.util.EventHandlerDispatcher;
@@ -31,6 +32,8 @@ public class EventDispatchHandler {
     ObjectMapper objectMapper;
     @Autowired
     MessageEventHandler messageEventHandler;
+    @Autowired
+    NoticeEventHandler noticeEventHandler;
     @Autowired
     EventHandlerDispatcher eventHandlerDispatcher;
 
@@ -76,8 +79,10 @@ public class EventDispatchHandler {
      * @param postJsonNode
      * @return
      */
+    @OneBotEventDispatcher(POST_NOTICE)
     private Boolean dispatchNoticeEvent(JsonNode postJsonNode) {
-
+        NoticeEvent noticeEvent = (NoticeEvent) deserializeSimply(POST_JSON_STR, NoticeEvent.class);
+        noticeEventHandler.handle(noticeEvent);
         return true;
     }
 

@@ -6,15 +6,20 @@ import com.yuier.yuni.common.detect.message.pattern.PatternDetector;
 import com.yuier.yuni.common.domain.event.OneBotEvent;
 import com.yuier.yuni.common.domain.event.message.MessageEvent;
 import com.yuier.yuni.common.domain.event.message.MessageEventPosition;
+import com.yuier.yuni.common.domain.event.notice.NoticeEvent;
 import com.yuier.yuni.common.domain.plugin.YuniMessagePlugin;
 import com.yuier.yuni.common.domain.plugin.YuniNegativePlugin;
+import com.yuier.yuni.common.domain.plugin.YuniNoticePlugin;
 import com.yuier.yuni.common.domain.plugin.YuniPlugin;
+import com.yuier.yuni.common.enums.OneBotEventEnum;
 import com.yuier.yuni.common.enums.PermissionLevel;
 import com.yuier.yuni.common.enums.SubscribeCondition;
 import com.yuier.yuni.common.interfaces.detector.EventDetector;
-import com.yuier.yuni.common.interfaces.detector.MessageDetector;
+import com.yuier.yuni.common.interfaces.detector.message.MessageDetector;
+import com.yuier.yuni.common.interfaces.detector.notice.NoticeDetector;
 import com.yuier.yuni.common.interfaces.plugin.MessagePluginBean;
 import com.yuier.yuni.common.interfaces.plugin.NegativePluginBean;
+import com.yuier.yuni.common.interfaces.plugin.NoticePluginBean;
 import com.yuier.yuni.common.interfaces.plugin.PluginBean;
 import com.yuier.yuni.common.utils.BeanCopyUtils;
 import com.yuier.yuni.core.randosoru.bot.BotManager;
@@ -60,6 +65,9 @@ public class PluginManager {
     private HashMap<Integer, YuniMessagePlugin> orderMessagePluginMap;
     private HashMap<Integer, YuniMessagePlugin> patternMessagePluginMap;
 
+    // 通知事件触发的插件合集
+    private HashMap<Integer, YuniNoticePlugin> noticePluginHashMap;
+
     // 使用过的插件名称，用于辅助构建插件
     private HashMap<String, String> pluginNamesUsed;
 
@@ -69,6 +77,7 @@ public class PluginManager {
         totalPluginNumber = 0;
         orderMessagePluginMap = new HashMap<>();
         patternMessagePluginMap = new HashMap<>();
+        noticePluginHashMap = new HashMap<>();
         pluginNamesUsed = new HashMap<>();
     }
 
@@ -81,6 +90,9 @@ public class PluginManager {
         }
         if (patternMessagePluginMap.containsKey(pluginId)) {
             return patternMessagePluginMap.get(pluginId);
+        }
+        if (noticePluginHashMap.containsKey(pluginId)) {
+            return noticePluginHashMap.get(pluginId);
         }
         return null;
     }
@@ -95,6 +107,27 @@ public class PluginManager {
         if (event instanceof MessageEvent) {
             // 检查是否能命中某个插件，并执行
             matchAndExecMessageEvent((MessageEvent<?>) event);
+        } else if (event instanceof NoticeEvent) {
+            // 如果事件为通知事件
+            matchAndExecNoticeEvent((NoticeEvent) event);
+        }
+    }
+
+    /**
+     * 匹配通知事件
+     * @param event 通知事件
+     */
+    public void matchAndExecNoticeEvent(NoticeEvent event) {
+        for (YuniNoticePlugin plugin : noticePluginHashMap.values()) {
+            // 检查插件是否被当前 BOT 实例订阅
+            if (!pluginIsSubscribedAtThePosition(event, plugin)) {
+                continue;
+            }
+            // 检查当前插件是否被消息命中
+            if (NoticeMatcher.matchNoticeDetector(event, plugin)) {
+                // 如果命中，直接执行插件即可
+                callPlugin(plugin, event);
+            }
         }
     }
 
@@ -159,6 +192,19 @@ public class PluginManager {
         PluginBean pluginBean = plugin.getPluginBean();
         Method runMethod = plugin.getRunMethod();
         MessageDetector detector = (MessageDetector) plugin.getDetector();
+        try {
+            // 反射执行插件入口函数
+            runMethod.invoke(pluginBean, event, detector);
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void callPlugin(YuniNoticePlugin plugin, NoticeEvent event) {
+        // 获取反射执行方法的必要材料
+        PluginBean pluginBean = plugin.getPluginBean();
+        Method runMethod = plugin.getRunMethod();
+        NoticeDetector detector = (NoticeDetector) plugin.getDetector();
         try {
             // 反射执行插件入口函数
             runMethod.invoke(pluginBean, event, detector);
@@ -284,6 +330,9 @@ public class PluginManager {
         // 如果被动插件由消息事件触发，继续构建
         if (targetPluginBean instanceof MessagePluginBean) {
             buildFurtherForMessagePlugin(yuniNegativePlugin, (MessagePluginBean<?>) targetPluginBean);
+        } else if (targetPluginBean instanceof NoticePluginBean<?>) {
+            // 如果被动插件由通知事件触发，继续构建
+            buildFurtherForNoticePlugin(yuniNegativePlugin, (NoticePluginBean<?>) targetPluginBean);
         }
     }
 
@@ -309,6 +358,25 @@ public class PluginManager {
         // 构建结束（たぶん），将插件加入 messagePluginMap 中
         putMessagePluginsIntoMap(yuniMessagePlugin);
     }
+
+    /**
+     * 从 YuniNegativePlugin 实例构建出 YuniNegativePlugin 消息插件
+     * @param yuniNegativePlugin  YuniNegativePlugin 实例
+     * @param targetPluginBean  插件 Bean 本体
+     */
+    private void buildFurtherForNoticePlugin(YuniNegativePlugin yuniNegativePlugin, NoticePluginBean<?> targetPluginBean) {
+        YuniNoticePlugin yuniNoticePlugin = BeanCopyUtils.copyBean(yuniNegativePlugin, YuniNoticePlugin.class);
+
+        Plugin pluginAnno = targetPluginBean.getClass().getAnnotation(Plugin.class);
+        if (pluginAnno == null) {
+            return;
+        }
+        // 将插件加入 noticePluginHashMap 中
+        totalPluginNumber ++;
+        yuniNoticePlugin.setId(totalPluginNumber);
+        noticePluginHashMap.put(totalPluginNumber, yuniNoticePlugin);
+    }
+
 
     /**
      * 将消息插件按探测器类型放入不同插件 map 中
@@ -346,12 +414,16 @@ public class PluginManager {
     }
 
     /**
-     * 检查插件是否被当前位置订阅了
+     * 检查消息插件是否被当前位置订阅了
      * @param event 事件
      * @param plugin  插件
      * @return  插件是否被该 Bot 订阅
      */
     public Boolean pluginIsSubscribedAtThePosition(MessageEvent<?> event, YuniPlugin plugin) {
+        return subscribeManager.querySubscCondition(event, plugin).equals(SubscribeCondition.YES);
+    }
+
+    public Boolean pluginIsSubscribedAtThePosition(NoticeEvent event, YuniPlugin plugin) {
         return subscribeManager.querySubscCondition(event, plugin).equals(SubscribeCondition.YES);
     }
 
@@ -365,8 +437,14 @@ public class PluginManager {
         String positionType = position.getPositionType();
         Long positionId = position.getPositionId();
         String pluginName = getPluginNameById(pluginId);
-        if (pluginName != null) {
-            subscribeManager.setSubscExcepCondition(positionType, positionId, pluginName, SUBSCRIBE_PLUGIN);
+        OneBotEventEnum pluginType = getPluginTypeById(pluginId);
+
+        if (pluginName != null && pluginType != null) {
+            switch (pluginType) {
+                case MESSAGE -> subscribeManager.setSubscExcepCondition(positionType, positionId, pluginName, SUBSCRIBE_PLUGIN);
+                case NOTICE -> subscribeManager.setSubscExcepCondition(positionId, pluginName, SUBSCRIBE_PLUGIN);
+            }
+
         }
     }
 
@@ -384,6 +462,25 @@ public class PluginManager {
             if (patternMessagePluginMap.containsKey(pluginId)) {
                 return patternMessagePluginMap.get(pluginId).getName();
             }
+            if (noticePluginHashMap.containsKey(pluginId)) {
+                return noticePluginHashMap.get(pluginId).getName();
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 根据插件 ID 获取插件类型
+     * @param pluginId 插件 ID
+     * @return 插件类型，粒度拉齐 OneBot 事件类型
+     */
+    public OneBotEventEnum getPluginTypeById(Integer pluginId) {
+        if (orderMessagePluginMap.containsKey(pluginId) ||
+                patternMessagePluginMap.containsKey(pluginId)) {
+            return OneBotEventEnum.MESSAGE;
+        }
+        if (noticePluginHashMap.containsKey(pluginId)) {
+            return OneBotEventEnum.NOTICE;
         }
         return null;
     }

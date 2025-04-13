@@ -37,5 +37,8 @@ public @interface Plugin {
      */
     SubscribeCondition subscribe() default SubscribeCondition.YES;
 
+    /**
+     * @return 是否为内置插件。内置插件无法删除。
+     */
     boolean inner() default false;
 }

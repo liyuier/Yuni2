@@ -22,7 +22,7 @@ import static com.yuier.yuni.common.constants.SystemConstants.FIRST_INDEX;
 @Service
 public class PluginSubscExceptServiceImpl extends ServiceImpl<PluginSubscExceptMapper, PluginSubscExceptEntity> implements PluginSubscExceptService {
 
-    private int lock = 0;
+    private static final String GENERAL_POSITION_STR = "UnImportant";
 
     @Override
     public List<PluginSubscExceptEntity> getSubscExceptList() {
@@ -63,13 +63,25 @@ public class PluginSubscExceptServiceImpl extends ServiceImpl<PluginSubscExceptM
     }
 
     @Override
-    public void refreshDbSubsc(String position, Long posId, String pluginName, Integer subscFlag) throws InterruptedException {
+    public void refreshDbSubsc(String position, Long posId, String pluginName, Integer subscFlag) {
         synchronized (this) {
             List<PluginSubscExceptEntity> subscExceptEntityList = listSubscs(position, posId, pluginName);
             if (subscExceptEntityList == null || subscExceptEntityList.isEmpty()) {
                 addSubsc(position, posId, pluginName, subscFlag);
             } else {
                 updateSubsc(position, posId, pluginName, subscFlag);
+            }
+        }
+    }
+
+    @Override
+    public void refreshDbSubsc(Long posId, String pluginName, Integer subscFlag) {
+        synchronized (this) {
+            List<PluginSubscExceptEntity> subscExceptEntityList = listSubscs(GENERAL_POSITION_STR, posId, pluginName);
+            if (subscExceptEntityList == null || subscExceptEntityList.isEmpty()) {
+                addSubsc(GENERAL_POSITION_STR, posId, pluginName, subscFlag);
+            } else {
+                updateSubsc(GENERAL_POSITION_STR, posId, pluginName, subscFlag);
             }
         }
     }

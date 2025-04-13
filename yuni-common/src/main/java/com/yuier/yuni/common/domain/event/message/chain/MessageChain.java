@@ -75,6 +75,10 @@ public class MessageChain {
         ));
     }
 
+    public void add(MessageChain chain) {
+        content.addAll(chain.getContent());
+    }
+
     public Boolean startWithTextData() {
         return content.get(FIRST_INDEX).typeOf(MessageDataEnum.TEXT) &&
                 !((TextSeg) content.get(FIRST_INDEX)).getData().getText().trim().isEmpty();

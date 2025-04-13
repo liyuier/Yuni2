@@ -1,6 +1,6 @@
 package com.yuier.yuni.common.detect.message.order;
 
-import com.yuier.yuni.common.interfaces.detector.order.OrderElement;
+import com.yuier.yuni.common.interfaces.detector.message.order.OrderElement;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
