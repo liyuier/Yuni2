@@ -81,7 +81,12 @@ public class BotManager {
         BotsConfig botsConfig = YamlParser.parse(inputStream, BotsConfig.class);
         List<YuniBot> bots = botsConfig.getBots();
         for (YuniBot bot : bots) {
-            GetLoginInfoResData loginInfo = BotAction.getLoginInfo(bot.getOnebotUrl());
+            GetLoginInfoResData loginInfo = null;
+            try {
+                loginInfo = BotAction.getLoginInfo(bot.getOnebotUrl());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             if (null != loginInfo) {
                 bot.setId(loginInfo.getUserId());
                 /*

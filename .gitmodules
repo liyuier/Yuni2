@@ -1,3 +1,6 @@
 [submodule "yuni_python_utils_service"]
 	path = yuni_python_utils_service
 	url = git@github.com:liyuier/yuni_python_utils_service.git
+[submodule "BA_logo"]
+	path = BA_logo
+	url = git@github.com:liyuier/BA_logo.git

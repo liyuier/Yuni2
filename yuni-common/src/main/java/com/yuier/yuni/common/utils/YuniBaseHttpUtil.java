@@ -50,7 +50,13 @@ public class YuniBaseHttpUtil {
                 .uri(url)
                 .retrieve()
                 .bodyToMono(String.class);
-        return parseJsonResult(stringMono.block(), responseDataType);
+        String responseJson = null;
+        try {
+            responseJson = stringMono.block();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return parseJsonResult(responseJson, responseDataType);
     }
 
     /**
@@ -70,7 +76,13 @@ public class YuniBaseHttpUtil {
                 .body(Mono.just(requestBody), requestBodyClass)
                 .retrieve()
                 .bodyToMono(String.class);
-        return parseJsonResult(stringMono.block(), responseDataType);
+        String responseJson = null;
+        try {
+            responseJson = stringMono.block();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return parseJsonResult(responseJson, responseDataType);
     }
 
     private static <T> T parseJsonResult(String responseJson, Class<T> responseDataType) {

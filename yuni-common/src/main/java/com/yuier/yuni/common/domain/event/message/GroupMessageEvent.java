@@ -1,5 +1,7 @@
 package com.yuier.yuni.common.domain.event.message;
 
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.yuier.yuni.common.anno.JsonTypeDefine;
 import com.yuier.yuni.common.domain.event.message.sender.GroupMessageSender;
 import lombok.AllArgsConstructor;
@@ -20,6 +22,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
+@JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
 @JsonTypeDefine("group")
 public class GroupMessageEvent extends MessageEvent<GroupMessageSender> {
     // 群号

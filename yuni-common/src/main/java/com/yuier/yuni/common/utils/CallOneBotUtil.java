@@ -12,10 +12,22 @@ import com.yuier.yuni.common.interfaces.onebotapi.OneBotApiData;
 public class CallOneBotUtil {
 
     public static <T extends OneBotApiData> T getOneBotForEntity(String url, Class<T> responseDataType) {
-        return YuniBaseHttpUtil.getForEntity(url, responseDataType);
+        T result = null;
+        try {
+            result = YuniBaseHttpUtil.getForEntity(url, responseDataType);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
     }
 
     public static <T extends OneBotApiData, S> T postOneBotForEntity(String url, S requestBody, Class<S> requestBodyClass, Class<T> responseDataType) {
-        return YuniBaseHttpUtil.postForEntity(url, requestBody, requestBodyClass, responseDataType);
+        T result = null;
+        try {
+            result = YuniBaseHttpUtil.postForEntity(url, requestBody, requestBodyClass, responseDataType);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
     }
 }
