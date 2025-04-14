@@ -89,9 +89,6 @@ public class MessageEvent<T extends MessageSender> extends OneBotEvent {
     // 消息发送者
     private T sender;
 
-    // 个人添加
-    private MessageEventPosition position;
-
     // 以下为 LLOneBot 在 OneBot 消息事件标准之外添加的字段
     // 消息类型，是数组还是 CQ 码
     private String messageFormat;

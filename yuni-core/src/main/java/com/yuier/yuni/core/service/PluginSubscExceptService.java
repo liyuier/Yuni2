@@ -23,6 +23,5 @@ public interface PluginSubscExceptService extends IService<PluginSubscExceptEnti
 
     void refreshDbSubsc(String position, Long posId, String pluginName, Integer subscFlag);
 
-    void refreshDbSubsc(Long posId, String pluginName, Integer subscFlag);
 }
 

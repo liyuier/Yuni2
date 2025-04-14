@@ -1,10 +1,11 @@
 package com.yuier.yuni.core.handler;
 
 import com.yuier.yuni.common.anno.EventHandler;
+import com.yuier.yuni.common.domain.event.OneBotEventPosition;
 import com.yuier.yuni.common.domain.event.message.MessageEvent;
 import com.yuier.yuni.common.domain.event.notice.NoticeEvent;
-import com.yuier.yuni.common.domain.event.notice.NoticeEventPosition;
 import com.yuier.yuni.common.enums.NoticeEventEnum;
+import com.yuier.yuni.common.enums.OneBotEventPositionEnum;
 import com.yuier.yuni.common.utils.YuniLogUtils;
 import com.yuier.yuni.core.randosoru.plugin.PluginManager;
 import lombok.extern.slf4j.Slf4j;
@@ -37,9 +38,9 @@ public class NoticeEventHandler {
         String noticeType = noticeEvent.getNoticeType();
         if (noticeType.equals(NoticeEventEnum.FRIEND_ADD.toString()) ||
                 noticeType.equals(NoticeEventEnum.FRIEND_RECALL.toString())) {
-            noticeEvent.setPosition(new NoticeEventPosition(noticeEvent.getUserId()));
+            noticeEvent.setPosition(new OneBotEventPosition(OneBotEventPositionEnum.PRIVATE, noticeEvent.getUserId()));
         } else {
-            noticeEvent.setPosition(new NoticeEventPosition(noticeEvent.getGroupId()));
+            noticeEvent.setPosition(new OneBotEventPosition(OneBotEventPositionEnum.GROUP, noticeEvent.getGroupId()));
         }
         // 打印事件日志
         log.info(YuniLogUtils.receiveNoticeLogStr(noticeEvent));

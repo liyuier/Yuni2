@@ -4,8 +4,8 @@ import com.yuier.yuni.common.anno.Plugin;
 import com.yuier.yuni.common.detect.message.order.OrderDetector;
 import com.yuier.yuni.common.detect.message.pattern.PatternDetector;
 import com.yuier.yuni.common.domain.event.OneBotEvent;
+import com.yuier.yuni.common.domain.event.OneBotEventPosition;
 import com.yuier.yuni.common.domain.event.message.MessageEvent;
-import com.yuier.yuni.common.domain.event.message.MessageEventPosition;
 import com.yuier.yuni.common.domain.event.notice.NoticeEvent;
 import com.yuier.yuni.common.domain.plugin.YuniMessagePlugin;
 import com.yuier.yuni.common.domain.plugin.YuniNegativePlugin;
@@ -414,16 +414,12 @@ public class PluginManager {
     }
 
     /**
-     * 检查消息插件是否被当前位置订阅了
+     * 判断当前位置下的事件是否订阅了插件
      * @param event 事件
      * @param plugin  插件
-     * @return  插件是否被该 Bot 订阅
+     * @return  是否订阅
      */
-    public Boolean pluginIsSubscribedAtThePosition(MessageEvent<?> event, YuniPlugin plugin) {
-        return subscribeManager.querySubscCondition(event, plugin).equals(SubscribeCondition.YES);
-    }
-
-    public Boolean pluginIsSubscribedAtThePosition(NoticeEvent event, YuniPlugin plugin) {
+    public Boolean pluginIsSubscribedAtThePosition(OneBotEvent event, YuniPlugin plugin) {
         return subscribeManager.querySubscCondition(event, plugin).equals(SubscribeCondition.YES);
     }
 
@@ -432,19 +428,15 @@ public class PluginManager {
      * @param position 当前位置
      * @param pluginId 插件 ID
      */
-    public void subscribePlugin(MessageEventPosition position, Integer pluginId) {
+    public void subscribePlugin(OneBotEventPosition position, Integer pluginId) {
         // 设置当前位置下插件 id 特殊订阅情况为 true
-        String positionType = position.getPositionType();
+        String positionType = position.getPositionStr();
         Long positionId = position.getPositionId();
         String pluginName = getPluginNameById(pluginId);
         OneBotEventEnum pluginType = getPluginTypeById(pluginId);
 
         if (pluginName != null && pluginType != null) {
-            switch (pluginType) {
-                case MESSAGE -> subscribeManager.setSubscExcepCondition(positionType, positionId, pluginName, SUBSCRIBE_PLUGIN);
-                case NOTICE -> subscribeManager.setSubscExcepCondition(positionId, pluginName, SUBSCRIBE_PLUGIN);
-            }
-
+            subscribeManager.setSubscExcepCondition(positionType, positionId, pluginName, SUBSCRIBE_PLUGIN);
         }
     }
 
@@ -494,9 +486,9 @@ public class PluginManager {
         return pluginId >= 1 && pluginId <= totalPluginNumber;
     }
 
-    public void unsubscribePlugin(MessageEventPosition position, Integer pluginId) {
+    public void unsubscribePlugin(OneBotEventPosition position, Integer pluginId) {
         // 设置当前位置下插件 id 特殊订阅情况为 true
-        String positionType = position.getPositionType();
+        String positionType = position.getPositionStr();
         Long positionId = position.getPositionId();
         String pluginName = getPluginNameById(pluginId);
         if (pluginName != null) {

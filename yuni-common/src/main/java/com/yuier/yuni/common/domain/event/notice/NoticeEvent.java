@@ -56,6 +56,4 @@ public class NoticeEvent extends OneBotEvent {
      * 用户 ID ，并不总有
      */
     Long userId;
-
-    NoticeEventPosition position;
 }

@@ -1,11 +1,11 @@
 package com.yuier.yuni.core.handler;
 
 import com.yuier.yuni.common.anno.EventHandler;
+import com.yuier.yuni.common.domain.event.OneBotEventPosition;
 import com.yuier.yuni.common.domain.event.message.GroupMessageEvent;
 import com.yuier.yuni.common.domain.event.message.MessageEvent;
-import com.yuier.yuni.common.domain.event.message.MessageEventPosition;
 import com.yuier.yuni.common.domain.event.message.chain.MessageChain;
-import com.yuier.yuni.common.enums.MessageTypeEnum;
+import com.yuier.yuni.common.enums.OneBotEventPositionEnum;
 import com.yuier.yuni.common.utils.YuniLogUtils;
 import com.yuier.yuni.core.randosoru.plugin.PluginManager;
 import lombok.extern.slf4j.Slf4j;
@@ -38,9 +38,9 @@ public class MessageEventHandler {
         messageEvent.setMessageChain(new MessageChain(messageEvent.getMessage(), true));
         // 设置消息位置（群聊还是私聊）
         if (messageEvent instanceof GroupMessageEvent) {
-            messageEvent.setPosition(new MessageEventPosition(MessageTypeEnum.GROUP, ((GroupMessageEvent) messageEvent).getGroupId()));
+            messageEvent.setPosition(new OneBotEventPosition(OneBotEventPositionEnum.GROUP, ((GroupMessageEvent) messageEvent).getGroupId()));
         } else {
-            messageEvent.setPosition(new MessageEventPosition(MessageTypeEnum.PRIVATE, messageEvent.getSender().getUserId()));
+            messageEvent.setPosition(new OneBotEventPosition(OneBotEventPositionEnum.PRIVATE, messageEvent.getSender().getUserId()));
         }
         // 打印消息日志
         log.info(YuniLogUtils.receiveMessageLogStr(messageEvent));

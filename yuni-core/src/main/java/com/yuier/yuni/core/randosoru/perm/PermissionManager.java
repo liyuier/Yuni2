@@ -153,7 +153,7 @@ public class PermissionManager {
      */
     private Integer queryUserExceptPerm(MessageEvent<?> event) {
         Long userId = event.getSender().getUserId();
-        String position = event.getPosition().getMessageType().toString();
+        String position = event.getPosition().getPositionStr();
         Long posId = event.getPosition().getPositionId();
         Long botId = ThreadLocalUtil.getBot().getId();
         return queryUserExceptionalPermission(userId, position, posId, botId);

@@ -211,7 +211,7 @@ public class ManagePlugins implements MessagePluginBean<OrderDetector> {
         // 获取缓存中的哈希
         Map<String, Integer> objectHashCodeMap = redisCache.getCacheMap(OBJECT_HASH_MAP);
         // 每个位置下订阅情况不同，所以哈希也不同
-        String positionStr = localEvent.getPosition().getMessageType().toString() + localEvent.getPosition().getPositionId();
+        String positionStr = localEvent.getPosition().getPositionStr() + localEvent.getPosition().getPositionId();
         Integer pojoMapHashCodeInCache = objectHashCodeMap.getOrDefault(PLUGIN_MAP_HASH + positionStr, null);
         // 如果二者相等，且缓存中存在图片，使用缓存中的图片
         if (pojoMapHashCode.equals(pojoMapHashCodeInCache)) {

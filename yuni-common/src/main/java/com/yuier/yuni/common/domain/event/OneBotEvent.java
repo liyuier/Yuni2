@@ -39,4 +39,6 @@ public class OneBotEvent {
      * meta_event：元事件
      */
     private String postType;
+
+    private OneBotEventPosition position;
 }

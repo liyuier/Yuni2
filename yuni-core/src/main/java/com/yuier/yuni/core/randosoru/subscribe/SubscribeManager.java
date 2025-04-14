@@ -1,8 +1,7 @@
 package com.yuier.yuni.core.randosoru.subscribe;
 
 import com.yuier.yuni.common.anno.Plugin;
-import com.yuier.yuni.common.domain.event.message.MessageEvent;
-import com.yuier.yuni.common.domain.event.notice.NoticeEvent;
+import com.yuier.yuni.common.domain.event.OneBotEvent;
 import com.yuier.yuni.common.domain.plugin.YuniPlugin;
 import com.yuier.yuni.common.enums.SubscribeCondition;
 import com.yuier.yuni.common.utils.RedisCache;
@@ -63,22 +62,11 @@ public class SubscribeManager {
     }
 
     /**
-     * 查询插件订阅情况，仅适配消息事件
-     * @param event 消息事件
+     * 查询插件订阅情况
+     * @param event 事件
      * @return 订阅情况
      */
-    public SubscribeCondition querySubscCondition(MessageEvent<?> event, YuniPlugin plugin) {
-        Integer subscExcepCondition = querySubscExcepCondition(event, plugin);
-        if (subscExcepCondition.equals(UNKNOWN_SUBSC_CONDITION)) {
-            // 没有查出特殊订阅情况，构造默认订阅情况
-            return plugin.getPluginBean()
-                        .getClass().getAnnotation(Plugin.class)
-                        .subscribe();
-        }
-        return getSubscByFlag(subscExcepCondition);
-    }
-
-    public SubscribeCondition querySubscCondition(NoticeEvent event, YuniPlugin plugin) {
+    public Object querySubscCondition(OneBotEvent event, YuniPlugin plugin) {
         Integer subscExcepCondition = querySubscExcepCondition(event, plugin);
         if (subscExcepCondition.equals(UNKNOWN_SUBSC_CONDITION)) {
             // 没有查出特殊订阅情况，构造默认订阅情况
@@ -106,17 +94,11 @@ public class SubscribeManager {
      * @param event 消息事件
      * @return 订阅情况数字
      */
-    private Integer querySubscExcepCondition(MessageEvent<?> event, YuniPlugin plugin) {
-        String position = event.getPosition().getMessageType().toString();
+    private Integer querySubscExcepCondition(OneBotEvent event, YuniPlugin plugin) {
+        String position = event.getPosition().getPositionStr();
         Long posId = event.getPosition().getPositionId();
         String pluginName = plugin.getName();
         return querySubscExcepCondition(position, posId, pluginName);
-    }
-
-    private Integer querySubscExcepCondition(NoticeEvent event, YuniPlugin plugin) {
-        Long posId = event.getPosition().getPositionId();
-        String pluginName = plugin.getName();
-        return querySubscExcepCondition(posId, pluginName);
     }
 
     /**
@@ -139,19 +121,6 @@ public class SubscribeManager {
         return subscExceptMap.get(redisSubscKey);
     }
 
-    private Integer querySubscExcepCondition(Long posId, String pluginName) {
-        // 到 redis 中查询特殊订阅情况
-        Map<String, Integer> subscExceptMap = redisCache.getCacheMap(SUBSCRIBE_PLUGIN_EXCEP_MAP);
-        if (subscExceptMap.isEmpty()) {
-            return UNKNOWN_SUBSC_CONDITION;
-        }
-        String redisSubscKey = buildRedisSubscKey(posId, pluginName);
-        if (!subscExceptMap.containsKey(redisSubscKey)) {
-            return UNKNOWN_SUBSC_CONDITION;
-        }
-        return subscExceptMap.get(redisSubscKey);
-    }
-
     /**
      * 设置特殊订阅情况表
      * @param positionType 位置，group 或 private
@@ -164,14 +133,6 @@ public class SubscribeManager {
         refreshRedisSubscExcepMap(positionType, posId, pluginName, subscFlag);
         // 刷新数据库中的特殊情况表
         refreshDbSubsc(positionType, posId, pluginName, subscFlag);
-    }
-
-    public void setSubscExcepCondition(Long posId, String pluginName, Integer subscFlag) {
-        // 刷新 redis 中的特殊情况表
-        refreshRedisSubscExcepMap(posId, pluginName, subscFlag);
-        // 刷新数据库中的特殊情况表
-        refreshDbSubsc(posId, pluginName, subscFlag);
-
     }
 
     /**
@@ -188,13 +149,6 @@ public class SubscribeManager {
         pluginSubscExceptService.refreshDbSubsc(position, posId, pluginName, subscFlag);
     }
 
-    public void refreshDbSubsc(Long posId, String pluginName, Integer subscFlag) {
-        if (!subscFlag.equals(SUBSCRIBE_OFF) && !subscFlag.equals(SUBSCRIBE_ON)) {
-            throw new RuntimeException("错误的订阅类型：" + subscFlag);
-        }
-        pluginSubscExceptService.refreshDbSubsc(posId, pluginName, subscFlag);
-    }
-
     /**
      * 刷新 redis 中的特殊订阅情况表
      * @param position 位置，group 或 private
@@ -207,20 +161,6 @@ public class SubscribeManager {
             throw new RuntimeException("错误的订阅类型：" + subscFlag);
         }
         String redisSubscKey = buildRedisSubscKey(position, posId, pluginName);
-        Map<String, Integer> subscExceptMap;
-        subscExceptMap = redisCache.getCacheMap(SUBSCRIBE_PLUGIN_EXCEP_MAP);
-        if (subscExceptMap == null) {
-            subscExceptMap = new HashMap<>();
-        }
-        subscExceptMap.put(redisSubscKey, subscFlag);
-        redisCache.setCacheMap(SUBSCRIBE_PLUGIN_EXCEP_MAP, subscExceptMap);
-    }
-
-    private void refreshRedisSubscExcepMap(Long posId, String pluginName, Integer subscFlag) {
-        if (!subscFlag.equals(SUBSCRIBE_OFF) && !subscFlag.equals(SUBSCRIBE_ON)) {
-            throw new RuntimeException("错误的订阅类型：" + subscFlag);
-        }
-        String redisSubscKey = buildRedisSubscKey(posId, pluginName);
         Map<String, Integer> subscExceptMap;
         subscExceptMap = redisCache.getCacheMap(SUBSCRIBE_PLUGIN_EXCEP_MAP);
         if (subscExceptMap == null) {
@@ -257,8 +197,4 @@ public class SubscribeManager {
                 pluginName;
     }
 
-    private String buildRedisSubscKey(Long posId, String pluginName) {
-        return posId + ":" +
-                pluginName;
-    }
 }

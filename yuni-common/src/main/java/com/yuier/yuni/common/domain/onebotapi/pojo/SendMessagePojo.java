@@ -2,10 +2,10 @@ package com.yuier.yuni.common.domain.onebotapi.pojo;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import com.yuier.yuni.common.domain.event.message.MessageEventPosition;
+import com.yuier.yuni.common.domain.event.OneBotEventPosition;
 import com.yuier.yuni.common.domain.event.message.chain.MessageChain;
 import com.yuier.yuni.common.domain.event.message.chain.seg.MessageSeg;
-import com.yuier.yuni.common.enums.MessageTypeEnum;
+import com.yuier.yuni.common.enums.OneBotEventPositionEnum;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -41,11 +41,11 @@ public class SendMessagePojo {
         return str.toString();
     }
 
-    public SendMessagePojo(MessageEventPosition messageEventPosition, MessageChain chain) {
-        if (messageEventPosition.getMessageType().equals(MessageTypeEnum.PRIVATE)) {
+    public SendMessagePojo(OneBotEventPosition messageEventPosition, MessageChain chain) {
+        if (messageEventPosition.getEventPosition().equals(OneBotEventPositionEnum.PRIVATE)) {
             this.messageType = "private";
             this.userId = messageEventPosition.getPositionId();
-        } else if (messageEventPosition.getMessageType().equals(MessageTypeEnum.GROUP)) {
+        } else if (messageEventPosition.getEventPosition().equals(OneBotEventPositionEnum.GROUP)) {
             this.messageType = "group";
             this.groupId = messageEventPosition.getPositionId();
         }

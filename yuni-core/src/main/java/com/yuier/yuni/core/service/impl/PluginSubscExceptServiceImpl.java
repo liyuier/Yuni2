@@ -74,16 +74,5 @@ public class PluginSubscExceptServiceImpl extends ServiceImpl<PluginSubscExceptM
         }
     }
 
-    @Override
-    public void refreshDbSubsc(Long posId, String pluginName, Integer subscFlag) {
-        synchronized (this) {
-            List<PluginSubscExceptEntity> subscExceptEntityList = listSubscs(GENERAL_POSITION_STR, posId, pluginName);
-            if (subscExceptEntityList == null || subscExceptEntityList.isEmpty()) {
-                addSubsc(GENERAL_POSITION_STR, posId, pluginName, subscFlag);
-            } else {
-                updateSubsc(GENERAL_POSITION_STR, posId, pluginName, subscFlag);
-            }
-        }
-    }
 }
 

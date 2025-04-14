@@ -1,7 +1,7 @@
 package com.yuier.yuni.common.utils;
 
 import com.yuier.yuni.common.domain.bot.YuniBot;
-import com.yuier.yuni.common.domain.event.message.MessageEventPosition;
+import com.yuier.yuni.common.domain.event.OneBotEventPosition;
 import com.yuier.yuni.common.domain.event.message.chain.MessageChain;
 import com.yuier.yuni.common.domain.event.message.chain.seg.MessageSeg;
 import com.yuier.yuni.common.domain.onebotapi.data.*;
@@ -9,7 +9,7 @@ import com.yuier.yuni.common.domain.onebotapi.pojo.GetGroupMemberInfoPojo;
 import com.yuier.yuni.common.domain.onebotapi.pojo.GetMessagePojo;
 import com.yuier.yuni.common.domain.onebotapi.pojo.SendGroupMessagePojo;
 import com.yuier.yuni.common.domain.onebotapi.pojo.SendPrivateMessagePojo;
-import com.yuier.yuni.common.enums.MessageTypeEnum;
+import com.yuier.yuni.common.enums.OneBotEventPositionEnum;
 import org.springframework.stereotype.Component;
 
 /**
@@ -155,9 +155,9 @@ public class BotAction {
      * @param messageSegs  消息段数组
      * @return 消息 ID
      */
-    public static SendMessageResData sendMessage(MessageEventPosition position, MessageSeg<?>[] messageSegs) {
-        MessageTypeEnum messageType = position.getMessageType();
-        if (messageType.equals(MessageTypeEnum.GROUP)) {
+    public static SendMessageResData sendMessage(OneBotEventPosition position, MessageSeg<?>[] messageSegs) {
+        OneBotEventPositionEnum messageType = position.getEventPosition();
+        if (messageType.equals(OneBotEventPositionEnum.GROUP)) {
             return new SendMessageResData(sendGroupMessage(position.getPositionId(), messageSegs));
         } else {
             return new SendMessageResData((sendPrivateMessageResData(position.getPositionId(), messageSegs)));
@@ -170,9 +170,9 @@ public class BotAction {
      * @param chain  消息链
      * @return 消息 ID
      */
-    public static SendMessageResData sendMessage(MessageEventPosition position, MessageChain chain) {
-        MessageTypeEnum messageType = position.getMessageType();
-        if (messageType.equals(MessageTypeEnum.GROUP)) {
+    public static SendMessageResData sendMessage(OneBotEventPosition position, MessageChain chain) {
+        OneBotEventPositionEnum messageType = position.getEventPosition();
+        if (messageType.equals(OneBotEventPositionEnum.GROUP)) {
             return new SendMessageResData(sendGroupMessage(position.getPositionId(), chain));
         } else {
             return new SendMessageResData((sendPrivateMessageResData(position.getPositionId(), chain)));
