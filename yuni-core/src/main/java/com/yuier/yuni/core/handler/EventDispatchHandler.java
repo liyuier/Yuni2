@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yuier.yuni.common.anno.OneBotEventDispatcher;
 import com.yuier.yuni.common.domain.event.OneBotEvent;
 import com.yuier.yuni.common.domain.event.message.MessageEvent;
+import com.yuier.yuni.common.domain.event.message.sender.MessageSender;
+import com.yuier.yuni.common.domain.event.messagesent.MessageSentEvent;
 import com.yuier.yuni.common.domain.event.notice.NoticeEvent;
 import com.yuier.yuni.common.utils.ReflectionUtils;
 import com.yuier.yuni.common.utils.ThreadLocalUtil;
@@ -35,6 +37,8 @@ public class EventDispatchHandler {
     @Autowired
     NoticeEventHandler noticeEventHandler;
     @Autowired
+    MessageSentEventHandler messageSentEventHandler;
+    @Autowired
     EventHandlerDispatcher eventHandlerDispatcher;
 
     private static final String POST_TYPE = "post_type";
@@ -42,6 +46,7 @@ public class EventDispatchHandler {
     private static final String POST_NOTICE = "notice";
     private static final String POST_REQUEST = "request";
     private static final String POST_META = "meta_event";
+    private static final String POST_MESSAGE_SENT = "message_sent";
 
     private static final String MESSAGE_TYPE = "message_type";
     private static final String NOTICE_TYPE = "notice_type";
@@ -74,10 +79,23 @@ public class EventDispatchHandler {
         }
     }
 
+
+    /**
+     * 分派 BOT 发送消息事件
+     * @param postJsonNode  postJsonNode
+     * @return  是否分派成功
+     */
+    @OneBotEventDispatcher(POST_MESSAGE_SENT)
+    private Boolean dispatchMessageSentEvent(JsonNode postJsonNode) {
+        MessageSentEvent<?> messageSentEvent = (MessageSentEvent<?>) deserializeSimply(POST_JSON_STR, MessageSentEvent.class);
+        messageSentEventHandler.handle(messageSentEvent);
+        return true;
+    }
+
     /**
      * 分派通知事件
-     * @param postJsonNode
-     * @return
+     * @param postJsonNode  postJsonNode
+     * @return  是否分派成功
      */
     @OneBotEventDispatcher(POST_NOTICE)
     private Boolean dispatchNoticeEvent(JsonNode postJsonNode) {

@@ -2,8 +2,11 @@ package com.yuier.yuni.common.utils;
 
 import com.yuier.yuni.common.domain.event.message.GroupMessageEvent;
 import com.yuier.yuni.common.domain.event.message.MessageEvent;
+import com.yuier.yuni.common.domain.event.message.PrivateMessageEvent;
 import com.yuier.yuni.common.domain.event.message.sender.GroupMessageSender;
 import com.yuier.yuni.common.domain.event.message.sender.MessageSender;
+import com.yuier.yuni.common.domain.event.messagesent.GroupMessageSentEvent;
+import com.yuier.yuni.common.domain.event.messagesent.MessageSentEvent;
 import com.yuier.yuni.common.domain.event.notice.NoticeEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StringUtils;
@@ -78,6 +81,26 @@ public class YuniLogUtils {
         return escapeString(logStr);
     }
 
+    /**
+     * 拼装收到 BOT 发送消息的日志字符串
+     * @param messageSentEvent  BOT 发送消息事件
+     * @return  日志字符串
+     */
+    public static <T extends MessageSender> String receiveMessageSentEvent(MessageSentEvent<T> messageSentEvent) {
+        MessageEvent<?> messageEvent = null;
+        if (messageSentEvent instanceof GroupMessageSentEvent) {
+            messageEvent = BeanCopyUtils.copyBean(messageSentEvent, GroupMessageEvent.class);
+        } else {
+            messageEvent = BeanCopyUtils.copyBean(messageSentEvent, PrivateMessageEvent.class);
+        }
+        return receiveMessageLogStr(messageEvent);
+    }
+
+    /**
+     * 拼装收到的通知事件
+     * @param event  通知事件
+     * @return  通知事件日志字符串
+     */
     public static String receiveNoticeLogStr(NoticeEvent event) {
         String timeStr = "";
         // 收到该消息的 bot

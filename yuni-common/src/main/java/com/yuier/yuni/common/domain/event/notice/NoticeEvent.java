@@ -44,6 +44,7 @@ public class NoticeEvent extends OneBotEvent {
      *   - 群内戳一戳  notify
      *   - 群红包运气王  lucky_king
      *   - 群成员荣誉变更  honor
+     *   - 表情回应  group_msg_emoji_like
      */
     String noticeType;
 
