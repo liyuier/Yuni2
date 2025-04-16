@@ -49,8 +49,7 @@ public class GroupRecallPlugin implements NoticePluginBean<GroupRecallNoticeEven
      * @return  被撤回的消息链
      */
     private MessageChain getRecalledMessageChain(Long messageId) {
-        // TODO 应该先从本地数据库查询
-
+        // 先从本地数据库查询
         // 本地数据库没有查到，去 OneBot 客户端查询
         GetMessageResData message = BotAction.getMessage(messageId);
         return new MessageChain(message.getMessage());

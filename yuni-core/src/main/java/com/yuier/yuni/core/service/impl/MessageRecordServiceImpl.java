@@ -14,6 +14,8 @@ import com.yuier.yuni.core.service.MessageRecordService;
 import com.yuier.yuni.core.domain.entity.MessageRecordEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
+
 /**
  * (MessageRecord)表服务实现类
  *
@@ -42,7 +44,11 @@ public class MessageRecordServiceImpl extends ServiceImpl<MessageRecordMapper, M
           - rawMessage
          */
         MessageRecordEntity messageRecordEntity = BeanCopyUtils.copyBean(messageEvent, MessageRecordEntity.class);
+
+        // 设置 sentByBot 为否
         messageRecordEntity.setSentByBot(MESSAGE_NOT_SENT_BY_BOT);
+        // 为实体化类赋格式化后的时间
+        messageRecordEntity.setFormattedTime(new Date(messageRecordEntity.getTime() * 1000L));
 
         // 为实体类赋 groupId
         trySetGroupId(messageEvent, messageRecordEntity);
@@ -55,7 +61,13 @@ public class MessageRecordServiceImpl extends ServiceImpl<MessageRecordMapper, M
     @Override
     public <T extends MessageSender> void saveMessage(MessageSentEvent<T> messageSentEvent) {
         MessageRecordEntity messageRecordEntity = BeanCopyUtils.copyBean(messageSentEvent, MessageRecordEntity.class);
+
+        // 设置 sentByBot 为是
         messageRecordEntity.setSentByBot(MESSAGE_SENT_BY_BOT);
+        // 为实体化类赋格式化后的时间
+        Date date = new Date(messageRecordEntity.getTime());
+        messageRecordEntity.setFormattedTime(new Date(messageRecordEntity.getTime() * 1000L));
+
         MessageEvent<?> messageEvent = null;
         if (messageSentEvent instanceof GroupMessageSentEvent) {
             messageEvent = BeanCopyUtils.copyBean(messageSentEvent, GroupMessageEvent.class);

@@ -1,5 +1,6 @@
 package com.yuier.yuni.core.domain.entity;
 
+import java.util.Date;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
@@ -11,7 +12,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
  * (MessageRecord)表实体类
  *
  * @author liyuier
- * @since 2025-04-17 00:03:21
+ * @since 2025-04-17 00:50:07
  */
 @SuppressWarnings("serial")
 @Data
@@ -27,9 +28,19 @@ public class MessageRecordEntity {
     private Long id;
     
     /**
+    * 消息 ID
+    */
+    private Long messageId;
+    
+    /**
     * 收到消息的时间
     */
     private Long time;
+    
+    /**
+    * 格式化后的时间
+    */
+    private Date formattedTime;
     
     /**
     * 收到消息的 BOT ID
