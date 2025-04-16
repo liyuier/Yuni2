@@ -163,4 +163,18 @@ public class MessageChain {
         }
         return str.toString();
     }
+
+    /**
+     * 获取消息中的文本字符串
+     * @return  消息中的文本字符串
+     */
+    public String getPlainText() {
+        StringBuilder result = new StringBuilder();
+        for (MessageSeg<?> seg : content) {
+            if (seg instanceof TextSeg) {
+                result.append(seg.getData().toString());
+            }
+        }
+        return result.toString();
+    }
 }

@@ -8,6 +8,7 @@ import com.yuier.yuni.common.domain.event.message.chain.MessageChain;
 import com.yuier.yuni.common.enums.OneBotEventPositionEnum;
 import com.yuier.yuni.common.utils.YuniLogUtils;
 import com.yuier.yuni.core.randosoru.plugin.PluginManager;
+import com.yuier.yuni.core.service.MessageRecordService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -27,6 +28,8 @@ public class MessageEventHandler {
 
     @Autowired
     PluginManager pluginManager;
+    @Autowired
+    MessageRecordService messageRecordService;
 
     public <T extends MessageEvent<?>> void handle(T messageEvent) {
         preHandle(messageEvent);
@@ -42,6 +45,8 @@ public class MessageEventHandler {
         } else {
             messageEvent.setPosition(new OneBotEventPosition(OneBotEventPositionEnum.PRIVATE, messageEvent.getSender().getUserId()));
         }
+        // 持久化
+        messageRecordService.saveMessage(messageEvent);
         // 打印消息日志
         log.info(YuniLogUtils.receiveMessageLogStr(messageEvent));
     }
