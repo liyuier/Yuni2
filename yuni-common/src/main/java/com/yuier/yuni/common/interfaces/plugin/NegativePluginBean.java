@@ -2,7 +2,6 @@ package com.yuier.yuni.common.interfaces.plugin;
 
 import com.yuier.yuni.common.domain.event.OneBotEvent;
 import com.yuier.yuni.common.interfaces.detector.EventDetector;
-import com.yuier.yuni.common.utils.BotAction;
 
 /**
  * @Title: NegativePluginBean

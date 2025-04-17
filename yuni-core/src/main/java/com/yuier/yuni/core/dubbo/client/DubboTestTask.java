@@ -2,8 +2,6 @@ package com.yuier.yuni.core.dubbo.client;
 
 
 import com.yuier.yuni.api.Greeter;
-import com.yuier.yuni.api.GreeterReply;
-import com.yuier.yuni.api.GreeterRequest;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;

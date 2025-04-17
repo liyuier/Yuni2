@@ -1,13 +1,11 @@
 package com.yuier.yuni.common.domain.event.message.chain.seg.data;
 
-import com.yuier.yuni.common.anno.JsonTypeDefine;
 import com.yuier.yuni.common.anno.MessageDataEntity;
 import com.yuier.yuni.common.enums.MessageDataEnum;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.springframework.stereotype.Component;
 
 /**
  * @Title: FaceData

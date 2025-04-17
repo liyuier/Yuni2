@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yuier.yuni.common.anno.OneBotEventDispatcher;
 import com.yuier.yuni.common.domain.event.OneBotEvent;
 import com.yuier.yuni.common.domain.event.message.MessageEvent;
-import com.yuier.yuni.common.domain.event.message.sender.MessageSender;
 import com.yuier.yuni.common.domain.event.messagesent.MessageSentEvent;
 import com.yuier.yuni.common.domain.event.notice.NoticeEvent;
 import com.yuier.yuni.common.utils.ReflectionUtils;

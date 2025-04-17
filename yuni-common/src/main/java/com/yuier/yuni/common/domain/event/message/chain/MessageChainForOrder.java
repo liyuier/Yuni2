@@ -1,18 +1,10 @@
 package com.yuier.yuni.common.domain.event.message.chain;
 
-import com.yuier.yuni.common.constants.SystemConstants;
 import com.yuier.yuni.common.domain.event.message.chain.seg.MessageSeg;
-import com.yuier.yuni.common.domain.event.message.chain.seg.TextSeg;
 import com.yuier.yuni.common.domain.event.message.chain.seg.data.ReplyData;
-import com.yuier.yuni.common.domain.event.message.chain.seg.data.TextData;
-import com.yuier.yuni.common.enums.MessageDataEnum;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-
-import java.util.ArrayList;
-
-import static com.yuier.yuni.common.constants.SystemConstants.FIRST_INDEX;
 
 /**
  * @Title: MessageChainForOrder

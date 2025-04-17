@@ -3,7 +3,6 @@ package com.yuier.yuni.common.domain.event.message.chain.seg;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.yuier.yuni.common.domain.event.message.MessageEvent;
 import com.yuier.yuni.common.domain.event.message.chain.seg.data.MessageData;
-import com.yuier.yuni.common.domain.event.message.chain.seg.data.TextData;
 import com.yuier.yuni.common.enums.MessageDataEnum;
 import lombok.AllArgsConstructor;
 import lombok.Data;

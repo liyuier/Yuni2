@@ -2,7 +2,6 @@ package com.yuier.yuni.common.domain.event.message.chain.seg;
 
 import com.yuier.yuni.common.anno.JsonTypeDefine;
 import com.yuier.yuni.common.domain.event.message.chain.seg.data.AnonymousData;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;

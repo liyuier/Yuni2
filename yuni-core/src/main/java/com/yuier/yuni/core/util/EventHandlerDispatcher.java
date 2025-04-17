@@ -1,6 +1,5 @@
 package com.yuier.yuni.core.util;
 
-import com.yuier.yuni.common.anno.EventHandler;
 import com.yuier.yuni.common.domain.event.OneBotEvent;
 import com.yuier.yuni.common.utils.ThreadLocalUtil;
 import com.yuier.yuni.core.randosoru.bot.BotManager;
@@ -8,10 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.HashMap;
-import java.util.Map;
 
 import static com.yuier.yuni.common.constants.SystemConstants.LOCAL_BOT;
 

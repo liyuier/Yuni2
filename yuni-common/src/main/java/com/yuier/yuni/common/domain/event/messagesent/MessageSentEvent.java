@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.yuier.yuni.common.anno.JsonTypeDefine;
 import com.yuier.yuni.common.domain.event.OneBotEvent;
-import com.yuier.yuni.common.domain.event.message.MessageEvent;
 import com.yuier.yuni.common.domain.event.message.chain.MessageChain;
 import com.yuier.yuni.common.domain.event.message.chain.seg.MessageSeg;
 import com.yuier.yuni.common.domain.event.message.sender.MessageSender;

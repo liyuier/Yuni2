@@ -2,9 +2,9 @@ package com.yuier.yuni.core.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.yuier.yuni.core.domain.entity.UserPermExceptEntity;
 import com.yuier.yuni.core.mapper.UserPermExceptMapper;
 import com.yuier.yuni.core.service.UserPermExceptService;
-import com.yuier.yuni.core.domain.entity.UserPermExceptEntity;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
