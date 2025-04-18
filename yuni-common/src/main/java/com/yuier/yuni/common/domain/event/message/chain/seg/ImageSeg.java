@@ -5,7 +5,6 @@ import com.yuier.yuni.common.domain.event.message.chain.seg.data.ImageData;
 import com.yuier.yuni.common.enums.MessageDataEnum;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
 
 /**
  * @Title: ImageSeg
@@ -16,7 +15,6 @@ import lombok.NoArgsConstructor;
  */
 
 @Data
-@NoArgsConstructor
 @JsonTypeDefine("image")
 @EqualsAndHashCode(callSuper = true)
 public class ImageSeg extends MessageSeg<ImageData> {
@@ -27,5 +25,9 @@ public class ImageSeg extends MessageSeg<ImageData> {
 
     public ImageSeg(String image) {
         this(new ImageData(image));
+    }
+
+    public ImageSeg() {
+        this.data = new ImageData();
     }
 }

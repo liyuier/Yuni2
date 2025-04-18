@@ -4,7 +4,6 @@ import com.yuier.yuni.common.anno.JsonTypeDefine;
 import com.yuier.yuni.common.domain.event.message.chain.seg.data.VideoData;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
 
 /**
  * @Title: VideoSeg
@@ -15,9 +14,11 @@ import lombok.NoArgsConstructor;
  */
 
 @Data
-@NoArgsConstructor
 @JsonTypeDefine("video")
 @EqualsAndHashCode(callSuper = true)
 public class VideoSeg extends MessageSeg<VideoData> {
 
+    public VideoSeg() {
+        this.data = new VideoData();
+    }
 }

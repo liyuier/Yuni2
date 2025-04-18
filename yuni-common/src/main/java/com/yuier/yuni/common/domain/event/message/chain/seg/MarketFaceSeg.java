@@ -4,7 +4,6 @@ import com.yuier.yuni.common.anno.JsonTypeDefine;
 import com.yuier.yuni.common.domain.event.message.chain.seg.data.MarketFaceData;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
 
 /**
  * @Title: MarketFaceSeg
@@ -15,9 +14,11 @@ import lombok.NoArgsConstructor;
  */
 
 @Data
-@NoArgsConstructor
 @JsonTypeDefine("mface")
 @EqualsAndHashCode(callSuper = true)
 public class MarketFaceSeg extends MessageSeg<MarketFaceData> {
 
+    public MarketFaceSeg() {
+        this.data = new MarketFaceData();
+    }
 }

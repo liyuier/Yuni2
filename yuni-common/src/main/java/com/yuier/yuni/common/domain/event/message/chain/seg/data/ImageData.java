@@ -31,6 +31,9 @@ public class ImageData extends MessageData {
     private String file;
     // 图片类型，flash 表示闪照；无此参数表示普通图片
     private String type;
+    // 图片子类型，只出现在群聊
+    // 适配 go-cqhttp
+    private String subType;
     // 图片 URL
     private String url;
     // 只在通过网络 URL 发送时有效，表示是否使用已缓存图片

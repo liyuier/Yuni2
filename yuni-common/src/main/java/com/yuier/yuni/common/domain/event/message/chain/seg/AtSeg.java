@@ -4,7 +4,6 @@ import com.yuier.yuni.common.anno.JsonTypeDefine;
 import com.yuier.yuni.common.domain.event.message.chain.seg.data.AtData;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
 
 /**
  * @Title: AtSeg
@@ -15,9 +14,10 @@ import lombok.NoArgsConstructor;
  */
 
 @Data
-@NoArgsConstructor
 @JsonTypeDefine("at")
 @EqualsAndHashCode(callSuper = true)
 public class AtSeg extends MessageSeg<AtData> {
-
+    public AtSeg() {
+        this.data = new AtData();
+    }
 }

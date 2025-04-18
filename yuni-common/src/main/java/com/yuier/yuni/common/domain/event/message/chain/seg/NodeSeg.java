@@ -4,7 +4,6 @@ import com.yuier.yuni.common.anno.JsonTypeDefine;
 import com.yuier.yuni.common.domain.event.message.chain.seg.data.NodeData;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
 
 /**
  * @Title: NodeSeg
@@ -15,9 +14,11 @@ import lombok.NoArgsConstructor;
  */
 
 @Data
-@NoArgsConstructor
 @JsonTypeDefine("node")
 @EqualsAndHashCode(callSuper = true)
 public class NodeSeg extends MessageSeg<NodeData> {
 
+    public NodeSeg() {
+        this.data = new NodeData();
+    }
 }

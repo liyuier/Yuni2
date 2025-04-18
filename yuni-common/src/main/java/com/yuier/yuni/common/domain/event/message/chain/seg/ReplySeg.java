@@ -4,7 +4,6 @@ import com.yuier.yuni.common.anno.JsonTypeDefine;
 import com.yuier.yuni.common.domain.event.message.chain.seg.data.ReplyData;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
 
 /**
  * @Title: ReplySeg
@@ -15,9 +14,11 @@ import lombok.NoArgsConstructor;
  */
 
 @Data
-@NoArgsConstructor
 @JsonTypeDefine("reply")
 @EqualsAndHashCode(callSuper = true)
 public class ReplySeg extends MessageSeg<ReplyData> {
 
+    public ReplySeg() {
+        this.data = new ReplyData();
+    }
 }

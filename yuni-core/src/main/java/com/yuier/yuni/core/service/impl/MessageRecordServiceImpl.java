@@ -1,5 +1,6 @@
 package com.yuier.yuni.core.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yuier.yuni.common.domain.event.message.GroupMessageEvent;
 import com.yuier.yuni.common.domain.event.message.MessageEvent;
@@ -9,9 +10,9 @@ import com.yuier.yuni.common.domain.event.message.sender.MessageSender;
 import com.yuier.yuni.common.domain.event.messagesent.GroupMessageSentEvent;
 import com.yuier.yuni.common.domain.event.messagesent.MessageSentEvent;
 import com.yuier.yuni.common.utils.BeanCopyUtils;
+import com.yuier.yuni.core.domain.entity.MessageRecordEntity;
 import com.yuier.yuni.core.mapper.MessageRecordMapper;
 import com.yuier.yuni.core.service.MessageRecordService;
-import com.yuier.yuni.core.domain.entity.MessageRecordEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -79,6 +80,20 @@ public class MessageRecordServiceImpl extends ServiceImpl<MessageRecordMapper, M
         // 为实体类赋值 text
         trySetText(messageEvent, messageRecordEntity);
         save(messageRecordEntity);
+    }
+
+    /**
+     * 根据消息 ID 查询本地数据库中的消息记录，并组装为消息链
+     * @param messageId  消息 ID
+     * @return  组装出的消息链
+     */
+    @Override
+    public MessageChain queryMessageByMessageId(Long messageId) {
+        LambdaQueryWrapper<MessageRecordEntity> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(MessageRecordEntity::getMessageId, messageId);
+        MessageRecordEntity record = getOne(wrapper);
+        String rawMessage = record.getRawMessage();
+        return MessageChain.parseCQToChain(rawMessage);
     }
 
     /**

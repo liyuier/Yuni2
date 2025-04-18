@@ -4,7 +4,6 @@ import com.yuier.yuni.common.anno.JsonTypeDefine;
 import com.yuier.yuni.common.domain.event.message.chain.seg.data.TextData;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
 
 /**
  * @Title: TextSeg
@@ -15,7 +14,6 @@ import lombok.NoArgsConstructor;
  */
 
 @Data
-@NoArgsConstructor
 @JsonTypeDefine("text")
 @EqualsAndHashCode(callSuper = true)
 public class TextSeg extends MessageSeg<TextData> {
@@ -27,5 +25,9 @@ public class TextSeg extends MessageSeg<TextData> {
 
     public TextSeg(String text) {
         this(new TextData(text));
+    }
+
+    public TextSeg() {
+        this.data = new TextData();
     }
 }

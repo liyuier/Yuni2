@@ -4,7 +4,6 @@ import com.yuier.yuni.common.anno.JsonTypeDefine;
 import com.yuier.yuni.common.domain.event.message.chain.seg.data.DiceData;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
 
 /**
  * @Title: DiceSeg
@@ -15,9 +14,10 @@ import lombok.NoArgsConstructor;
  */
 
 @Data
-@NoArgsConstructor
 @JsonTypeDefine("dice")
 @EqualsAndHashCode(callSuper = true)
 public class DiceSeg extends MessageSeg<DiceData> {
-
+    public DiceSeg() {
+        this.data = new DiceData();
+    }
 }

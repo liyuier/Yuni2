@@ -4,7 +4,6 @@ import com.yuier.yuni.common.anno.JsonTypeDefine;
 import com.yuier.yuni.common.domain.event.message.chain.seg.data.XmlData;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
 
 /**
  * @Title: XmlSeg
@@ -15,9 +14,11 @@ import lombok.NoArgsConstructor;
  */
 
 @Data
-@NoArgsConstructor
 @JsonTypeDefine("xml")
 @EqualsAndHashCode(callSuper = true)
 public class XmlSeg extends MessageSeg<XmlData> {
 
+    public XmlSeg() {
+        this.data = new XmlData();
+    }
 }

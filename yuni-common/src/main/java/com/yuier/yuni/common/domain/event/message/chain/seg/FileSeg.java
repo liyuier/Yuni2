@@ -4,7 +4,6 @@ import com.yuier.yuni.common.anno.JsonTypeDefine;
 import com.yuier.yuni.common.domain.event.message.chain.seg.data.FileData;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
 
 /**
  * @Title: FileSeg
@@ -15,9 +14,10 @@ import lombok.NoArgsConstructor;
  */
 
 @Data
-@NoArgsConstructor
 @JsonTypeDefine("file")
 @EqualsAndHashCode(callSuper = true)
 public class FileSeg extends MessageSeg<FileData> {
-
+    public FileSeg() {
+        this.data = new FileData();
+    }
 }

@@ -4,7 +4,6 @@ import com.yuier.yuni.common.anno.JsonTypeDefine;
 import com.yuier.yuni.common.domain.event.message.chain.seg.data.RpsData;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
 
 /**
  * @Title: RpsSeg
@@ -15,9 +14,11 @@ import lombok.NoArgsConstructor;
  */
 
 @Data
-@NoArgsConstructor
 @JsonTypeDefine("rps")
 @EqualsAndHashCode(callSuper = true)
 public class RpsSeg extends MessageSeg<RpsData> {
 
+    public RpsSeg() {
+        this.data = new RpsData();
+    }
 }

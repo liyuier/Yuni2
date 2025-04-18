@@ -4,7 +4,6 @@ import com.yuier.yuni.common.anno.JsonTypeDefine;
 import com.yuier.yuni.common.domain.event.message.chain.seg.data.PokeData;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
 
 /**
  * @Title: PokeSeg
@@ -15,9 +14,11 @@ import lombok.NoArgsConstructor;
  */
 
 @Data
-@NoArgsConstructor
 @JsonTypeDefine("poke")
 @EqualsAndHashCode(callSuper = true)
 public class PokeSeg extends MessageSeg<PokeData> {
 
+    public PokeSeg() {
+        this.data = new PokeData();
+    }
 }

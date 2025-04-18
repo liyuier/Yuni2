@@ -9,6 +9,7 @@ import com.yuier.yuni.common.domain.event.OneBotEvent;
  * @Date 2024/11/9 16:23
  * @description: 事件探测器接口
  */
+
 public interface EventDetector<T extends OneBotEvent> {
 
     /**

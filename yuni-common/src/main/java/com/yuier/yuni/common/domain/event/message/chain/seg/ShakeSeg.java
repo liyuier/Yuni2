@@ -4,7 +4,6 @@ import com.yuier.yuni.common.anno.JsonTypeDefine;
 import com.yuier.yuni.common.domain.event.message.chain.seg.data.ShakeData;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
 
 /**
  * @Title: ShakeSeg
@@ -15,9 +14,11 @@ import lombok.NoArgsConstructor;
  */
 
 @Data
-@NoArgsConstructor
 @JsonTypeDefine("shake")
 @EqualsAndHashCode(callSuper = true)
 public class ShakeSeg extends MessageSeg<ShakeData> {
 
+    public ShakeSeg() {
+        this.data = new ShakeData();
+    }
 }

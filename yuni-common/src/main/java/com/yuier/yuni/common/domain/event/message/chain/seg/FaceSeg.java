@@ -4,7 +4,6 @@ import com.yuier.yuni.common.anno.JsonTypeDefine;
 import com.yuier.yuni.common.domain.event.message.chain.seg.data.FaceData;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
 
 /**
  * @Title: FaceSeg
@@ -15,9 +14,10 @@ import lombok.NoArgsConstructor;
  */
 
 @Data
-@NoArgsConstructor
 @JsonTypeDefine("face")
 @EqualsAndHashCode(callSuper = true)
 public class FaceSeg extends MessageSeg<FaceData> {
-
+    public FaceSeg() {
+        this.data = new FaceData();
+    }
 }

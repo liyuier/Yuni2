@@ -4,7 +4,6 @@ import com.yuier.yuni.common.anno.JsonTypeDefine;
 import com.yuier.yuni.common.domain.event.message.chain.seg.data.RecordData;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
 
 /**
  * @Title: RecordSeg
@@ -15,9 +14,11 @@ import lombok.NoArgsConstructor;
  */
 
 @Data
-@NoArgsConstructor
 @JsonTypeDefine("record")
 @EqualsAndHashCode(callSuper = true)
 public class RecordSeg extends MessageSeg<RecordData> {
 
+    public RecordSeg() {
+        this.data = new RecordData();
+    }
 }

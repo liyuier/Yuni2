@@ -4,7 +4,6 @@ import com.yuier.yuni.common.anno.JsonTypeDefine;
 import com.yuier.yuni.common.domain.event.message.chain.seg.data.ShareData;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
 
 /**
  * @Title: ShareSeg
@@ -15,9 +14,10 @@ import lombok.NoArgsConstructor;
  */
 
 @Data
-@NoArgsConstructor
 @JsonTypeDefine("share")
 @EqualsAndHashCode(callSuper = true)
 public class ShareSeg extends MessageSeg<ShareData> {
-
+    public ShareSeg() {
+        this.data = new ShareData();
+    }
 }

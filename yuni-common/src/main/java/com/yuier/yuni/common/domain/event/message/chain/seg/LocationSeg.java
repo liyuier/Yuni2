@@ -4,7 +4,6 @@ import com.yuier.yuni.common.anno.JsonTypeDefine;
 import com.yuier.yuni.common.domain.event.message.chain.seg.data.LocationData;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
 
 /**
  * @Title: LocationSeg
@@ -15,9 +14,10 @@ import lombok.NoArgsConstructor;
  */
 
 @Data
-@NoArgsConstructor
 @JsonTypeDefine("location")
 @EqualsAndHashCode(callSuper = true)
 public class LocationSeg extends MessageSeg<LocationData> {
-
+    public LocationSeg() {
+        this.data = new LocationData();
+    }
 }

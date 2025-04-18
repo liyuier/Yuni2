@@ -10,6 +10,9 @@ import com.yuier.yuni.common.enums.SubscribeCondition;
 import com.yuier.yuni.common.interfaces.detector.notice.NoticeDetector;
 import com.yuier.yuni.common.interfaces.plugin.NoticePluginBean;
 import com.yuier.yuni.common.utils.BotAction;
+import com.yuier.yuni.core.service.MessageRecordService;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -20,9 +23,13 @@ import org.springframework.stereotype.Component;
  * @description: 处理群消息撤回事件的插件
  */
 
+@Slf4j
 @Component
 @Plugin(name = "消息撤回提醒", subscribe = SubscribeCondition.NO)
 public class GroupRecallPlugin implements NoticePluginBean<GroupRecallNoticeEvent> {
+
+    @Autowired
+    MessageRecordService messageRecordService;
 
     @Override
     public void run(GroupRecallNoticeEvent event, NoticeDetector detector) {
@@ -50,6 +57,11 @@ public class GroupRecallPlugin implements NoticePluginBean<GroupRecallNoticeEven
      */
     private MessageChain getRecalledMessageChain(Long messageId) {
         // 先从本地数据库查询
+        MessageChain localMessageChain = messageRecordService.queryMessageByMessageId(messageId);
+        if (!(localMessageChain == null) && !localMessageChain.isEmpty()) {
+            log.info("从本地数据库获取到消息。");
+            return localMessageChain;
+        }
         // 本地数据库没有查到，去 OneBot 客户端查询
         GetMessageResData message = BotAction.getMessage(messageId);
         return new MessageChain(message.getMessage());

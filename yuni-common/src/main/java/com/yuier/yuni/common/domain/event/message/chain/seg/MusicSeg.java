@@ -4,7 +4,6 @@ import com.yuier.yuni.common.anno.JsonTypeDefine;
 import com.yuier.yuni.common.domain.event.message.chain.seg.data.MusicData;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
 
 /**
  * @Title: MusicSeg
@@ -15,9 +14,11 @@ import lombok.NoArgsConstructor;
  */
 
 @Data
-@NoArgsConstructor
 @JsonTypeDefine("music")
 @EqualsAndHashCode(callSuper = true)
 public class MusicSeg extends MessageSeg<MusicData> {
 
+    public MusicSeg() {
+        this.data = new MusicData();
+    }
 }
