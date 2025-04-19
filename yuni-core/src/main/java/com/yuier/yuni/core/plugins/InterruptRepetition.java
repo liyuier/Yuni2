@@ -15,6 +15,7 @@ import jakarta.servlet.ServletContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -33,11 +34,23 @@ public class InterruptRepetition implements MessagePluginBean<PatternDetector> {
     @Autowired
     ServletContext servletContext;
 
+    // 群聊中上一条消息哈希
     HashMap<Long, Integer> groupLashMessageMap = new HashMap<>();
+    // 群聊中相同消息出现次数
     HashMap<Long, Integer> groupSameMessageNumberMap = new HashMap<>();
+    // 群聊中本轮复读次数
+    HashMap<Long, Integer> groupMaxRepeatTimeMap = new HashMap<>();
 
-    static final Integer INTERRUPT_THRESHOLD = 3;
-    static final String DEFAULT_INTERRUPT_IMAGE_PATH = "https://yui-bucket-1309363843.cos.ap-nanjing.myqcloud.com/interrupt_repetition.jpeg";
+    SecureRandom secureRandom = new SecureRandom();
+
+    static final String[] INTERRUPT_IMAGES_PATHS = {
+            "https://yui-bucket-1309363843.cos.ap-nanjing.myqcloud.com/interrupt_repetition_zago.jpeg",
+            "https://yui-bucket-1309363843.cos.ap-nanjing.myqcloud.com/interrupt_repetition_goodfriend.jpeg",
+            "https://yui-bucket-1309363843.cos.ap-nanjing.myqcloud.com/interrupt_repetition_fk.jpeg",
+            "https://yui-bucket-1309363843.cos.ap-nanjing.myqcloud.com/interrupt_repetition_soyorin.jpeg"
+    };
+
+    static final String INTERRUPT_FIVE_REPEATS_IMAGE_PATH = "https://yui-bucket-1309363843.cos.ap-nanjing.myqcloud.com/interrupt_repetition_gameking.png";
 
     @Override
     public void run(MessageEvent<?> event, PatternDetector detector) {
@@ -61,14 +74,18 @@ public class InterruptRepetition implements MessagePluginBean<PatternDetector> {
             groupSameMessageNumber += 1;
             groupSameMessageNumberMap.put(groupId, groupSameMessageNumber);
         }
-        // 如果相同次数达到 3 次，打断复读
-        if (groupSameMessageNumber.equals(INTERRUPT_THRESHOLD)) {
+        // 如果相同次数达到本轮打断阈值，打断复读
+        Integer groupMaxRepeatTime = getGroupMaxRepeatTime(groupId);
+        if (groupSameMessageNumber.equals(groupMaxRepeatTime)) {
             BotAction.sendGroupMessage(
                     groupId,
-                    getInterruptChain()
+                    getInterruptChain(groupMaxRepeatTime)
             );
-            // 将 group same message number 置 1
+            // 刷新
             groupSameMessageNumberMap.put(groupId, 1);
+            groupLashMessageMap.put(groupId, 0);
+            groupMaxRepeatTimeMap.put(groupId, getRandomRepeatTime());
+            return;
         }
 
         // 刷新 group last message
@@ -76,13 +93,42 @@ public class InterruptRepetition implements MessagePluginBean<PatternDetector> {
     }
 
     /**
+     * 获取当前群聊允许的最大复读次数
+     * @param groupId  群号
+     * @return  当前群聊允许的最大复读次数
+     */
+    private Integer getGroupMaxRepeatTime(Long groupId) {
+        Integer time = groupMaxRepeatTimeMap.getOrDefault(groupId, 0);
+        if (time.equals(0)) {
+            time = getRandomRepeatTime();
+            groupMaxRepeatTimeMap.put(groupId, time);
+        }
+        return time;
+    }
+
+    /**
+     * @return  从 3, 4, 5 中随机挑选一个数字
+     */
+    private Integer getRandomRepeatTime() {
+        int time = 0;
+        // 随机赋值
+        int [] numbers = {3, 4, 5};
+        time = numbers[secureRandom.nextInt(numbers.length)];
+        return time;
+    }
+
+    /**
      * @return  获取用于打断复读的消息
      *           这里默认使用表情包
      */
-    private MessageChain getInterruptChain() {
+    private MessageChain getInterruptChain(Integer groupMaxRepeatTime) {
         MessageChain chain = new MessageChain();
-        // TODO 待优化
-        chain.add(new ImageSeg(DEFAULT_INTERRUPT_IMAGE_PATH));
+        if (groupMaxRepeatTime == 5) {
+            chain.add(new ImageSeg(INTERRUPT_FIVE_REPEATS_IMAGE_PATH));
+            return chain;
+        }
+        int imageIndex = secureRandom.nextInt(INTERRUPT_IMAGES_PATHS.length);
+        chain.add(new ImageSeg(INTERRUPT_IMAGES_PATHS[imageIndex]));
         return chain;
     }
 
@@ -96,8 +142,9 @@ public class InterruptRepetition implements MessagePluginBean<PatternDetector> {
     @Override
     public String helpInfo() {
         return """
-                检测到群聊内连续三条相同消息时，发送表情包打断复读。
-                BOT 自身消息不参与。""";
+                当群内出现复读现象时，正义的 bot 将会从天而降将其打断！
+                打断前的最大复读次数在 3, 4, 5 次中随机选择；将从打断表情包池中随机挑选一张打断。
+                如果本次复读次数为 5 次，那么必定触发 `群陨石` 表情包。""";
     }
 
     @Override
