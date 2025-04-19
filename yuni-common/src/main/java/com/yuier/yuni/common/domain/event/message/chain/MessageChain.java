@@ -58,6 +58,11 @@ public class MessageChain {
         content.addAll(Arrays.asList(messageSegs));
     }
 
+    public MessageChain(MessageSeg<?> messageSeg) {
+        this();
+        content.add(messageSeg);
+    }
+
     /**
      * 用于接收到消息，组装消息链时使用
      * 可以维护一个每种消息在 content 中的索引列表，很方便
@@ -89,6 +94,10 @@ public class MessageChain {
 
     public void add(MessageChain chain) {
         content.addAll(chain.getContent());
+    }
+
+    public void add(MessageSeg<?> messageSeg) {
+        content.add(messageSeg);
     }
 
     public Boolean startWithTextData() {
@@ -195,6 +204,23 @@ public class MessageChain {
      */
     public Boolean isEmpty() {
         return content.isEmpty();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MessageChain chain = (MessageChain) o;
+        return Objects.equals(content, chain.content);
+    }
+
+    @Override
+    public int hashCode() {
+        int code = 0;
+        for (MessageSeg<?> seg : content) {
+            code += seg.hashCode();
+        }
+        return code;
     }
 
     /**
@@ -416,7 +442,7 @@ public class MessageChain {
      */
     private static <S extends MessageData, T extends MessageSeg<S>> T getExactMessageSeg(String messageType) {
         HashMap<String, T> subMessageSegMap = new HashMap<>();
-        // 初始化 map
+        // 初始化 map  // TODO 待优化
         if (subMessageSegMap.isEmpty()) {
             // 获取 MessageSeg 的所有子类
             String packagePath = "com.yuier.yuni.common.domain.event.message.chain.seg";

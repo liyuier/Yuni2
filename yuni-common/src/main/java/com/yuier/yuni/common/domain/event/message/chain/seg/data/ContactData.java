@@ -4,8 +4,9 @@ import com.yuier.yuni.common.anno.MessageDataEntity;
 import com.yuier.yuni.common.enums.MessageDataEnum;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+
+import java.util.Objects;
 
 /**
  * @Title: ContactData
@@ -18,7 +19,6 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = true)
 @MessageDataEntity(dataType = MessageDataEnum.CONTACT)
 public class ContactData extends MessageData {
     // 推荐好友，可选值： qq/group
@@ -29,5 +29,18 @@ public class ContactData extends MessageData {
     @Override
     public String toString() {
         return "[推荐" + (type.equals("qq") ? "QQ 用户" : "QQ 群 ") + "<" + this.id + ">]";
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ContactData that = (ContactData) o;
+        return Objects.equals(type, that.type) && Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(type, id);
     }
 }

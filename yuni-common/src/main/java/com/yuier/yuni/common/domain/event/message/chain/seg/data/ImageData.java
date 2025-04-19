@@ -4,8 +4,9 @@ import com.yuier.yuni.common.anno.MessageDataEntity;
 import com.yuier.yuni.common.enums.MessageDataEnum;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+
+import java.util.Objects;
 
 /**
  * @Title: ImageData
@@ -18,7 +19,6 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = true)
 @MessageDataEntity(dataType = MessageDataEnum.IMAGE)
 public class ImageData extends MessageData {
     /**
@@ -60,4 +60,16 @@ public class ImageData extends MessageData {
         return "[图片" + ((null == this.type) ? "" : "<闪照>") + "<file=" + this.file + ">" + ((null == this.url) ? "" : "<url=" + this.url  + ">") +"]";
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ImageData imageData = (ImageData) o;
+        return Objects.equals(file, imageData.file);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(file);
+    }
 }

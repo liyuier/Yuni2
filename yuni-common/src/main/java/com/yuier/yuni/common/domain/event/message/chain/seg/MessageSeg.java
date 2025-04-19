@@ -8,6 +8,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Objects;
+
 /**
  * @Title: MessageSeg
  * @Author yuier
@@ -45,5 +47,18 @@ public abstract class MessageSeg<T extends MessageData> {
     T data;
     public Boolean typeOf(MessageDataEnum messageDataEnum) {
         return type.equals(messageDataEnum.toString());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MessageSeg<?> that = (MessageSeg<?>) o;
+        return Objects.equals(type, that.type) && Objects.equals(data, that.data);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(type, data);
     }
 }

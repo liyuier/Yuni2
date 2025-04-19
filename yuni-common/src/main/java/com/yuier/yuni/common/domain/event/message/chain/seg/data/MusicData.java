@@ -4,8 +4,9 @@ import com.yuier.yuni.common.anno.MessageDataEntity;
 import com.yuier.yuni.common.enums.MessageDataEnum;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+
+import java.util.Objects;
 
 /**
  * @Title: MusicData
@@ -18,7 +19,6 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = true)
 @MessageDataEntity(dataType = MessageDataEnum.MUSIC)
 public class MusicData extends MessageData {
     /**
@@ -49,5 +49,18 @@ public class MusicData extends MessageData {
         return "[分享音乐" + (!this.type.equals("custom")
                 ? "<平台=" + this.type + "><歌曲ID=" + this.id
                 : "<url=" + this.url + "><歌曲url=" + this.audio + "><标题=" + this.title + ">]");
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MusicData musicData = (MusicData) o;
+        return Objects.equals(type, musicData.type) && Objects.equals(id, musicData.id) && Objects.equals(audio, musicData.audio);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(type, id, audio);
     }
 }

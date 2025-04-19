@@ -4,8 +4,9 @@ import com.yuier.yuni.common.anno.MessageDataEntity;
 import com.yuier.yuni.common.enums.MessageDataEnum;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+
+import java.util.Objects;
 
 /**
  * @Title: MarketFaceData
@@ -18,7 +19,6 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = true)
 @MessageDataEntity(dataType = MessageDataEnum.MARKETFACE)
 public class MarketFaceData extends MessageData {
     private String summary;
@@ -30,5 +30,18 @@ public class MarketFaceData extends MessageData {
     @Override
     public String toString() {
         return "[商城表情#" + this.summary + "]";
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MarketFaceData that = (MarketFaceData) o;
+        return Objects.equals(url, that.url);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(url);
     }
 }
